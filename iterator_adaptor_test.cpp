@@ -52,6 +52,7 @@
 #include <boost/pending/iterator_tests.hpp>
 #include <boost/pending/integer_range.hpp>
 #include <boost/concept_archetype.hpp>
+#include <boost/type_traits/same_traits.hpp>
 #include <stdlib.h>
 #include <vector>
 #include <deque>
@@ -105,7 +106,7 @@ main()
   const int N = sizeof(array)/sizeof(dummyT);
 
   // sanity check, if this doesn't pass the test is buggy
-  boost::random_access_iterator_test(array,N,array);
+  boost::random_access_iterator_test(array, N, array);
 
   // Check that the policy concept checks and the default policy
   // implementation match up.
@@ -117,6 +118,41 @@ main()
                       int*, int&>
       > >();
 
+  // Test the named parameters
+  {
+    // Test computation of defaults
+    typedef boost::iterator_adaptor<int*, boost::default_iterator_policies,
+      boost::value_type_is<int> > Iter1;
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::value_type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::reference, int&>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::pointer, int*>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::difference_type, std::ptrdiff_t>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::iterator_category, std::random_access_iterator_tag>::value));
+  }
+  {  
+    // Test computation of default when the Value is const
+    typedef boost::iterator_adaptor<int*, boost::default_iterator_policies,
+      boost::value_type_is<const int> > Iter1;
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::value_type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::reference, const int&>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::pointer, const int*>::value));
+  }
+  {
+    // Test with no defaults
+    typedef boost::iterator_adaptor<int*, boost::default_iterator_policies,
+      boost::reference_is<long>,
+      boost::pointer_is<float>,
+      boost::value_type_is<char>,
+      boost::iterator_category_is<std::input_iterator_tag>,
+      boost::difference_type_is<int>
+    > Iter1;
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::value_type, char>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::reference, long>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::pointer, float>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::difference_type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<std::iterator_traits<Iter1>::iterator_category, std::input_iterator_tag>::value));
+  }
+  
   // Test the iterator_adaptor
   {
     boost::iterator_adaptor<dummyT*, boost::default_iterator_policies, dummyT> i(array);
@@ -307,12 +343,12 @@ main()
 #else
     typedef boost::iterator_adaptor<boost::forward_iterator_archetype<dummyT>,
       boost::default_iterator_policies,
-      boost::iterator_traits_generator
-        ::value_type<dummyT>
-        ::reference<const dummyT&>
-        ::pointer<const dummyT*> 
-        ::iterator_category<std::forward_iterator_tag>
-        ::difference_type<std::ptrdiff_t> > adaptor_type;
+      boost::reference_is<const dummyT&>,
+      boost::pointer_is<const dummyT*> ,
+      boost::iterator_category_is<std::forward_iterator_tag>,
+      boost::value_type_is<dummyT>,
+      boost::difference_type_is<std::ptrdiff_t>
+    > adaptor_type;
 #endif
     adaptor_type i(forward_iter);
     int zero = 0;
