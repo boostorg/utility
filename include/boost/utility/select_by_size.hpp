@@ -9,17 +9,20 @@
 // Provides an arbitrary number of types (case_<0>, case_<1>, ...) for
 // determining the results of overload resultion using 'sizeof', plus a uniform
 // means of using the result. yes_type and no_type are typedefs for case_<1>
-// and case_<0>.
+// and case_<0>. A single case with negative argument, case_<-1>, is also 
+// provided, for convenience.
 //
 // This header may be included any number of times, with
-// BOOST_SELECT_BY_SIZE_CASES defined to be the number of cases needed for a
-// particular application. It defaults to 2.
+// BOOST_SELECT_BY_SIZE_MAX_CASE defined to be the largest N such that case_<N>
+// is needed for a particular application. It defaults to 2.
 //
-// This header depends only on Boost.Config and Boost.Preprocessor.
+// This header depends only on Boost.Config and Boost.Preprocessor. Dependence
+// on Type Traits or MPL was intentionally avoided, to leave open the 
+// possibility that select_by_size could be used by these libraries.
 //
 // Example usage:
 //
-//    #define BOOST_SELECT_BY_SIZE_CASES 8         // Needed for > 2 cases.
+//    #define BOOST_SELECT_BY_SIZE_MAX_CASE 7         // Needed for > 2 cases.
 //    #include <boost/utility/select_by_size.hpp>
 //
 //    using namespace boost::utility;
@@ -61,10 +64,31 @@
 // specialized.
 #define SELECT_BY_SIZE_MAX_SPECIALIZED 2
 
-#include <boost/config.hpp>    // BOOST_STATIC_CONSTANT, BOOST_NESTED_TEMPLATE
+#include <boost/config.hpp>    // BOOST_STATIC_CONSTANT.
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+
+/* Alternative implementation using max_align. 
+
+#include <boost/type_traits/alignment_of.hpp>
+#include <boost/type_traits/type_with_alignment.hpp>
+
+namespace boost { namespace utility {
+
+template<int N>
+struct case_ { char c[(N + 1) * alignment_of<detail::max_align>::value]; };
+
+template<unsigned Size>
+struct select_by_size {
+    BOOST_STATIC_CONSTANT(int, value = 
+        (Size / alignment_of<detail::max_align>::value - 1));
+};
+
+} }             // End namespaces utility, boost.
+
+*/              // End alternate implementation.
 
 namespace boost { namespace utility {
 
@@ -84,7 +108,7 @@ template<unsigned Size> struct select_by_size;
 //--------------Definition of SELECT_BY_SIZE_SPEC-----------------------------//
 
 // Sepecializes select_by_size for sizeof(case<n-1>). The decrement is used
-// here because -1 cannot be passed
+// here because the preprocessor library doesn't handle negative integers.
 #define SELECT_BY_SIZE_SPEC(n)                                                 \
     namespace boost { namespace utility {                                      \
       namespace detail {                                                       \
@@ -92,7 +116,8 @@ template<unsigned Size> struct select_by_size;
       }                                                                        \
       template<>                                                               \
       struct select_by_size< detail::BOOST_PP_CAT(sizeof_case_, n) > {         \
-        BOOST_STATIC_CONSTANT(int, value = n - 1);                             \
+          struct type { BOOST_STATIC_CONSTANT(int, value = n - 1); };          \
+          BOOST_STATIC_CONSTANT(int, value = type::value);                     \
       };                                                                       \
     } }                                                                        \
     /**/
@@ -129,21 +154,22 @@ SELECT_BY_SIZE_SPEC(2) // select_by_size< sizeof(case<1>) >
 
 #if !BOOST_PP_IS_ITERATING //-------------------------------------------------//
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #if !defined(BOOST_SELECT_BY_SIZE_CASES) || (BOOST_SELECT_BY_SIZE_CASES < 2)
-        #undef BOOST_SELECT_BY_SIZE_CASES
-        #define BOOST_SELECT_BY_SIZE_CASES 2
+    #if !defined(BOOST_SELECT_BY_SIZE_MAX_CASE) || \
+        (BOOST_SELECT_BY_SIZE_MAX_CASE < 2)
+        #undef BOOST_SELECT_BY_SIZE_MAX_CASE
+        #define BOOST_SELECT_BY_SIZE_MAX_CASE 2
     #endif
 
-    #if (BOOST_SELECT_BY_SIZE_CASES > SELECT_BY_SIZE_MAX_SPECIALIZED)
+    #if (BOOST_SELECT_BY_SIZE_MAX_CASE > SELECT_BY_SIZE_MAX_SPECIALIZED)
         #define BOOST_PP_FILENAME_1 <boost/utility/select_by_size.hpp>
         #define BOOST_PP_ITERATION_LIMITS ( SELECT_BY_SIZE_MAX_SPECIALIZED, \
-                                            BOOST_SELECT_BY_SIZE_CASES )
+                                            BOOST_SELECT_BY_SIZE_MAX_CASE )
         #include BOOST_PP_ITERATE()
         #undef SELECT_BY_SIZE_MAX_SPECIALIZED
-        #define SELECT_BY_SIZE_MAX_SPECIALIZED BOOST_SELECT_BY_SIZE_CASES
+        #define SELECT_BY_SIZE_MAX_SPECIALIZED BOOST_SELECT_BY_SIZE_MAX_CASE
     #endif // #if (BOOST_SELECT_BY_SIZE_CASES > SELECT_BY_SIZE_MAX_SPECIALIZED)
 
-    #undef BOOST_SELECT_BY_SIZE_CASES
+    #undef BOOST_SELECT_BY_SIZE_MAX_CASE
 #else // #if !BOOST_PP_IS_ITERATING //----------------------------------------//
     SELECT_BY_SIZE_SPEC(BOOST_PP_INC(BOOST_PP_ITERATION()))
 #endif // #if !BOOST_PP_IS_ITERATING //---------------------------------------//
