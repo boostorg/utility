@@ -79,10 +79,10 @@ Adaptor Library. This generator simplifies the creation of iterators;
 it automates the error-prone and redundant parts of the implementation
 and greatly simplifies the creation of iterator types that are
 variations on other iterators (adapted iterators). The Iterator
-Adaptor Library employs template meta-programming and is an example of
-policy-based design. It uses an extremely flexible implementation
-pattern which can be easily adapted to generate new representatives of
-other abstract Concept families.
+Adaptor Library is an example of policy-based design and employs
+template meta-programming. It uses an extremely flexible
+implementation pattern which can be easily adapted to generate new
+representatives of other abstract Concept families.
 
 \end{abstract}
 
@@ -95,9 +95,9 @@ other abstract Concept families.
 
 Iterators play an important role in modern C++ programing. The
 iterator is the central abstraction of the algorithms of the Standard
-Library and creating new iterator types and adapting old ones are
-common tasks for C++ programmers. There are plenty of examples of
-iterators in the literature: the
+Library and creating new iterator types is a common task for C++
+programmers. There are plenty of examples of iterators in the
+literature: the
 \code{line\_iterator}~\cite{austern99:_gener_progr_stl},
 \code{Constant\_iterator}~\cite{koenig97:_rumin_cpp},
 \code{std::istream\_iterator} and
@@ -229,7 +229,7 @@ type. It is desirable to allow the constant and mutable iterators to
 interoperate through comparison and
 subtraction. For example, suppose
 that you are implementing a container type \code{C}. Then you ought to
-define the following four version of \code{operator==}, along with
+define the following four versions of \code{operator==}, along with
 corresponding versions of \code{operator!=}, and (for
 \stlconcept{RandomAccessIterator}), operators \code{<}, \code{>},
 \code{<=}, \code{>=}, and \code{-}.
@@ -344,7 +344,7 @@ the primary communication mechanism between the iterator implementer
 and the \code{iterator\_\-adaptor}; it specifies how the new iterator
 type is different from the \code{Base} type. Unlike the policy classes
 in~\cite{alexandrescu01:_modern_cpp_design}, we group several policies
-into a single class, as this proved more convenient for iterator
+into a single class as this proved more convenient for iterator
 implementation.
 
 \subsection{Iterator Policies Class}
@@ -523,7 +523,7 @@ following constructor.
 }
 
 It would be cumbersome for the user to call this constructor since
-they would have to separately construct a policies class object and
+they would have to separately construct a policies object and
 then the iterator object. We therefore recommend that iterator
 implementers create an \emph{object generator} function for their
 iterator. The following is the generator function for the transform
@@ -620,7 +620,7 @@ namespace boost {
     // the policies are ``second''.
     Policies& policies() { return m_iter_p.second(); }
     Base& iter() { return m_iter_p.first(); }
-    // and the same for const references...
+    // and similarly for const...
   };
   // Core binary operators.
   // Redundant binary operators.
@@ -658,13 +658,11 @@ default was used for \code{value\_type} then the \code{reference} and
 \subsubsection{Named Template Parameters}
 \label{sec:named-template-parameters}
 
-The \code{iterator\_adaptor} class has five template parameters that
-specify the associated types of the iterator. Each of the parameters
-has defaults as described above, so the user may specify zero or more
-parameters. One difficulty with {C++} templates is that if a default
-is used for a parameter then all the following parameters must also be
-default. When there are a large number of parameters this becomes
-inconvenient.
+Since each of the parameters for the associated types has a default
+user may specify zero or more of them. One difficulty with {C++}
+templates is that if a default is used for a parameter then all the
+following parameters must also be default. When there are a large
+number of parameters this becomes inconvenient.
 
 A solution to this problem is the idea of named parameters.  Instead
 of matching arguments to parameters based on order, the assignment of
@@ -682,13 +680,13 @@ example:
 \end{verbatim} 
 }
 
-Instead of passing the argument for the \code{Value} type directly to
+Instead of passing the argument \code{Value} directly to
 \code{iterator\_\-adaptor} the user passes
-\code{value\_type\_is<Value>}. The \code{iterator\_\-adaptor} now has
+\code{value\_type\_is<Value>}. The \code{iterator\_\-adaptor} has
 five arguments for the associated types, each of which could be used
 to specify any of the actual parameters. The
 \code{iterator\_\-adaptor} must deduce which argument is for which
-parameter based on the \code{tag} type inside the wrapper.
+parameter based on the \code{tag} inside the wrapper.
 
 First we take all of the parameters and place them in a
 lisp-style list, using \code{std::pair} for \code{cons}. Each
@@ -806,31 +804,37 @@ in the following two sections.
 \subsubsection{Implementing \code{operator->} for Input Iterators}
 \label{sec:operator-arrow}
 
-Fortunately, the standard gives us a way: section 13.3.1.2 paragraph 8
-describes a seemingly quirky rule that the \code{->} operator will be
-applied to the \emph{result} of any call to \code{operator->}. This is
-a convenient way to describe the semantics of ordinary
-\code{operator->}, which returns a pointer: it just uses the pointer
-to perform the usual member dereferencing. It also turns out to be
-what we need to make a conforming \stlconcept{InputIterator}. By
-making the return type of \code{operator->} a proxy containing an
-instance of the iterator's \code{value\_type}, we can eventually form
-a \code{const} pointer to the returned temporary:
+As introduced in \S\ref{sec:operator-arrow}, it is difficult to
+implement \code{operator->} for input iterators because there may not
+be an lvalue from which to form a pointer.
+
+Fortunately, the standard makes a workaround possible: section
+13.3.1.2 paragraph 8 describes a seemingly quirky rule that the
+\code{->} operator will be applied to the \emph{result} of any call to
+\code{operator->}. This is a convenient way to describe the semantics
+of ordinary \code{operator->}, which returns a pointer: it just uses
+the pointer to perform the usual member dereferencing. It also turns
+out to be what we need to make a conforming
+\stlconcept{InputIterator}. By making the return type of
+\code{operator->} a proxy containing an instance of the iterator's
+\code{value\_type}, we can eventually form a \code{const} pointer to
+the returned temporary:
 
 {\footnotesize
 \begin{verbatim}
   template <class T>
   struct operator_arrow_proxy
   {
-      operator_arrow_proxy(const T& x) : m_value(x) {}
-      const T* operator->() const { return &m_value; }
-      T m_value;
+    operator_arrow_proxy(const T& x) : m_value(x) {}
+    const T* operator->() const { return &m_value; }
+    T m_value;
   };
 \end{verbatim}
 }
 
-The iterator adaptor library uses a small meta-program to select the
-appropriate type for the result of an iterator's \code{operator->}:
+\noindent The iterator adaptor library uses a small meta-program to
+select the appropriate type for the result of an iterator's
+\code{operator->}:
 
 {\footnotesize
 \begin{verbatim}
@@ -843,7 +847,7 @@ appropriate type for the result of an iterator's \code{operator->}:
          && !is_convertible<Category*,std::forward_iterator_tag*>::value;
 
     typedef typename type_if<is_input_iter,
-        operator_arrow_proxy<Value>, /*else*/ Pointer>::type type;
+      operator_arrow_proxy<Value>, /*else*/ Pointer>::type type;
   };
 \end{verbatim}
 }
@@ -856,10 +860,11 @@ iterator categories derived from the standard ones.
 
 
 \subsubsection{Implementation of \code{operator[]}}
+\label{sec:op-bracket-impl}
 
 The implementation of \code{operator[]} would be trivial except for
 the issue surrounding what the return type should be.  As mentioned in
-\S\ref{sec:iterator-bracket}, it would be dangerous to make the
+\S\ref{sec:operator-bracket}, it would be dangerous to make the
 \code{iterator\_adaptor} always return a reference for
 \code{operator[]} for there are certain situations in which this can
 cause run-time errors.
@@ -937,14 +942,14 @@ of course that will take some time to gain acceptance.
 
 Constructing iterators and iterator adaptors is a common task for
 modern C++ programming. Despite the conceptual simplicity of most
-iterators, implementing {C++} Standard conforming iterators requires
-is non-trivial amount of code: some of which is challenging to get
-right, and a lot of which is tedious to write. The
-\code{iterator\_adaptor} class that we present in this paper solves
-this problem by providing a mechanism by which the user provides a
-minimal specification (by way of the policies class) for the iterator,
-and then the \code{iterator\_\-adaptor} takes care of most of the
-implementation details.
+iterators, implementing {C++} Standard conforming iterators requires a
+non-trivial amount of code: some of which is challenging to get right
+and a lot of which is tedious. The \code{iterator\_adaptor} class that
+we present in this paper solves this problem by providing a mechanism
+by which the user provides a minimal specification (by way of the
+policies class) for the iterator, and then the
+\code{iterator\_\-adaptor} takes care of most of the implementation
+details.
 
 Taking a step back, the design approach was to create a canonical
 implementation of a concept (iterator) and then delegate the core
