@@ -11,16 +11,16 @@
 // Revision History
 // 21 Jan 01 Initial version (Jeremy Siek)
 
+#include <boost/config.hpp>
 #include <iostream>
 #include <iterator>
-#include <boost/config.hpp>
 #include <boost/pending/iterator_adaptors.hpp>
-#include <boost/detail/iterator.hpp>
 
 int main()
 {
-  typedef boost::iterator_adaptor<int*, boost::default_iterator_policies,
-    boost::iterator<std::input_iterator_tag, int> > adaptor_type;
+  typedef boost::iterator_adaptor<std::istream_iterator<int>,
+    boost::default_iterator_policies,
+    int,int&,int*,std::input_iterator_tag> adaptor_type;
   
   adaptor_type iter;
   --iter;

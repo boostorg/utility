@@ -6,9 +6,24 @@
 //  See http://www.boost.org for most recent version including documentation.
 //
 // Revision History
+// 16 Feb 2001  Added a missing const. Made the tests run (somewhat) with
+//              plain MSVC again. (David Abrahams)
+// 11 Feb 2001  #if 0'd out use of counting_iterator on non-numeric types in
+//              MSVC without STLport, so that the other tests may proceed
+//              (David Abrahams)
+// 04 Feb 2001  Added use of iterator_tests.hpp (David Abrahams)
+// 28 Jan 2001  Removed not_an_iterator detritus (David Abrahams)
 // 24 Jan 2001  Initial revision (David Abrahams)
+
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+# pragma warning(disable:4786) // identifier truncated in debug info
+#endif
+
+#include <boost/pending/iterator_tests.hpp>
 #include <boost/counting_iterator.hpp>
 #include <boost/detail/iterator.hpp>
+#include <iostream>
 #include <climits>
 #include <iterator>
 #include <stdlib.h>
@@ -37,8 +52,6 @@ template <class T> struct is_numeric
     };
 };
 
-struct not_an_iterator_tag {};
-
 // Special tests for RandomAccess CountingIterators.
 template <class CountingIterator>
 void category_test(
@@ -65,12 +78,39 @@ void category_test(
 
     // Show that values outside the range can't be found
     assert(!std::binary_search(start, boost::prior(finish), *finish));
+
+    // Do the generic random_access_iterator_test
+    typedef typename CountingIterator::value_type value_type;
+    std::vector<value_type> v;
+    for (value_type z = *start; z != *finish; ++z)
+        v.push_back(z);
+    if (v.size() >= 2)
+    {
+        // Note that this test requires a that the first argument is
+        // dereferenceable /and/ a valid iterator prior to the first argument
+        boost::random_access_iterator_test(start + 1, v.size() - 1, v.begin() + 1);
+    }
 }
 
-// Otherwise, we'll have to skip those.
+// Special tests for bidirectional CountingIterators
 template <class CountingIterator>
-void category_test(CountingIterator, CountingIterator, std::forward_iterator_tag)
+void category_test(CountingIterator start, CountingIterator finish, std::bidirectional_iterator_tag)
 {
+    if (finish != start
+        && finish != boost::next(start)
+        && finish != boost::next(boost::next(start)))
+    {
+        // Note that this test requires a that the first argument is
+        // dereferenceable /and/ a valid iterator prior to the first argument
+        boost::bidirectional_iterator_test(boost::next(start), boost::next(*start), boost::next(boost::next(*start)));
+    }
+}
+
+template <class CountingIterator>
+void category_test(CountingIterator start, CountingIterator finish, std::forward_iterator_tag)
+{
+    if (finish != start && finish != boost::next(start))
+        boost::forward_iterator_test(start, *start, boost::next(*start));
 }
 
 template <class CountingIterator>
@@ -97,7 +137,7 @@ void test_aux(CountingIterator start, CountingIterator finish)
 template <class Incrementable>
 void test(Incrementable start, Incrementable finish)
 {
-    test_aux(boost::counting_iterator(start), boost::counting_iterator(finish));
+    test_aux(boost::make_counting_iterator(start), boost::make_counting_iterator(finish));
 }
 
 template <class Integer>
@@ -112,7 +152,7 @@ template <class Container>
 void test_container(Container* = 0)  // default arg works around MSVC bug
 {
     Container c(1 + (unsigned)rand() % 1673);
-    
+
     const typename Container::iterator start = c.begin();
     
     // back off by 1 to leave room for dereferenceable value at the end
@@ -120,10 +160,66 @@ void test_container(Container* = 0)  // default arg works around MSVC bug
     std::advance(finish, c.size() - 1);
     
     test(start, finish);
-    
-    test(static_cast<typename Container::const_iterator>(start),
-         static_cast<typename Container::const_iterator>(finish));
+
+    typedef typename Container::const_iterator const_iterator;
+    test(const_iterator(start), const_iterator(finish));
 }
+
+class my_int1 {
+public:
+  my_int1() { }
+  my_int1(int x) : m_int(x) { }
+  my_int1& operator++() { ++m_int; return *this; }
+  bool operator==(const my_int1& x) const { return m_int == x.m_int; }
+private:
+  int m_int;
+};
+
+namespace boost {
+  template <>
+  struct counting_iterator_traits<my_int1> {
+    typedef std::ptrdiff_t difference_type;
+    typedef std::forward_iterator_tag iterator_category;
+  };
+}
+
+class my_int2 {
+public:
+  typedef void value_type;
+  typedef void pointer;
+  typedef void reference;
+  typedef std::ptrdiff_t difference_type;
+  typedef std::bidirectional_iterator_tag iterator_category;
+
+  my_int2() { }
+  my_int2(int x) : m_int(x) { }
+  my_int2& operator++() { ++m_int; return *this; }
+  my_int2& operator--() { --m_int; return *this; }
+  bool operator==(const my_int2& x) const { return m_int == x.m_int; }
+private:
+  int m_int;
+};
+
+class my_int3 {
+public:
+  typedef void value_type;
+  typedef void pointer;
+  typedef void reference;
+  typedef std::ptrdiff_t difference_type;
+  typedef std::random_access_iterator_tag iterator_category;
+
+  my_int3() { }
+  my_int3(int x) : m_int(x) { }
+  my_int3& operator++() { ++m_int; return *this; }
+  my_int3& operator+=(std::ptrdiff_t n) { m_int += n; return *this; }
+  std::ptrdiff_t operator-(const my_int3& x) const { return m_int - x.m_int; }
+  my_int3& operator--() { --m_int; return *this; }
+  bool operator==(const my_int3& x) const { return m_int == x.m_int; }
+  bool operator!=(const my_int3& x) const { return m_int != x.m_int; }
+  bool operator<(const my_int3& x) const { return m_int < x.m_int; }
+private:
+  int m_int;
+};
 
 int main()
 {
@@ -142,14 +238,26 @@ int main()
     test_integer<long long>();
     test_integer<unsigned long long>();
 #endif
-    // Some tests on container iterators, to prove we handle a few different categories
+
+   // wrapping an iterator or non-built-in integer type causes an INTERNAL
+   // COMPILER ERROR in MSVC without STLport. I'm clueless as to why.
+#if !defined(BOOST_MSVC) || defined(__SGI_STL_PORT)
+    // Test user-defined type.
+    test_integer<my_int1>();
+    test_integer<my_int2>();
+    test_integer<my_int3>();
+    
+   // Some tests on container iterators, to prove we handle a few different categories
     test_container<std::vector<int> >();
     test_container<std::list<int> >();
-#ifndef BOOST_NO_SLIST
+# ifndef BOOST_NO_SLIST
     test_container<BOOST_STD_EXTENSION_NAMESPACE::slist<int> >();
-#endif
+# endif
+    
     // Also prove that we can handle raw pointers.
     int array[2000];
-    test(boost::counting_iterator(array), boost::counting_iterator(array+2000-1));
+    test(boost::make_counting_iterator(array), boost::make_counting_iterator(array+2000-1));
+#endif
+    std::cout << "test successful " << std::endl;
     return 0;
 }
