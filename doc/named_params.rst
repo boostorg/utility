@@ -390,10 +390,12 @@ Portability
 
 Boost.NamedParams has been confirmed to work on the following compilers:
 
-   - VC6 sp5, VC7 [#norestrict]_
-   - VC7.1
-   - GCC3.3.1 (cygwin), GCC2.95.3 (cygwin)
-   - Metrowerks Codewarrior xx.xx (?)
+   - Microsoft VC6 sp5, VC7 [#norestrict]_
+   - Microsoft VC7.1
+   - GCC3.3.1 (cygwin), GCC2.95.3 (cygwin), GCC3.2 (mingw)
+   - Metrowerks Codewarrior Pro8 and Pro9 (Windows)
+   - Intel C++ 5.0,6.0,7.1,8.0 (Windows)
+   - Comeau 4.3.3
 
 -----------------------------
 
