@@ -330,6 +330,28 @@ These additional parameters are not intended to be used directly
 by callers; they merely trigger SFINAE by becoming illegal types
 when the ``name`` argument is not convertible to ``const char*``.
 
+Lazy Evaluation of Defaults
+===========================
+
+Sometimes computation of the default value can be expensive, and
+best avoided if the user does supply the argument.
+
+.. parsed-literal::
+
+    parms[value || **nullary_function**];
+
+Where nullary_function is an Adaptable Nullary Function object
+which defines it's return type with a nested ``result_type``
+typedef. On complient compilers a pointer to a nullary function
+can be passed directly, on others it needs to be wrapped.
+
+.. parsed-literal::
+
+    int default_value();
+
+    parms[value || default_value]; // OK! on complient compilers
+    parms[value || boost::bind(default_value) ]; // OK!
+
 Automatic Overload Generation
 =============================
 
