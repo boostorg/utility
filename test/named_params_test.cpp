@@ -125,16 +125,20 @@ namespace test
       template <class Name_, class Value_, class Index_>
       void operator()(Name_ const& n_, Value_ const& v_, Index_ const& i_) const
       {
-/*         std::cout << typeid(Name_).name() << "\n";
-         std::cout << typeid(Value_).name() << "\n";
-         std::cout << typeid(Index_).name() << "\n";
-  */       
-         // vc7 fails on these assert because of constness mismatch
-//          BOOST_STATIC_ASSERT((boost::is_same<Name,Name_>::value));
+
+          // Only VC and its emulators fail this; they seem to have
+          // problems with deducing the constness of string literal
+          // arrays.
+ #if defined(_MSC_VER)                                      \
+     && (BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, <= 700)  \
+         || BOOST_WORKAROUND(BOOST_MSVC, < 1310))
+# else 
+          BOOST_STATIC_ASSERT((boost::is_same<Index,Index_>::value));
+          BOOST_STATIC_ASSERT((boost::is_same<Value,Value_>::value));
+          BOOST_STATIC_ASSERT((boost::is_same<Name,Name_>::value));
+#endif
           assert(equal(n, n_));
-  //        BOOST_STATIC_ASSERT((boost::is_same<Value,Value_>::value));
           assert(equal(v, v_));
-    //      BOOST_STATIC_ASSERT((boost::is_same<Index,Index_>::value));
           assert(equal(i, i_));
       }
       
@@ -151,6 +155,15 @@ namespace test
   }
 }
 
+// GCC2 has a problem with char (&)[] deduction, so we'll cast string
+// literals there.
+#undef S
+#if BOOST_WORKAROUND(__GNUC__, == 2)
+# define S(s) (char const*)s
+#else
+# define S(s) s
+#endif
+
 int main()
 {
    using test::f;
@@ -160,13 +173,14 @@ int main()
    using test::tester;
 
    f(
-       test::values("foo", "bar", "baz")
-     , "foo", "bar", "baz"
+       test::values(S("foo"), S("bar"), S("baz"))
+     , S("foo"), S("bar"), S("baz")
    );
 
+   int x = 56;
    f(
        test::values("foo", 666.222, 56)
-     , index = boost::cref(56), name = "foo"
+     , index = boost::ref(x), name = "foo"
    );
    
    //f(index = 56, name = 55); // won't compile
