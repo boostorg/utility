@@ -10,5 +10,13 @@ import testing ;
        : [ run lexicographic_test.cpp ]
          [ run lex_performance_test.cpp ]
          [ run named_params_test.cpp ]
+	 [ run enable_if_constructors.cpp ]
+         [ run enable_if_member_templates.cpp ]
+         [ run enable_if_dummy_arg_disambiguation.cpp ]
+         [ run enable_if_namespace_disambiguation.cpp ]
+         [ run enable_if_lazy.cpp ]
+         [ run enable_if_no_disambiguation.cpp ]
+         [ run enable_if_lazy_test.cpp ]                
+         [ run enable_if_partial_specializations.cpp ]
        ;
 }
