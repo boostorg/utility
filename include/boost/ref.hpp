@@ -9,7 +9,10 @@
 # include <boost/utility/addressof.hpp>
 # include <boost/type_traits/ice.hpp>
 # include <boost/type.hpp>
-# include <boost/result_of.hpp>
+# ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#  include <boost/result_of.hpp>
+# endif
+# include <boost/preprocessor/iterate.hpp>
 # include <boost/pending/ct_if.hpp>
 
 //
@@ -28,9 +31,9 @@
 //  See http://www.boost.org/libs/bind/ref.html for documentation.
 //
 
-#ifndef BOOST_REF_NUM_ARGS
+# ifndef BOOST_REF_NUM_ARGS
 #  define BOOST_REF_NUM_ARGS 10
-#endif
+# endif
 
 namespace boost
 {
@@ -42,7 +45,10 @@ class reference_wrapper_without_result_type
 {
 public:
   template<typename F>
-  struct result_of : boost::result_of<F>
+  struct result_of
+# ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+      : boost::result_of<F>
+# endif 
   {
   };
 
@@ -50,21 +56,24 @@ public:
   T& get() const { return *(this->t_); }
   T* get_pointer() const { return this->t_; }
 
-#define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_REF_NUM_ARGS,<boost/detail/ref_iterate.hpp>))
-#include BOOST_PP_ITERATE()
+# if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)         \
+    && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
+#  define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_REF_NUM_ARGS,<boost/detail/ref_iterate.hpp>))
+#  include BOOST_PP_ITERATE()
+# endif 
 
 protected:
-#if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
+# if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
   explicit reference_wrapper_without_result_type(T& t) : t_(&t) {}
-#else
+# else
   explicit reference_wrapper_without_result_type(T& t) : t_(addressof(t)) {}
-#endif
+# endif
 
 private:
   T* t_;
 };
 
-#ifndef BOOST_NO_PARTIAL_SPECIALIZATION
+# ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 template<typename T>
 class reference_wrapper_with_result_type
 {
@@ -77,15 +86,17 @@ public:
 
   result_type operator()() const { return get()(); }
 
-#define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_REF_NUM_ARGS,<boost/detail/ref_iterate.hpp>))
-#include BOOST_PP_ITERATE()
+#  if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
+#   define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_REF_NUM_ARGS,<boost/detail/ref_iterate.hpp>))
+#   include BOOST_PP_ITERATE()
+#  endif 
 
 protected:
-#if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
+#  if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
   explicit reference_wrapper_with_result_type(T& t) : t_(&t) {}
-#else
+#  else
   explicit reference_wrapper_with_result_type(T& t) : t_(addressof(t)) {}
-#endif
+#  endif
 
 private:
   T* t_;
@@ -105,7 +116,7 @@ class reference_wrapper_impl :
 protected:
   reference_wrapper_impl(T& t) : inherited(t) {}
 };
-#else
+# else
 template<typename T>
 class reference_wrapper_impl : public reference_wrapper_without_result_type<T>
 {
@@ -114,7 +125,7 @@ class reference_wrapper_impl : public reference_wrapper_without_result_type<T>
 protected:
   reference_wrapper_impl(T& t) : inherited(t) {}
 };
-#endif
+# endif
 
 } } // end namespace detail::ref
 
