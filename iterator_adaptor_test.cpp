@@ -83,8 +83,8 @@ main()
       x[k] = k;
     std::copy(x, x + N, y);
 
-    for (int k = 0; k < N; ++k)
-      x[k] = x[k] * 2;
+    for (int k2 = 0; k2 < N; ++k2)
+      x[k2] = x[k2] * 2;
 
     boost::transform_iterator<mult_functor, int*>::type i(y, mult_functor(2));
     boost::random_access_iterator_test(i, N, x);
