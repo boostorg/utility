@@ -1,4 +1,4 @@
-// Copyright 2003 © The Trustees of Indiana University.  All rights reserved.
+// Copyright 2003 © The Trustees of Indiana University.
 
 // Boost Software License - Version 1.0 - August 17th, 2003
 
