@@ -384,8 +384,13 @@ main()
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         , dummyT
 #endif
-        >::type filter_iter;
-    
+        > filter_iter_gen;
+
+#ifndef __BORLANDC__
+    typedef filter_iter_gen::type filter_iter;
+#else
+# define filter_iter filter_iter_gen::type // Borland has a problem with the above
+#endif
     filter_iter i(array, filter_iter::policies_type(one_or_four(), array + N));
     boost::forward_iterator_test(i, dummyT(1), dummyT(4));
 
@@ -435,8 +440,8 @@ main()
     boost::forward_iterator_archetype<dummyT> forward_iter;
     typedef boost::iterator_adaptor<boost::forward_iterator_archetype<dummyT>,
       boost::default_iterator_policies,
-      dummyT, const dummyT&, const dummyT*, 
-      std::forward_iterator_tag, std::ptrdiff_t> adaptor_type;
+      dummyT, const dummyT&, 
+      std::forward_iterator_tag, std::ptrdiff_t, const dummyT*> adaptor_type;
     adaptor_type i(forward_iter);
     if (0) // don't do this, just make sure it compiles
       assert((*i).m_x == i->foo());      
@@ -446,8 +451,8 @@ main()
     boost::input_iterator_archetype<dummyT> input_iter;
     typedef boost::iterator_adaptor<boost::input_iterator_archetype<dummyT>,
       boost::default_iterator_policies,
-      dummyT, const dummyT&, const dummyT*, 
-      std::input_iterator_tag, std::ptrdiff_t> adaptor_type;
+      dummyT, const dummyT&, 
+      std::input_iterator_tag, std::ptrdiff_t, const dummyT*> adaptor_type;
     adaptor_type i(input_iter);
     if (0) // don't do this, just make sure it compiles
       assert((*i).m_x == i->foo());      
