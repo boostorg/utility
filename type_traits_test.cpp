@@ -5,6 +5,8 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 
 /* Release notes:
+   31st July 2000:
+      Added extra tests for is_empty, is_convertible, alignment_of.
    23rd July 2000:
       Removed all call_traits tests to call_traits_test.cpp
       Removed all compressed_pair tests to compressed_pair_tests.cpp
@@ -570,7 +572,12 @@ int main()
    align_test(char);
    align_test(double);
    align_test(int[4]);
-   //align_test(int&);
+   align_test(int(*)(int));
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+   align_test(char&);
+   align_test(char (&)(int));
+   align_test(char(&)[4]);
+#endif
    align_test(int*);
    //align_test(const int);
    align_test(VB);
