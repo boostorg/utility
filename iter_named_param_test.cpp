@@ -13,9 +13,6 @@
 #include <boost/pending/iterator_tests.hpp>
 #include <boost/static_assert.hpp>
 
-class bar { };
-void foo(bar) { }
-
 int
 main()
 {
