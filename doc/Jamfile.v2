@@ -1,6 +1,0 @@
-project boost-sandbox/utility/doc ;
-import boostbook ;
-import doxygen ;
-
-doxygen reference : ../../../boost/tribool.hpp : <prefix>boost ;
-boostbook tribool : tribool.boostbook ;
