@@ -214,7 +214,7 @@ struct iterator_adaptor;
         particular, the result type of <tt>operator*()</tt>.<br>
          <b>Default:</b> If <tt>Value</tt> is supplied, <tt>Value&amp;</tt> is
         used. Otherwise
-        <tt>std::iterator_traits&lt;BaseType&gt;::reference</tt> is used.
+        <tt>std::iterator_traits&lt;BaseType&gt;::reference</tt> is used. <a href="#7">[7]</a>
 
       <tr>
         <td><tt>Pointer</tt> 
@@ -222,7 +222,7 @@ struct iterator_adaptor;
         <td>The <tt>pointer</tt> type of the resulting iterator, and in
         particular, the result type of <tt>operator-&gt;()</tt>.<br>
          <b>Default:</b> If <tt>Value</tt> was supplied, then <tt>Value*</tt>,
-        otherwise <tt>std::iterator_traits&lt;BaseType&gt;::pointer</tt>.
+        otherwise <tt>std::iterator_traits&lt;BaseType&gt;::pointer</tt>. <a href="#7">[7]</a>
 
       <tr>
         <td><tt>Category</tt> 
@@ -883,6 +883,14 @@ bool operator==(const iterator_adaptor&lt;B1,P,V1,R1,P1,C,D&gt;&amp;,
     int i = 3;
     *x = i;
 </pre>
+
+    <p><a name="7">[7]</a>
+    If you are using a compiler that does not have a version of
+    <tt>std::iterator_traits</tt> that works for pointers (i.e., if your
+    compiler does not support partial specialization) then if the
+    <tt>Base</tt> type is a const pointer, then the correct defaults
+    for the <tt>reference</tt> and <tt>pointer</tt> types can not be
+    deduced. You must specify these types explicitly.
 
     <hr>
 
