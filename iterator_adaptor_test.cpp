@@ -86,7 +86,9 @@ main()
     for (int k2 = 0; k2 < N; ++k2)
       x[k2] = x[k2] * 2;
 
-    boost::transform_iterator<mult_functor, int*>::type i(y, mult_functor(2));
+    boost::transform_iterator<mult_functor, int*,
+      boost::iterator<std::random_access_iterator_tag,int> >::type
+      i(y, mult_functor(2));
     boost::random_access_iterator_test(i, N, x);
   }
   // Test indirect_iterator
@@ -96,7 +98,11 @@ main()
       ptr[k] = array + k;
     
     typedef dummyT* DummyPtr;
-    typedef boost::indirect_iterators<DummyPtr*, const DummyPtr*> Indirect;
+    typedef boost::indirect_iterators<DummyPtr*, const DummyPtr*,
+      boost::iterator<std::random_access_iterator_tag, DummyPtr>,
+      boost::iterator<std::random_access_iterator_tag, const DummyPtr>,
+      boost::iterator<std::random_access_iterator_tag, dummyT>
+      > Indirect;
     Indirect::iterator i = ptr;
     boost::random_access_iterator_test(i, N, array);
 
@@ -111,7 +117,10 @@ main()
     std::copy(array, array + N, reversed);
     std::reverse(reversed, reversed + N);
     
-    typedef boost::reverse_iterators<dummyT*, const dummyT*> Reverse;
+    typedef boost::reverse_iterators<dummyT*, const dummyT*,
+      boost::iterator<std::random_access_iterator_tag,dummyT>,
+      boost::iterator<std::random_access_iterator_tag,const dummyT>
+      > Reverse;
     Reverse::iterator i = reversed + N;
     boost::random_access_iterator_test(i, N, array);
 
