@@ -1,3 +1,6 @@
+Executing ssh-askpass to query the password...
+Warning: Remote host denied X11 forwarding, perhaps xauth program could not be run on the server side.
+
 \documentclass{netobjectdays}
 
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}}
@@ -573,20 +576,28 @@ code for our previous example:
 % I wonder whether this section should be a footnote, stricken, 
 % cleaned up, or I'm nuts.
 
-An alternative solution to using an object generator function would
-have been to give \iteratoradaptor\ a templated constructor accepting
-arbitrary arguments. The arguments would then be passed as a
-heterogeneous value list~\cite{TMPW00:Eisenecker} to the policies
-class. This scheme would remove the need for object generating
-functions but would increase the complexity of the implementation and
-the compile time. For a low-level component such as an iterator
-adaptor we felt that simplicity and compile-time were more important
-than implementer convenience.
+%
+% This really isn't a good alternative because you would still
+% have to write out the iterator type, which is the main reason
+% for having the object generator functions. -JGS
+%
+
+% An alternative solution to using an object generator function would
+% have been to give \iteratoradaptor\ a templated constructor accepting
+% arbitrary arguments. The arguments would then be passed as a
+% heterogeneous value list~\cite{TMPW00:Eisenecker} to the policies
+% class. This scheme would remove the need for object generating
+% functions but would increase the complexity of the implementation and
+% the compile time. For a low-level component such as an iterator
+% adaptor we felt that simplicity and compile-time were more important
+% than implementer convenience.
+
+
 
 \subsection{Example Use of the Transform Iterator Adaptor}
 
-This example shows how a transform iterator can be used to
-negate the numbers over which it iterates.
+This example shows how a transform iterator can be used to negate the
+numbers over which it iterates.
 
 {\footnotesize
 \begin{verbatim}
