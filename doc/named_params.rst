@@ -30,10 +30,10 @@ __ ../../../index.htm
 Introduction
 ============
 
-In C++ function parameters are given meaning by their position in
-the argument list. This protocol is fine when there are few
+In C++ function arguments are given meaning by their position in
+the parameter list. This protocol is fine when there are few
 parameters with default values, but as the number of parameters
-grows, so does the inconvenience of specifying parameters in the
+grows, so does the inconvenience of passing arguments in the
 correct order, especially in the presence of default values:
 
    * It can become difficult for readers to understand the meaning of
@@ -41,8 +41,8 @@ correct order, especially in the presence of default values:
 
        window* w = new_window("alert", true, true, false, 77, 65);
 
-   * Since meaning is given by position, we have to choose some,
-     often arbitrary order, for parameters with default values,
+   * Since meaning is given by position, we have to choose some
+     (often arbitrary) order for parameters with default values,
      making some combinations of defaults unusable::
 
         window* new_window(
@@ -60,9 +60,9 @@ correct order, especially in the presence of default values:
             char const* name, bool border, ...
           , int width = 100, int heigh = width); // error!
 
-   * Template types can not be deduced from the default values,
-     meaning we have to resort to overloading to provide default
-     values for parameters with template type::
+   * Template types can not be deduced from the default values, so
+     we have to resort to overloading to provide default values for
+     parameters with template type::
 
         template<class T> void f(T x = 0);
 
@@ -109,19 +109,23 @@ First we define the named parameter keywords. This is done by creating
      struct value_t;
 
      namespace {
-       keyword<name_t> name;    // keyword objects
-       keyword<value_t> value;
+       boost::keyword<name_t> name;    // keyword objects
+       boost::keyword<value_t> value;
      }
 
 Placing these keyword objects in an unnamed namespace will prevent
-link errors when you declare keywords in header files.  We also
-need to create a keywords list for our function::
+link errors when you declare keywords in header files [**Note**:
+the tag types should generally *not* be declared in an unnamed
+namespace].  We also need to create a keywords list for our
+function.  These keywords should be declared in the same order as
+their corresponding parameters appear in the function's parameter
+list::
 
      struct foo_keywords
-         : keywords<
-               name_t
-             , value_t
-        >
+       : boost::keywords<
+             name_t
+           , value_t
+         >
      {};
 
 Defining the forwarding functions
