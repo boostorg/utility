@@ -259,7 +259,8 @@ public:
   typename get_result_type<Result,
                            get_result_type2<T, first_argument_type,
                                             second_argument_type> >::type
-  operator()(first_argument_type a1, second_argument_type a2) const
+  operator()(const first_argument_type& a1,
+             const second_argument_type& a2) const
   {
     return this->get()(a1, a2);
   }
@@ -316,7 +317,7 @@ public:
   using inherited::operator();
 
   typename get_result_type<Result, get_result_type1<T, argument_type> >::type
-  operator()(argument_type a1) const
+  operator()(const argument_type& a1) const
   {
     return this->get()(a1);
   }
