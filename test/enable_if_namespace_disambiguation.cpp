@@ -1,6 +1,5 @@
 //
-//    Copyright 2003 © The Trustees of Indiana University.  All rights
-//    reserved.
+//    Copyright 2003 © The Trustees of Indiana University.
 //
 //    See the file enable_if_LICENSE for licensing conditions.
 //
