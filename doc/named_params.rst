@@ -385,6 +385,16 @@ function for our example, we need only apply
              << params[value | 0] << "\n";
      }
 
+Portability
+===========
+
+Boost.NamedParams has been confirmed to work on the following compilers:
+
+   - VC6 sp5, VC7 [#norestrict]_
+   - VC7.1
+   - GCC3.3.1 (cygwin), GCC2.95.3 (cygwin)
+   - Metrowerks Codewarrior xx.xx (?)
+
 -----------------------------
 
 .. [#forwarding] One could provide overloads for ``const`` and
@@ -408,4 +418,7 @@ function for our example, we need only apply
         ...
       }
       using foo_overloads::foo;  
+
+.. [#norestrict] Restrictions doesn't work on these compilers because
+   of lack of SFINAE support.
 
