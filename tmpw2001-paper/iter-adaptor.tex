@@ -262,8 +262,8 @@ A generalized iterator is useful, but a generalized iterator
 \emph{adaptor} would be even more useful. One could then build
 specialized adaptors to generate new families of iterator instances
 based on existing iterators. In the Boost Iterator Adaptor Library,
-the \iteratoradaptor\ class template plays the roles of both Adaptor
-and Model. The behaviors of \iteratoradaptor{} instances are supplied
+the \iteratoradaptor\ class template plays the roles of both Model and
+Adaptor. The behaviors of \iteratoradaptor{} instances are supplied
 through a policies class~\cite{alexandrescu01:_modern_cpp_design}
 which allows allows users to specialize adaptation. Users go beyond
 generating new iterator types to easily generating new iterator
@@ -592,7 +592,7 @@ behavioral adaptors for existing Models. We can capture this strategy
 in the Policy Adaptor design pattern:\footnote{This is not quite the
 same as the Policy Class pattern which has been discussed previously
 in the literature~\cite{alexandrescu01:_modern_cpp_design}. The
-construction of an adaptor which can easily transforms existing Models
+construction of an adaptor which can easily transform existing Models
 into new ones is the key difference}\begin{itemize}
 
 % Jeremy, can we get a numbered list here?
