@@ -7,6 +7,7 @@
 #include <cassert>
 #include <string>
 #include <boost/type_traits/is_convertible.hpp>
+#include <iostream>
 
 namespace test
 {
@@ -29,16 +30,34 @@ namespace test
               , boost::mpl::true_
               , boost::is_convertible<boost::mpl::_, float>
             >
-        >
+      >
   {};
 
-  BOOST_NAMED_PARAMS_FUN(void, f, 0, 2, f_keywords)
+  template<class P>
+  void f_impl(P const& p)
   {
       std::string s = p[name | "bar"];
       float v = p[value | 3.f];
-      
+
       assert(s == "foo");
       assert(v == 3.f);
+  }
+ 
+  void f()
+  {
+      f_impl(f_keywords()());
+  }
+  
+  template<class A0>
+  void f(A0 const& a0, typename f_keywords::restrict<A0>::type = f_keywords())
+  {
+      f_impl(f_keywords()(a0));
+  }
+
+  template<class A0, class A1>
+  void f(A0 const& a0, A1 const& a1)
+  {
+      f_impl(f_keywords()(a0, a1));
   }
 
 } // namespace test
@@ -52,5 +71,7 @@ int main()
     f("foo");
     f("foo", 3.f);
     f(value = 3.f, name = "foo");
+
+    return 0;
 }
 
