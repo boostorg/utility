@@ -49,13 +49,15 @@ namespace test
   }
   
   template<class A0>
-  void f(A0 const& a0, typename f_keywords::restrict<A0>::type = f_keywords())
+  void f(A0 const& a0
+      , typename f_keywords::restrict<A0>::type = f_keywords())
   {
       f_impl(f_keywords()(a0));
   }
 
   template<class A0, class A1>
-  void f(A0 const& a0, A1 const& a1)
+  void f(A0 const& a0, A1 const& a1
+      , typename f_keywords::restrict<A0, A1>::type = f_keywords())
   {
       f_impl(f_keywords()(a0, a1));
   }
