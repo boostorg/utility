@@ -29,11 +29,13 @@ struct index_t : keyword<index_t>
    using keyword<index_t>::operator=;
 } index;
 
-typedef keywords<
+struct f_keywords // vc6 is happier with inheritance than with a typedef
+  : keywords<
      name_t
    , value_t
    , index_t
-> f_keywords;
+    >
+{};
 
 template<class Params>
 int f_impl(const Params& p)
@@ -77,7 +79,12 @@ int main()
    using test::index;
 
    f("foo", "bar", "baz");
+#if BOOST_MSVC == 1200  // sadly templated operator= just doesn't work.
+   f(index(56), name("foo"));
+#else 
    f(index = 56, name = "foo");
+#endif 
    //f(index = 56, name = 55); // won't compile
+   return 0;
 }
 
