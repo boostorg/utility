@@ -141,6 +141,7 @@ namespace test
 int main()
 {
    using test::f;
+   using test::f_list;
    using test::name;
    using test::value;
    using test::index;
