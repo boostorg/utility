@@ -9,6 +9,7 @@
 //  See http://www.boost.org for most recent version including documentation.
 
 //  Revision History
+//  27 June 01 Updated to changes in named parameters.
 //  08 Mar 01 Moved indirect and transform tests to separate files.
 //            (Jeremy Siek)
 //  19 Feb 01 Take adavantage of improved iterator_traits to do more tests
@@ -52,8 +53,7 @@
 #include <boost/pending/iterator_tests.hpp>
 #include <boost/pending/integer_range.hpp>
 #include <boost/concept_archetype.hpp>
-#include <stdlib.h>
-#include <vector>
+#include <cstdlib>
 #include <deque>
 #include <set>
 
@@ -96,6 +96,9 @@ struct one_or_four {
 typedef std::deque<int> storage;
 typedef std::deque<int*> pointer_deque;
 typedef std::set<storage::iterator> iterator_set;
+
+struct bar { };
+void foo(bar) { }
 
 int
 main()
@@ -306,12 +309,11 @@ main()
 #else
     typedef boost::iterator_adaptor<boost::forward_iterator_archetype<dummyT>,
       boost::default_iterator_policies,
-      boost::iterator_traits_generator
-        ::value_type<dummyT>
-        ::reference<const dummyT&>
-        ::pointer<const dummyT*> 
-        ::iterator_category<std::forward_iterator_tag>
-        ::difference_type<std::ptrdiff_t> > adaptor_type;
+      boost::value_type_is<dummyT>,
+      boost::reference_is<const dummyT&>,
+      boost::pointer_is<const dummyT*>,
+      boost::iterator_category_is<std::forward_iterator_tag>,
+      boost::difference_type_is<std::ptrdiff_t> > adaptor_type;
 #endif
     adaptor_type i(forward_iter);
     int zero = 0;
