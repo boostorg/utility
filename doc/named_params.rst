@@ -124,8 +124,8 @@ function.  These keywords should be declared in the same order as
 their corresponding parameters appear in the function's parameter
 list::
 
-     struct foo_keywords
-       : boost::keywords<
+     struct foo_parameters
+       : boost::parameters<
              name_t
            , value_t
          >
@@ -141,19 +141,19 @@ Defining the forwarding functions
 
      void foo()
      {
-         foo_impl(foo_keywords()());
+         foo_impl(foo_parameters()());
      }
 
      template<class A0>
      void foo(const A0& a0)
      {
-         foo_impl(foo_keywords()(a0));
+         foo_impl(foo_parameters()(a0));
      }
 
      template<class A0, class A1>
      void foo(const A0& a0, const A1& a1)
      {
-         foo_impl(foo_keywords()(a0, a1));
+         foo_impl(foo_parameters()(a0, a1));
      }
 
 Defining the implementation function
@@ -293,8 +293,8 @@ of ``boost::named_param``:
 
 .. parsed-literal::
 
-     struct foo_keywords
-       : boost::keywords<
+     struct foo_parameters
+       : boost::parameters<
              **boost::named_param<
                  name_t
                , mpl::false\_
@@ -312,7 +312,7 @@ Now we can add an additional optional argument to each of our
      template<class A0>
      void foo(
          const A0& a0
-       , **foo_keywords::restrict<A0>::type x = foo_keywords()**
+       , **foo_parameters::restrict<A0>::type x = foo_parameters()**
      )
      {
          foo_impl(x(a0));
@@ -321,7 +321,7 @@ Now we can add an additional optional argument to each of our
      template<class A0, class A1>
      void foo(
          const A0& a0, const A1& a1
-       , **foo_keywords::restrict<A0,A1>::type x = foo_keywords()**
+       , **foo_parameters::restrict<A0,A1>::type x = foo_parameters()**
      )
      {
          foo_impl(x(a0, a1));
@@ -372,14 +372,14 @@ Synopsis::
 
      BOOST_NAMED_PARAMS_FUN(
          return_type, function_name
-       , min_arity, max_arity, keywords_type
+       , min_arity, max_arity, parameters_type
      );
 
 To generate all the forwarding functions and the implementation
 function for our example, we need only apply
 ``BOOST_NAMED_PARAMS_FUN`` this way::
 
-     BOOST_NAMED_PARAMS_FUN(void, foo, 0, 2, foo_keywords)
+     BOOST_NAMED_PARAMS_FUN(void, foo, 0, 2, foo_parameters)
      {
          std::cout
              << p[name | "unnamed"] << " = "

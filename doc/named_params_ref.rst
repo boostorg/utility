@@ -174,7 +174,7 @@ Denotes a argument keyword. ``Tag`` is a tag class, typically an incomplete type
     };
 
     template<class K0, class K1, ..., class KN>
-    struct keywords
+    struct parameters
     {
         template<class T0, class T1, ..., class TN>
         *keyword-expression* operator()(T0 const&, T1 const&, ..., TN const&) const;
