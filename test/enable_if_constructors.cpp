@@ -30,6 +30,19 @@ struct container {
   my_value(false) {}
 };
 
+// example from Howard Hinnant (tests enable_if template members of a templated class)
+template <class charT>
+struct xstring
+{
+  template <class It>
+  xstring(It begin, It end, typename 
+	 enable_if<!is_arithmetic<It>::value>::type* = 0)
+    : data(end-begin) {}
+  
+  int data;
+};
+
+
 int test_main(int, char*[])
 {
  
@@ -38,6 +51,10 @@ int test_main(int, char*[])
 
   BOOST_TEST(!container("1").my_value);  
   BOOST_TEST(!container(static_cast<void*>(0)).my_value);  
+
+  char sa[] = "123456";
+  BOOST_TEST(xstring<char>(sa, sa+6).data == 6);
+
 
   return 0;
 }
