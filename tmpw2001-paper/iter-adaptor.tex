@@ -136,7 +136,7 @@ despite the fact that most iterators are conceptually simple.
 Perhaps the most obvious reason that implementing an iterator can
 be tedious is that there are lots of redundant operators.  That is,
 there are many operators that can be trivially defined in terms of
-other operators. For example, the post-fix \code{operator++(int)} is often best
+other operators. For example, the postfix \code{operator++(int)} is often best
 implemented in terms of prefix \code{operator++()} as shown below.
 
 {\footnotesize
@@ -349,13 +349,17 @@ implementation.
 
 \subsection{Iterator Policies Class}
 
-In the following we show an example of implementing the policies class
-for a transform iterator adaptor: an iterator that applies some
-function to the value returned by dereferencing the base iterator.
-The \code{transform\_\-iterator\_\-policies} class is templated on the
-function object type, and a function object is stored as a data member
-of the policies class.  In general, any extra state needed by the
-iterator should be stored in the policies class. The policies class
+The following example shows how to implement the policies class for a transform
+iterator adaptor: an iterator that applies some function to the value returned
+by dereferencing the base iterator.  The
+\code{transform\_\-iterator\_\-policies} class is templated on the function
+object type, and a function object is stored as a data member of the policies
+class. When adapting an underlying iterator, it is easiest to store any extra state
+needed by the resulting adapted iterator in the policies class rather than
+incorporating it into the \code{Base} type because \code{iterator\_\-adaptor}
+provides so many useful defaults when the \code{Base} type is an iterator.
+
+The policies class
 inherits from \code{default\_\-iterator\_\-policies}, which delegates
 all other operations to the base iterator. The main event of the
 \code{transform\_\-iterator\_\-policies} class is the
@@ -373,9 +377,11 @@ with any base iterator type.
     transform_iterator_policies() { }
     transform_iterator_policies(const AdaptableUnaryFunction& f)
       : m_f(f) { }
+
     template <class Reference, class BaseIterator>
     Reference dereference(type<Reference>, const BaseIterator& i) const
       { return m_f(*i); } // apply the function and return the result
+
     AdaptableUnaryFunction m_f;
   };
 \end{verbatim}
@@ -387,7 +393,7 @@ perhaps not the most elegant, but it was the most portable solution.
 
 A policies class is required to have a default constructor because the
 \code{iterator\_\-adaptor} has an instance of the policies class as a
-data-member, and iterators are required to have default constructors
+data member, and iterators are required to have default constructors
 thereby requiring the policies class to also have a default
 constructor.
 
@@ -404,15 +410,15 @@ iterator type is constructed using \code{iterator\_\-adaptor}.
 \subsection{Default Iterator Policies Class}
 
 The \code{default\_\-iterator\_\-policies} class is the mechanism that
-provides automatic delegation to the base iterator, freeing the
-iterator implementer from the tedious task of writing delegating
-functions. As above, an iterator policies class inherits from this
-class and overrides any functions that should not be delegated. The
-\code{default\_\-iterator\_\-policies} class also serves as an example
-of the iterator policies interface. There are seven member functions
-that correspond to the core iterator operations and an
-\code{initialize()} function to provide a hook for customization of
-iterator construction.
+automatically delegates operator implementations to the base iterator,
+freeing the iterator implementer from the tedious task of writing
+delegating functions. As above, an iterator policies class inherits
+from this class and overrides any functions that should not be
+delegated. The \code{default\_\-iterator\_\-policies} class also
+serves as an example of the iterator policies interface. There are
+seven member functions corresponding to the core iterator operations
+and an \code{initialize()} function which provides a hook for
+customized iterator construction.
 
 {\footnotesize
 \begin{verbatim}
@@ -532,14 +538,16 @@ iterator adaptor.
 {\footnotesize
 \begin{verbatim}
   template <class AdaptableUnaryFunction, class Iterator>
-  typename transform_iterator_generator<AdaptableUnaryFunction,
-      Iterator>::type
+  typename transform_iterator_generator<
+      AdaptableUnaryFunction, Iterator>::type
   make_transform_iterator(Iterator base,
       const AdaptableUnaryFunction& f = AdaptableUnaryFunction())
   {
     typedef typename transform_iterator_generator<AdaptableUnaryFunction,
       Iterator>::type result_t;
+
     transform_iterator_policies<AdaptableUnaryFunction> policies(f);
+
     return result_t(base, policies);
   }
 \end{verbatim}
@@ -609,7 +617,7 @@ namespace boost {
 	    class Param5 = default_argument>
   struct iterator_adaptor {
     // Deduce iterator associated types (value_type, etc.) from the
-    //   named template parameters, and resolve any defaults.
+    // named template parameters, and resolve any defaults.
   public:
     // Core operators, delegate to policies class.
     // Redundant operators, implemented in terms of the core operators.
@@ -847,7 +855,10 @@ select the appropriate type for the result of an iterator's
          && !is_convertible<Category*,std::forward_iterator_tag*>::value;
 
     typedef typename type_if<is_input_iter,
-      operator_arrow_proxy<Value>, /*else*/ Pointer>::type type;
+           operator_arrow_proxy<Value>,
+      // else
+           Pointer
+      >::type type;
   };
 \end{verbatim}
 }
@@ -869,7 +880,7 @@ the issue surrounding what the return type should be.  As mentioned in
 \code{operator[]} for there are certain situations in which this can
 cause run-time errors.
 
-Suppose the adapted iterator is reading in elements from a file and
+Suppose the base iterator is reading in elements from a file and
 caching each element as a data member of the iterator.
 
 {\footnotesize
@@ -893,7 +904,7 @@ the data member. Now consider what happens inside the
 
 {\footnotesize
 \begin{verbatim}
-template <class Iterator> class iter_adaptor {
+template <class Iterator> class iterator_adaptor {
   Iterator iter;
 public:
   reference operator[](difference_type n) const {
@@ -905,12 +916,11 @@ public:
 }
 
 \noindent The iterator addition creates a temporary iterator and the
-dereference returns a reference to a data member of this
-temporary. The result is a dangling reference being returned from
-\code{operator[]}.
+dereference returns a reference to a data member of this temporary,
+which is destroyed before \code{operator[]} returns. The result is a
+dangling reference.
 
-
-The \code{iterator\_adaptor} takes the safe route and returns the
+Boost's \code{iterator\_adaptor} takes the safe route and returns the
 result by-value. This meets the random access iterator requirements of
 the Standard, which only says that the return type must be
 ``convertible to T'',
@@ -927,15 +937,23 @@ in a generic algorithm, you can not use \code{operator[]} for
 assignment (on the left hand side) but instead must write \code{*(i +
 n) = x}.
 
-Alternatively, it would be nice to return by-reference for some
-iterators and by-value for others. However, the current
+It would be nice to return by-reference for iterators that can support
+it, and by-value for the rest. However, the current
 \code{iterator\_\-traits} does not provide enough information make the
-choice. In addition, the lack of consistency between \code{operator[]}
-and \code{operator*} will be surprising to people. Preferably an
-iterator would either return by-value for both \code{operator*} and
-\code{operator[]} or return by-reference for both.  The proposal
-in~\cite{siek01:_improved_iter_cat} would solves these problems, but
-of course that will take some time to gain acceptance.
+choice.
+
+% Jeremy: I didn't agree with this part, so commented it out
+% temporarily. I think an iterator which can return by-reference for
+% operator* should be allowed to do so, regardless of what it can do
+% for operator[]. Let's discuss.
+
+% In addition, the lack of consistency between \code{operator[]}
+% and \code{operator*} will be surprising to people. Preferably an
+% iterator would either return by-value for both \code{operator*} and
+% \code{operator[]} or return by-reference for both. 
+
+The proposal in~\cite{siek01:_improved_iter_cat} would solve this
+problem, but of course that will take some time to gain acceptance.
 
 
 \section{Conclusion}
@@ -943,9 +961,9 @@ of course that will take some time to gain acceptance.
 Constructing iterators and iterator adaptors is a common task for
 modern C++ programming. Despite the conceptual simplicity of most
 iterators, implementing {C++} Standard conforming iterators requires a
-non-trivial amount of code: some of which is challenging to get right
+non-trivial amount of code, some of which is challenging to get right
 and a lot of which is tedious. The \code{iterator\_adaptor} class that
-we present in this paper solves this problem by providing a mechanism
+we've presented solves these problem by providing a mechanism
 by which the user provides a minimal specification (by way of the
 policies class) for the iterator, and then the
 \code{iterator\_\-adaptor} takes care of most of the implementation
@@ -957,7 +975,6 @@ implementation issues to a policies class. This approach can be
 applied in situations where there is large family of components that
 share the same interface. For example, we plan on applying this design
 approach to containers and algebraic types.
-
 
 \bibliographystyle{abbrv}
 \bibliography{refs,tmpw00}
