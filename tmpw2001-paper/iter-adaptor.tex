@@ -159,7 +159,7 @@ It is often the case that an iterator adaptor changes the meaning of
 one or two operators while leaving the rest of the operators defined
 in the same way as the underlying iterator.  This is typically
 implemented with delegating functions. The following example shows an
-excerpt from an \code{indirect\_iterator} adaptor, which takes an
+excerpt from an \code{indirect\_iterator} adaptor which takes an
 iterator over pointers and creates an iterator over the things pointed
 to. The \code{operator*} is changed to dereference twice but all the
 other operators stay the same. Writing all of the delegating functions
