@@ -62,17 +62,22 @@ namespace test
       >
   {};
 
-  double value_default()
+  struct value_default
   {
-      return 666.222;
-  }
+      typedef double result_type;
+
+      double operator()() const
+      {
+          return 666.222;
+      }
+  };
 
   template<class Params>
   int f_impl(const Params& p)
   { 
       p[tester](
           p[name]
-        , p[value || &value_default ]
+        , p[value || value_default() ]
         , p[index | 999]
       );
       return 1;
