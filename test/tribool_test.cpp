@@ -1,4 +1,4 @@
-// Copyright (C) 2002 Doug Gregor (gregod@cs.rpi.edu)
+// Copyright (C) 2002-2003 Doug Gregor (gregod@cs.rpi.edu)
 //
 // Permission to copy, use, sell and distribute this software is granted
 // provided this copyright notice appears in all copies.
@@ -8,7 +8,7 @@
 //
 // This software is provided "as is" without express or implied warranty,
 // and with no claim as to its suitability for any purpose.
- 
+
 // For more information, see http://www.boost.org
 
 #include <boost/tribool.hpp>
@@ -28,10 +28,10 @@ int main()
   assert(false == x);
   assert(x != true);
   assert(true != x);
-  assert(!(x == indeterminate));
-  assert(!(indeterminate == x));
-  assert(x != indeterminate);
-  assert(indeterminate != x);
+  assert(indeterminate(x == indeterminate));
+  assert(indeterminate(indeterminate == x));
+  assert(indeterminate(x != indeterminate));
+  assert(indeterminate(indeterminate != x));
   assert(x == x);
   assert(!(x != x));
   assert(!(x && true));
@@ -44,39 +44,39 @@ int main()
   assert(true == y);
   assert(y != false);
   assert(false != y);
-  assert(!(y == indeterminate));
-  assert(!(indeterminate == y));
-  assert(y != indeterminate);
-  assert(indeterminate != y);
+  assert(indeterminate(y == indeterminate));
+  assert(indeterminate(indeterminate == y));
+  assert(indeterminate(y != indeterminate));
+  assert(indeterminate(indeterminate != y));
   assert(y == y);
   assert(!(y != y));
 
-  assert((z || !z) == indeterminate);
+  assert(indeterminate(z || !z));
   assert(indeterminate(z == true));
   assert(indeterminate(true == z));
   assert(indeterminate(z == false));
   assert(indeterminate(false == z));
-  assert(z == indeterminate);
-  assert(indeterminate == z);
-  assert(!(z != indeterminate));
-  assert(!(indeterminate != z));
-  assert((z == z) == indeterminate);
-  assert((z != z) == indeterminate);
+  assert(indeterminate(z == indeterminate));
+  assert(indeterminate(indeterminate == z));
+  assert(indeterminate(z != indeterminate));
+  assert(indeterminate(indeterminate != z));
+  assert(indeterminate(z == z));
+  assert(indeterminate(z != z));
 
   assert(!(x == y));
   assert(x != y);
-  assert((x == z) == indeterminate);
-  assert((x != z) == indeterminate);
-  assert((y == z) == indeterminate);
-  assert((y != z) == indeterminate);
+  assert(indeterminate(x == z));
+  assert(indeterminate(x != z));
+  assert(indeterminate(y == z));
+  assert(indeterminate(y != z));
 
   assert(!(x && y));
   assert(x || y);
   assert(!(x && z));
-  assert((y && z) == indeterminate);
-  assert((z && z) == indeterminate);
+  assert(indeterminate(y && z));
+  assert(indeterminate(z && z));
   assert(indeterminate(z || z));
-  assert(x || z == indeterminate);
+  assert(indeterminate(x || z));
   assert(y || z);
 
   assert(indeterminate(y && indeterminate));
@@ -89,6 +89,7 @@ int main()
   assert(indeterminate(x || indeterminate));
   assert(indeterminate(indeterminate || x));
 
+  // Test the if (z) ... else (!z) ... else ... idiom
   if (z) {
     assert(false);
   }
@@ -97,6 +98,28 @@ int main()
   }
   else {
     assert(true);
+  }
+
+  z = true;
+  if (z) {
+    assert(true);
+  }
+  else if (!z) {
+    assert(false);
+  }
+  else {
+    assert(false);
+  }
+
+  z = false;
+  if (z) {
+    assert(false);
+  }
+  else if (!z) {
+    assert(true);
+  }
+  else {
+    assert(false);
   }
 
   std::cout << "no errors detected\n";

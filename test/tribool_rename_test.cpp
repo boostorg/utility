@@ -1,4 +1,4 @@
-// Copyright (C) 2002 Doug Gregor (gregod@cs.rpi.edu)
+// Copyright (C) 2002-2003 Doug Gregor (gregod@cs.rpi.edu)
 //
 // Permission to copy, use, sell and distribute this software is granted
 // provided this copyright notice appears in all copies.
@@ -8,7 +8,7 @@
 //
 // This software is provided "as is" without express or implied warranty,
 // and with no claim as to its suitability for any purpose.
- 
+
 // For more information, see http://www.boost.org
 
 #include <boost/tribool.hpp>
@@ -30,10 +30,10 @@ int main()
   assert(false == x);
   assert(x != true);
   assert(true != x);
-  assert(!(x == maybe));
-  assert(!(maybe == x));
-  assert(x != maybe);
-  assert(maybe != x);
+  assert(maybe(x == maybe));
+  assert(maybe(maybe == x));
+  assert(maybe(x != maybe));
+  assert(maybe(maybe != x));
   assert(x == x);
   assert(!(x != x));
   assert(!(x && true));
@@ -46,39 +46,39 @@ int main()
   assert(true == y);
   assert(y != false);
   assert(false != y);
-  assert(!(y == maybe));
-  assert(!(maybe == y));
-  assert(y != maybe);
-  assert(maybe != y);
+  assert(maybe(y == maybe));
+  assert(maybe(maybe == y));
+  assert(maybe(y != maybe));
+  assert(maybe(maybe != y));
   assert(y == y);
   assert(!(y != y));
 
-  assert((z || !z) == maybe);
+  assert(maybe(z || !z));
   assert(maybe(z == true));
   assert(maybe(true == z));
   assert(maybe(z == false));
   assert(maybe(false == z));
-  assert(z == maybe);
-  assert(maybe == z);
-  assert(!(z != maybe));
-  assert(!(maybe != z));
-  assert((z == z) == maybe);
-  assert((z != z) == maybe);
+  assert(maybe(z == maybe));
+  assert(maybe(maybe == z));
+  assert(maybe(z != maybe));
+  assert(maybe(maybe != z));
+  assert(maybe(z == z));
+  assert(maybe(z != z));
 
   assert(!(x == y));
   assert(x != y);
-  assert((x == z) == maybe);
-  assert((x != z) == maybe);
-  assert((y == z) == maybe);
-  assert((y != z) == maybe);
+  assert(maybe(x == z));
+  assert(maybe(x != z));
+  assert(maybe(y == z));
+  assert(maybe(y != z));
 
   assert(!(x && y));
   assert(x || y);
   assert(!(x && z));
-  assert((y && z) == maybe);
-  assert((z && z) == maybe);
+  assert(maybe(y && z));
+  assert(maybe(z && z));
   assert(maybe(z || z));
-  assert(x || z == maybe);
+  assert(maybe(x || z));
   assert(y || z);
 
   assert(maybe(y && maybe));
@@ -91,6 +91,7 @@ int main()
   assert(maybe(x || maybe));
   assert(maybe(maybe || x));
 
+  // Test the if (z) ... else (!z) ... else ... idiom
   if (z) {
     assert(false);
   }
@@ -99,6 +100,28 @@ int main()
   }
   else {
     assert(true);
+  }
+
+  z = true;
+  if (z) {
+    assert(true);
+  }
+  else if (!z) {
+    assert(false);
+  }
+  else {
+    assert(false);
+  }
+
+  z = false;
+  if (z) {
+    assert(false);
+  }
+  else if (!z) {
+    assert(true);
+  }
+  else {
+    assert(false);
   }
 
   std::cout << "no errors detected\n";
