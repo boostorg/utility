@@ -7,7 +7,7 @@
 <META name="GENERATOR" content="hevea 1.06">
 </HEAD>
 <BODY >
-<!--HEVEA command line is: hevea enable_if_docs_for_boost.tex -->
+<!--HEVEA command line is: hevea -nosymb -noiso -pedantic -v enable_if_docs_for_boost.tex -->
 <!--HTMLHEAD-->
 <!--ENDHTML-->
 <!--PREFIX <ARG ></ARG>-->
@@ -20,7 +20,7 @@
 <img border="0" src="c++boost.gif" align="center" width="277" height="86">enable_if</h1>
 <BR>
 <BR>
-Copyright 2003 Jaakko Järvi, Jeremiah Willcock, Andrew Lumsdaine.<BR>
+Copyright 2003 Jaakko J&auml;rvi, Jeremiah Willcock, Andrew Lumsdaine.<BR>
 <BR>
 <!--TOC section Introduction-->
 
@@ -261,8 +261,8 @@ partial specializations as well.<BR>
 <H3><A NAME="htoc8">3.3</A>&nbsp;&nbsp;Lazy <TT>enable_if</TT></H3><!--SEC END -->
 
 <A NAME="sec:enable_if_lazy"></A>
-The standard is not entirely clear on how deep into nested template instantiations SFINAE applies,
-and there is variation among compilers. For example:
+In some cases it is necessary to avoid instantiating part of a
+function signature unless an enabling condition is true. For example:
 <PRE>
 
 template &lt;class T, class U&gt; class mult_traits;
@@ -293,6 +293,18 @@ operator*(const T&amp; t, const U&amp; u) { ... }
 </PRE>The second argument of <TT>lazy_enable_if</TT> must be a class type
 that defines a nested type named <TT>type</TT> whenever the first
 parameter (the condition) is true.<BR>
+<BR>
+<!--TOC paragraph Note-->
+
+<H5>Note</H5><!--SEC END -->
+
+Referring to one member type or static constant in a traits class
+causes all of the members (type and static constant) of that
+specialization to be instantiated. Therefore, if your traits classes
+can sometimes contain invalid types, you should use two distinct
+templates for describing the conditions and the type mappings. In the
+above example, <TT>is_multipliable&lt;T, U&gt;::value</TT> defines when
+<TT>mult_traits&lt;T, U&gt;::type</TT> is valid.<BR>
 <BR>
 <!--TOC subsection Compiler workarounds-->
 
@@ -367,16 +379,16 @@ Smith whose findings have influenced the library.<BR>
 
 <H2>References</H2><!--SEC END -->
 <DL COMPACT=compact><DT><A NAME="jarvi:03:cuj_arbitrary_overloading"><FONT COLOR=purple>[1]</FONT></A><DD>
-Jaakko Järvi, Jeremiah Willcock, Howard Hinnant, and Andrew Lumsdaine.
+Jaakko J&auml;rvi, Jeremiah Willcock, Howard Hinnant, and Andrew Lumsdaine.
 Function overloading based on arbitrary properties of types.
 <EM>C/C++ Users Journal</EM>, 21(6):25--32, June 2003.<BR>
 <BR>
 <DT><A NAME="jarvi:03:c++typeclasses"><FONT COLOR=purple>[2]</FONT></A><DD>
-Jaakko Järvi, Jeremiah Willcock, and Andrew Lumsdaine.
+Jaakko J&auml;rvi, Jeremiah Willcock, and Andrew Lumsdaine.
 Concept-controlled polymorphism.
-In <EM>Proceedings of Generative Programming and Component
- Engineering  (GPCE'03)</EM>, September 2003.
-To appear.<BR>
+In Frank Pfennig and Yannis Smaragdakis, editors, <EM>Generative
+ Programming and Component Engineering</EM>, volume 2830 of <EM>LNCS</EM>, pages
+ 228--244. Springer Verlag, September 2003.<BR>
 <BR>
 <DT><A NAME="vandevoorde2002:templates"><FONT COLOR=purple>[3]</FONT></A><DD>
 David Vandevoorde and Nicolai&nbsp;M. Josuttis.
@@ -390,7 +402,7 @@ Addison-Wesley, 2002.</DL>
 <hr></hr>
 
 <B>Contributed by:</B> <BR>
-Jaakko Järvi, Jeremiah Willcock and Andrew Lumsdaine<BR>
+Jaakko J&auml;rvi, Jeremiah Willcock and Andrew Lumsdaine<BR>
 <EM>{jajarvi|jewillco|lums}@osl.iu.edu</EM><BR>
 Indiana University<BR>
 Open Systems Lab
