@@ -1,77 +1,3 @@
-% Current TOC outline
-% 0 Abstract
-% 1 Introduction
-%   1.1 Redundant Operators
-%   1.2 Delegation of Operators and Type Definitions
-%   1.3 Iterator Implementation Complexities
-%     1.3.1 Constant/Mutable Iterator Interactions
-%     1.3.2 Constant/Mutable Iterator Code Duplication
-%     1.3.3 Input Iterators and operator->
-%     1.3.4 The Return Type of operator[] for Adaptors
-% 2 The Boost iterator_adaptor Class Template
-%   2.1 Iterator Policies Class
-%   2.2 Default Iterator Policies Class
-%   2.3 Iterator Type Generator
-%   2.4 Iterator Object Generator
-%   2.5 Example Use of the Transform Iterator Adaptor
-% 3 The Implementation of iterator_adaptor
-%   3.1 Deducing the Associates Types
-%     3.1.1 Defaults for the Associated Types
-%     3.1.2 Named Template Parameters
-%   3.2 Core Operators
-%   3.3 Redundant Operators
-%     3.3.1 Implementing operator-> for Input Iterators
-%     3.3.2 Implementation of operator[]
-% 4. Conclusion
-
-% Introduction/Motivation, etc. (Dave & Jeremy)
-
-% iterator policies   (Dave)
-%   default policies
-%   type<> wrapper
-% \cite{alexandrescu01:_modern_cpp_design}
-
-% iterator_comparisons base (B&N) (Jeremy) \cite{Barton94}
-%  workaround for g++ compiler bug with friend functions?
-
-% operator_array_proxy (Dave)
-
-% default pointer/reference type selection (Dave)
-
-% wrapping non-iterators (count_iterator) (Jeremy)
-
-% named template parameters (Jeremy)
-
-% operator[] return type (Dave)
-
-% the static asserts (Dave)
-
-% generators (Jeremy)
-%   type generators
-%     tempting to try to use inheritance to replace
-%        templated typedef, but that doesn't work.
-%   object generators
-
-% const/non-const interoperability (Dave)
-
-% implementing const/mutable iterators with the same class
-%   common mistake is to make the return type of operator*()
-%     depend on whether the iterator object is const/non-const.
-%     See the transform iterator in \cite{TMPW00:Weiser}
-
-% custom iterators \cite{TMPW00:Baus}
-%   generating iterators 
-%     line iterator \cite{austern99:_gener_progr_stl}
-%     constant iterator \cite{koenig97:_rumin_cpp}
-
-% reverse iterator, front_insert_iterator, back_insert_iterator,
-% insert_iterator \cite{iso98:_cpp_final_draft_standard}
-
-% view iterators
-%   \cite{TMPW00:Weiser}
-
-% future work, container adaptors
-
 \documentclass{netobjectdays}
 
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}}
@@ -211,8 +137,8 @@ in which a variety of adaptor types are enumerated.
 
  \item Several iterator adaptors from the MTL~\cite{siek99:_scitools}.
   The MTL contains a strided iterator, where each call to \code{operator++()}
-  moved the iterator ahead by some constant factor, and a 
-  scaled iterator which multiplies the dereferenced value by some
+  moves the iterator ahead by some constant factor, and a 
+  scaled iterator, which multiplies the dereferenced value by some
   constant. 
 
 \end{itemize}
@@ -289,7 +215,7 @@ iterators. In the Boost Iterator Adaptor Library, the
 \iteratoradaptor\ class template plays the roles of both an iterator
 generator and an iterator adaptor generator. The behaviors of
 \iteratoradaptor{} instances are supplied through a policies
-class~\cite{alexandrescu01:_modern_cpp_design} which allows allows
+class~\cite{alexandrescu01:_modern_cpp_design} which allows
 users to specialize adaptation. Users go beyond generating new
 iterator types to easily generating new iterator adaptor families.
 
@@ -415,14 +341,13 @@ template argument as in
 \code{policies.dereference<reference\_type>(base\_iterator)}, but that approach
 proved not to to be portable to all of the targeted compilers.}
 
-A policies class is required to have a default constructor because the
-\iteratoradaptor\ has an instance of the policies class as a
-data member, and iterators are required to have default constructors
-thereby requiring the policies class to also have a default
-constructor.
+Because all iterators are required to have default constructors and
+\iteratoradaptor\ stores an instance of the policies class as a
+data member, policies classes to be used with \iteratoradaptor\ are
+also required to have default constructors.
 
 With the policies class complete, the iterator implementer is almost
-finished: and only eleven lines of code have been written. The code
+finished, and only eleven lines of code have been written. The code
 consists of little more than the main idea of the transform iterator,
 applying a function to the result of dereferencing the base iterator.
 Next we will take a closer look at the
@@ -488,7 +413,7 @@ type. The best way to package the construction of the transform
 iterator is to create a \emph{type generator}: a class
 template whose sole purpose is to simplify the instantiation of some
 other complicated class template. It fulfills the same need as a
-template typedef would if that were part of the \Cpp\ language.  The
+template typedef would, if that were part of the \Cpp\ language.  The
 first template parameter to the generator is the type of the function
 object and the second is the base iterator type.  The following code
 shows the type generator for the transform iterator.
@@ -532,16 +457,32 @@ return type of \code{operator++} of an iterator is required to be the
 same iterator type, while in this case the return type would be
 \iteratoradaptor\ and not \code{transform\_\-iterator}.
 
-%It
-%would be possible to arrange for using inheritance by applying the
-%Barton and Nackman trick, but we felt that design 
-
 \subsection{Iterator Object Generator}
 \label{sec:iter-object-generator}
 
-The next question is how users of the transform iterator will
-construct the iterator. The \iteratoradaptor\ class has the following
-constructor.
+Even though we now have a way to easily express the type of our
+transform iterator, writing the type down at all is often more than
+it is worth. The \stlconcept{AdaptableUnaryFunction}'s type alone
+could be quite complex if it were generated using standard library
+facilities such as \code{std::bind1st}, \code{std::bind2nd}, or
+\code{std::ptr\_fun}.  Declaring the entire transform iterator type
+can be much worse. For example, suppose we wanted to multiply the
+elements of a \code{set} by 2, and append them to a \code{list}. The
+transform iterator type might be declared as follows:
+
+{\footnotesize
+\begin{verbatim}
+  typedef transform_iterator_generator<
+        std::binder2nd<std::multiplies<int> >,
+        std::set<int, std::greater<int> >::const_iterator>::type
+    int_set_doubler;
+  // to be continued...
+\end{verbatim}
+}
+
+Continuing our example, we find that the ``adapting constructor'' of
+\iteratoradaptor\ is not always well-suited to easy construction of
+specialized adaptor types. That constructor is declared as follows:
 
 {\footnotesize
 \begin{verbatim}
@@ -549,31 +490,49 @@ constructor.
 \end{verbatim}
 }
 
-There are two reasons why it is cumbersome for the user to use this
-constructor. First, to call the constructor the user needs to write
-down the exact type of the iterator adaptor. Writing down the type is
-complex, and often requires an extra line of code. If instead we
-provide an \emph{object generator} function, the type of the iterator
-adaptor need not be written down explicitly by the user.  The
-generator function deduces the type of the iterator adaptor and
-returns the new iterator adaptor object, which can then be passed
-directly to the function operating on the iterator.
+Because we stored the \stlconcept{AdaptableUnaryFunction} object
+(which may have state) inside the Policies class of our transform
+iterator, the user can't rely on the default constructor argument to
+generate the correct policies object. Instead the policies object must
+be explicitly constructed and passed to the adaptor's
+constructor:
 
-The second reason it is cumbersome, in this case, to use the
-\iteratoradaptor\ constructor, is that the policies object has to be
-explicitly constructed and passed to the iterator object.  For a
-transform iterator it would be nicer to create the new iterator based
-on the adapted iterator and the function object, thereby not exposing
-the policies class to the user.
+{\footnotesize
+\begin{verbatim}
+  // ...example (continued)
+  typedef transform_iterator_policies<
+      std::binder2nd<std::multiplies<int> > > policies;
 
-We therefore recommend that iterator implementers create an
-\emph{object generator} function for their iterator. The following is
-the generator function for the transform iterator adaptor.\footnote{
+  policies p(std::bind2nd(std::multiplies<int>(),2));
+
+  std::copy(
+    int_set_doubler(my_set.begin(), p),
+    int_set_doubler(my_set.end(), p),
+    std::back_inserter(my_list));
+\end{verbatim}
+}
+
+If every use of transform iterator required this much code, users
+would quickly give up on it and use handwritten loops
+instead. Fortunately, the \Cpp\ standard library provides a useful
+precedent.
+
+In the example above, \code{std::back\_\-inserter} is a type of
+function called an \emph{object generator} which returns an object of
+type \code{std::back\_\-insert\_\-iterator<my\_\-list>}. An object
+generator allows the user to build adapted types ``on the fly'' and
+pass them directly to functions, so that no declaration is
+needed. This idiom is especially convenient in the case of iterators,
+since so many algorithms are implemented in terms of iterator
+ranges. We therefore recommend that iterator implementers create an
+object generator for their iterators. The generator
+function for the transform iterator adaptor,
+\code{make\_\-transform\_\-iterator}, is shown below.\footnote{
 Although there is precedent in the standard for calling such an object
 generator, simply ``\code{transform\_iterator()}''
-(e.g. \code{std::back\_inserter}), the standard also uses the more
+(e.g. \code{std::back\_\-inserter}), the standard also uses the more
 explicit ``\code{make\_}'' prefix (e.g. \code{std::make\_pair()}) and
-occasionally also uses the simple name for the iterator type itself
+occasionally also reserves the simple name for the iterator type itself
 (e.g. \code{std::reverse\_iterator}).  In the end, the authors felt
 that explicit was better than implicit and decided to use the
 ``\code{make\_}'' prefix for object generators.  }
@@ -596,15 +555,34 @@ that explicit was better than implicit and decided to use the
 \end{verbatim}
 }
 
-An alternative solution to using object generating functions would be
-to have a constructor in \iteratoradaptor\ that takes arbitrary
-arguments (the constructor would be templated). The arguments would
-then be passed as a heterogeneous value list~\cite{TMPW00:Eisenecker}
-to the policies class. This would remove the need for object
-generating functions but would increase the complexity of the
-implementation and the compile time. For a low-level component such as
-an iterator adaptor we felt that simplicity and compile-time were more
-important than implementer convenience.
+With the object generator in place, we can considerably simplify the
+code for our previous example:
+
+{\footnotesize
+\begin{verbatim}
+  std::copy(
+    make_transform_iterator(my_set.begin(), 
+        std::bind2nd(std::multiplies<int>(),2)),
+    make_transform_iterator(my_set.end(), 
+        std::bind2nd(std::multiplies<int>(),2)),
+    std::back_inserter(my_list));
+\end{verbatim}
+}
+
+% Jeremy, I'm not sure I buy the arguments below. I certainly never
+% considered and rejected that approach on the basis you give ;-). 
+% I wonder whether this section should be a footnote, stricken, 
+% cleaned up, or I'm nuts.
+
+An alternative solution to using an object generator function would
+have been to give \iteratoradaptor\ a templated constructor accepting
+arbitrary arguments. The arguments would then be passed as a
+heterogeneous value list~\cite{TMPW00:Eisenecker} to the policies
+class. This scheme would remove the need for object generating
+functions but would increase the complexity of the implementation and
+the compile time. For a low-level component such as an iterator
+adaptor we felt that simplicity and compile-time were more important
+than implementer convenience.
 
 \subsection{Example Use of the Transform Iterator Adaptor}
 
@@ -651,8 +629,8 @@ in the literature~\cite{alexandrescu01:_modern_cpp_design}. The
 construction of an adaptor which can easily transform existing Models
 into new ones is the key difference}\begin{enumerate}
 
-\item First, identify the core elements of the Adaptor's public
-  interface, which will be described by a concept.  In our case, the
+\item Identify the core elements of the public
+  interface of the concept family to be modeled. In our case, the
   Adaptor will model one of the iterator concepts:
   \stlconcept{InputIterator}, \stlconcept{ForwardIterator},
   \stlconcept{BidirectionalIterator}, or
@@ -672,30 +650,14 @@ into new ones is the key difference}\begin{enumerate}
   policies class.
   
 \item Store a member of the Policies parameter in the Adaptor template
-  so that users can store additional data while taking advantage of
+  so that users can maintain additional state while taking advantage of
   default behavior delegation.
 
 \end{enumerate}
 
-While this pattern has not yet been widely tested for applicability,
-we believe it will be useful for modeling any Concept which varies
-along several axes and contains significant redundancy.
-
-% In addition, large number of iterator adaptors are now in use:
-% iterators that  that conforms to the Conceptual
-% requirements of its iterator category
-
-
-%----------
-
-
-% Automatic implementation of redundant operators
-% Default delegation to adapted iterator
-
-% complexities: 
-%   const-non const interaction
-%   const/mutable iterator distinction
-%   input iterator \code{operator->}
+We believe this design pattern is a powerful new tool for modeling any
+concept which varies along several axes and contains significant
+redundancy.
 
 \section{The Implementation of \iteratoradaptor{}}
 
@@ -766,7 +728,7 @@ iterators. For example:
 \begin{verbatim}
   template <class ForwardIterator>
   typename iterator_traits<ForwardIterator>::value_type
-  accumulate(ForwardIterator start, ForwardIterator finish)
+  sum(ForwardIterator start, ForwardIterator finish)
   {
       typedef typename
           iterator_traits<ForwardIterator>::value_type value;
