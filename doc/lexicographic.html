@@ -2,6 +2,11 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+
+<!-- TODO: 
+	- lambda interaction
+-->
+
         <title>Boost.Utility - lexicographic documentation</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
@@ -18,8 +23,8 @@
 	<a href="../../../boost/utility/lexicographic.hpp"
 	>boost/utility/lexicographic.hpp</a> and depends on no others headers. 
 	The test code is in 
-	<a href="../../../libs/utility/test/lexicographic_test.hpp"
-        >lexicographic_test.hpp</a>.
+	<a href="../../../libs/utility/test/lexicographic_test.cpp"
+        >lexicographic_test.cpp</a>.
 	</p>
 
 	<h2>Contents</h2>
@@ -33,6 +38,7 @@
 	</ul>
 
 	<h2><a name="introduction">Introduction</a></h2>
+	<p>	
 	Often one has to write comparisions which give an ordering between
 	various kinds of data. When they look in a certain 
 	specified order at one relation between two data items at a time and 
@@ -50,7 +56,64 @@
 	one can just switch the order of the arguments. Additionally, both the
 	constructor and the function call operator provide also a three argument
 	form which takes a functor for comparisions as a third argument.
- 
+ 	</p>
+	
+	<h3>Relation to <code>std::lexicographic_compare</code></h3>
+	<p>
+	The standard C++ algorithm <code>std::lexicographic_compare</code>
+	does essentially the same thing but in a different situation. It compares
+	sequences of data items of equal type. Whereas <code>boost::lexicographic</code>
+	compares individual data items of different type, and every comparison
+	must be specified explicitly by using the function call operator of the class.
+	</p>
+
+	<h3>Relation to if-else-cascades</h3>
+	<p>
+	<b>Advantages</b><br>
+	<ul>
+		<li>The order of comparisons can easily be changed.
+		<li>Single comparisons can be added or removed in one line.
+		<li>Comparisons can be split up to be computed partly in one 
+			function and partly in another by using 
+			<code>boost::lexicographic</code> as a functor.
+		<li>It documents the code in a better fashion and expresses
+			the users intention directly.
+		<li>If the comparison arguments do not need computation, there is in
+			theory no performance overhead.   
+	</ul>
+	<b>Disadvantages</b><br>
+	<ul>
+		<li>There is no short-circuiting. All arguments will be 
+	evaluated, also if
+	an earlier comparison step already gave the final result. As long as the
+	arguments are trivial there should be no performance overhead. The only 
+	way to avoid evaluation of arguments is to place every comparison step
+	in an if-statement like:
+<blockquote>
+<pre>boost::lexicographic cmp (complex_computation (a), complex_computation (b));
+if (cmp.result () == lexicographic::equivalent) 
+{
+	cmp (complex_computation (c), complex_computation (d));
+	if (cmp.result () == lexicographic::equivalent)
+	{
+		cmp (complex_computation (e), complex_computation (f));
+	}
+}
+// do something with cmp
+</pre>
+</blockquote>
+	But this construct eats up many of the advantages of using 
+	<code>boost::lexicographic</code>.
+		<li>
+	The performance of using <code>boost::lexicographic</code>, besides 
+	the lack of short-circuiting, is not negligible.
+	Tests with gcc 3.2.2 showed, that the algorithmic overhead
+	is about 40% in comparison to according to if-else-cascades.
+	Additionally gcc failed to inline everything properly, so that the 
+	resulting performance overhead was about a factor two.
+	</ul>
+	</p>
+
 	<h2><a name="examples">Examples</a></h2>
 	<p>
 	An example usage are special sorting operators, such as the lexicographic
@@ -223,11 +286,17 @@ bool operator &lt; (person const &amp;p1, person const &amp;p2)
 	<h2><a name="credits">Credits</a></h2>
 	<p>
 	The author of <code>boost::lexicographic</code> is Jan Langer (jan@langernetz.de).
-	Ideas and suggestions from Steve Cleary, David Abrahams, Gennaro Proata and Paul Bristow were used.
+	Ideas and suggestions from Steve Cleary, David Abrahams, Gennaro Proata, Paul Bristow, Daniel Frey, Daryle Walker and Brian McNamara were used.
 	</p>
 	<hr>
-	<p>August 22, 2003<br><br>
-	© Copyright Jan Langer 2003. Permission to copy, use, modify, sell and distribute this document is granted provided this copyright notice appears in all copies. This document is provided "as is" without express or implied warranty, and with no claim as to its suitability for any purpose.
-	</p>	
+	<p>
+	October 5, 2003<br>
+	<br>
+	© Copyright Jan Langer 2003<br>
+	Use, modification, and distribution is subject to the Boost Software 
+	License, Version 1.0. (See accompanying file 
+	<a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or copy at 
+	<a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a>)
+	</p>
 </body>
 </html>
