@@ -87,7 +87,7 @@
 
 \begin{document}
 
-\title{Mass Producing Iterators}
+\title{Policy Adaptors in the Boost Iterator Adaptor Library}
 
 \author{David Abrahams$^\dag$ and Jeremy Siek$^\ddag$\thanks{This work
 was partially supported by NSF grant ACI-9982205.} \\
@@ -701,11 +701,11 @@ problems discussed in the introduction were solved.
 \begin{verbatim}
 namespace boost {
   template <class Base, class Policies, 
-	    class Value = default_argument,
-	    class Reference = default_argument,
-	    class Pointer = default_argument,
-	    class Category = default_argument,
-	    class Distance = default_argument>
+            class Value = default_argument,
+            class Reference = default_argument,
+            class Pointer = default_argument,
+            class Category = default_argument,
+            class Distance = default_argument>
   struct iterator_adaptor {
     // Deduce iterator associated types (value_type, etc.) from the
     // named template parameters, and resolve any defaults.
@@ -889,7 +889,7 @@ respectively), so we can treat this as an associative list.
 {\footnotesize
 \begin{verbatim} 
   typedef pair<Param1, pair<Param2, pair<Param3, pair<Param4,
-	    pair<Param5, list_end_type> > > > > NamedParamList;
+            pair<Param5, list_end_type> > > > > NamedParamList;
 \end{verbatim} 
 }
 
