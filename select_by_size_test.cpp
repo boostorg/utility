@@ -9,7 +9,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/config.hpp>
 
-// Include "select_by_size.hpp" with BOOST_SELECT_BY_SIZE_CASES undefined.
+// Include "select_by_size.hpp" with BOOST_SELECT_BY_SIZE_MAX_CASE undefined.
 #include <boost/utility/select_by_size.hpp>
 using boost::utility::case_;
 
@@ -26,7 +26,7 @@ struct test1 {
 };
 
 // Include "select_by_size.hpp" a second time, defining more cases.
-#define BOOST_SELECT_BY_SIZE_CASES 8
+#define BOOST_SELECT_BY_SIZE_MAX_CASE 7
 #include <boost/utility/select_by_size.hpp>
 
 case_<2> helper(unsigned);
