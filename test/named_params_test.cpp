@@ -7,6 +7,14 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <cassert>
 #include <string.h>
+//#include <iostream>
+#include <boost/ref.hpp>
+/*
+BOOST_NAMED_PARAMS_FUN(int, f, 0, 3, f_keywords)
+{
+    return p[index];
+}
+*/
 
 namespace test
 {
@@ -32,21 +40,44 @@ namespace test
   struct tester_t;
   keyword<tester_t> tester;
 
+  struct X
+  {
+     X(const char*) {}
+  };
+
+  template<class T>
+  struct convertible_from
+  {
+     template<class U>
+     struct apply : boost::is_convertible<U, T>
+     {};
+  };
+
   struct f_keywords // vc6 is happier with inheritance than with a typedef
     : keywords<
           tester_t
-        , arg<name_t, boost::mpl::false_, boost::is_convertible<boost::mpl::_1, const char*> >
+          , arg<name_t, boost::mpl::false_, convertible_from<const char*> >
         , value_t
         , index_t
       >
   {};
 
+  struct value_default
+  {
+      typedef double result_type;
+     
+      double operator()() const
+      {
+         return 666.222;
+      }
+  };
+
   template<class Params>
   int f_impl(const Params& p)
-  {
+  { 
       p[tester](
           p[name]
-        , p[value | 666.222]
+        , p[value || value_default() ]
         , p[index | 999]
       );
       return 1;
@@ -90,10 +121,14 @@ namespace test
       values_t(Name const& n, Value const& v, Index const& i)
         : n(n), v(v), i(i)
       {}
-      
+
       template <class Name_, class Value_, class Index_>
       void operator()(Name_ const& n_, Value_ const& v_, Index_ const& i_) const
       {
+/*         std::cout << typeid(Name_).name() << "\n";
+         std::cout << typeid(Value_).name() << "\n";
+         std::cout << typeid(Index_).name() << "\n";
+  */       
          // vc7 fails on these assert because of constness mismatch
 //          BOOST_STATIC_ASSERT((boost::is_same<Name,Name_>::value));
           assert(equal(n, n_));
@@ -116,7 +151,6 @@ namespace test
   }
 }
 
-struct Foo { operator const char*() const { return "foo"; } };
 int main()
 {
    using test::f;
@@ -132,7 +166,7 @@ int main()
 
    f(
        test::values("foo", 666.222, 56)
-     , index = 56, name = "foo"
+     , index = boost::cref(56), name = "foo"
    );
    
    //f(index = 56, name = 55); // won't compile
