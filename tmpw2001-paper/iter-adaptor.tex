@@ -66,7 +66,6 @@ Florham Park, NJ 07932, USA \\
 
 \maketitle
 
-
 \begin{abstract}
 The iterator abstraction is one of the most commonly used in
 programming and a considerable amount of time is spent building new
@@ -214,7 +213,7 @@ types: \code{value\_\-type}, \code{reference}, \code{pointer},
 example above, the last two would be delegated to the \code{Base}
 iterator type. For many iterator adaptors, all five must be delegated.
 
-\subsection{Iterator Complexities}
+\subsection{Iterator Implementation Complexities}
 
 In addition to the tedious aspects of iterator implementation, there
 are some complexities that trip up even the most experienced of
@@ -234,7 +233,6 @@ define the following four version of \code{operator==}, along with
 corresponding versions of \code{operator!=}, and (for
 \stlconcept{RandomAccessIterator}), operators \code{<}, \code{>},
 \code{<=}, \code{>=}, and \code{-}.
-
 
 {\footnotesize
 \begin{verbatim}
@@ -463,39 +461,53 @@ actual iterator type. The best way to package the construction of the
 transform iterator is to create a \emph{type generator}, which is a
 class template whose sole purpose is to simplify the instantiation of
 some other complicated class template. It fulfills the same need as a
-templated typedef would if that were part of the {C++} language.
-The following code shows the type generator for the transform
-iterator.
+templated typedef would if that were part of the {C++} language.  The
+first template parameter to the generator is the type of the function
+object and the second is the base iterator type.  The following code
+shows the type generator for the transform iterator.
 
 {\footnotesize
 \begin{verbatim}
-  template <class AdaptableUnaryFunction, class Iterator>
+  template <class AdaptableUnaryFunction, class BaseIterator>
   struct transform_iterator_generator
   {
-    typedef typename AdaptableUnaryFunction::result_type value_type;
+    typedef typename AdaptableUnaryFunction::result_type val_t;
   public:
-    typedef iterator_adaptor<Iterator, 
+    typedef iterator_adaptor<BaseIterator, 
       transform_iterator_policies<AdaptableUnaryFunction>,
-      value_type, value_type, value_type*, std::input_iterator_tag> type;
+      iterator_category_is<std::input_iterator_tag>, 
+      value_type_is<val_t>, reference_is<val_t> > type;
   };
 \end{verbatim}
 }
 
 We use \code{iterator\_adaptor} to define the transform iterator type
 as a nested \code{typedef} inside the
-\code{transform\_iterator\_generator} class.  The first template
-parameter to the generator is the type of the function object and the
-second is the base iterator type. The remaining types specify the
-traits of the iterator: \code{value\_type}, \code{reference},
-\code{pointer}, and \code{iterator\_\-category}.  Because the function
-may return by-value, we must limit the \code{iterator\_category} to
-\code{std::input\_\-iterator\_\-tag}, and the iterator's
-\code{reference} type cannot be a true reference (the standard allows
-this for input iterators). The last template parameter of the
-\code{iterator\_adaptor} is for the \code{difference\_\-type}, which
-in this case will default to the \code{difference\_\-type} of the base
-iterator.
+\code{transform\_\-iterator\_\-generator} class. The first parameter
+to \code{iterator\_\-adaptor} is the base iterator type and the second
+is the policies class. The remaining parameters specify the iterators
+associated types and are given as \emph{named parameters}.  We will
+discuss this technique in \S\ref{sec:named-template-parameters}.
 
+The \code{iterator\_category} is set to
+\code{std::input\_\-iterator\_\-tag} because the function object may
+return by-value. For the same reason the \code{reference} type (which
+will be the return type of \code{operator*}) is set to \code{val\_t}
+(and not \code{val\_t\&}). There are two parameters that are left out:
+the \code{pointer} type defaults to \code{value\_type*} and the
+\code{difference\_\-type} defaults to the \code{difference\_\-type} of
+the base iterator.
+
+It is tempting to create a \code{transform\_\-iterator} by deriving
+from \code{iterator\_\-adaptor} (as an alternative to using the
+generator).  This approach does not work, for example, because the
+return type of \code{operator++} of an iterator is required to be the
+same iterator type, but in this case the return type would be
+\code{iterator\_\-adaptor} and not \code{transform\_\-iterator}.
+
+%It
+%would be possible to arrange for using inheritance by applying the
+%Barton and Nackman trick, but we felt that design 
 
 \subsection{Iterator Object Generator}
 \label{sec:iter-object-generator}
@@ -506,7 +518,6 @@ following constructor.
 
 {\footnotesize
 \begin{verbatim}
-  explicit
   iterator_adaptor(const Base& it, const Policies& p = Policies())
 \end{verbatim}
 }
@@ -556,7 +567,6 @@ printing the result to standard output.
   #include <algorithm>
   #include <iostream>
   #include <boost/iterator_adaptors.hpp>
-
   int main(int, char*[])
   {
     int x[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -592,14 +602,14 @@ discussed in the introduction were solved.
 \begin{verbatim}
 namespace boost {
   template <class Base, class Policies, 
-	    class Value = default_argument,
-	    class Reference = default_argument,
-	    class Pointer = default_argument,
-	    class Category = default_argument,
-	    class Distance = default_argument>
+	    class Param1 = default_argument,
+	    class Param2 = default_argument,
+	    class Param3 = default_argument,
+	    class Param4 = default_argument,
+	    class Param5 = default_argument>
   struct iterator_adaptor {
     // Deduce iterator associated types (value_type, etc.) from the
-    //   template parameters, and handle any named template parameters.
+    //   named template parameters, and resolve any defaults.
   public:
     // Core operators, delegate to policies class.
     // Redundant operators, implemented in terms of the core operators.
@@ -620,9 +630,106 @@ namespace boost {
 
 \subsection{Deducing the Associates Types}
 
-\subsubsection{Default Types}
+Iterators have five associated types: \code{value\_\-type},
+\code{reference}, \code{pointer}, \code{iterator\_\-category}, and
+\code{difference\_\-type}. Each of these types must either be supplied
+by the user, using the named parameter technique described below in
+\S\ref{sec:named-template-parameters}, or a default must be computed
+for the type.
+
+\subsubsection{Defaults for the Associated Types}
+
+The defaults for the \code{value\_type}, \code{iterator\_\-category},
+and \code{difference\_\-type} are straightforward: they are the
+respective types from the base iterator. So, for example, the default
+for the \code{value\_type} is
+\code{std::iterator\_\-traits\-<Base>::\-value\_type}.
+
+Computing the defaults for \code{reference} and \code{pointer} is a
+bit more complicated. If a \code{value\_type} is specified by the
+user, then \code{value\_type\&} and \code{value\_type*} are used for
+the \code{reference} and \code{pointer} type. Otherwise, if the
+default was used for \code{value\_type} then the \code{reference} and
+\code{pointer} types are taken from the base iterator using
+\code{std::iterator\_traits}.
+% Dave, is the above right? I'm not sure...
+
 
 \subsubsection{Named Template Parameters}
+\label{sec:named-template-parameters}
+
+The \code{iterator\_adaptor} class has five template parameters that
+specify the associated types of the iterator. Each of the parameters
+has defaults as described above, so the user may specify zero or more
+parameters. One difficulty with {C++} templates is that if a default
+is used for a parameter then all the following parameters must also be
+default. When there are a large number of parameters this becomes
+inconvenient.
+
+A solution to this problem is the idea of named parameters.  Instead
+of matching arguments to parameters based on order, the assignment of
+arguments to parameters is made explicitly by name (so the ordering no
+longer matters). The way this works for the \code{iterator\_\-adaptor}
+class is that there is a wrapper class for each parameter, for
+example:
+
+{\footnotesize
+\begin{verbatim} 
+  template <class Value> struct value_type_is {
+    typedef value_type_tag tag;
+    typedef Value type;
+  };
+\end{verbatim} 
+}
+
+Instead of passing the argument for the \code{Value} type directly to
+\code{iterator\_\-adaptor} the user passes
+\code{value\_type\_is<Value>}. The \code{iterator\_\-adaptor} now has
+five arguments for the associated types, each of which could be used
+to specify any of the actual parameters. The
+\code{iterator\_\-adaptor} must deduce which argument is for which
+parameter based on the \code{tag} type inside the wrapper.
+
+First we take all of the parameters and place them in a
+lisp-style list, using \code{std::pair} for \code{cons}. Each
+parameter wrapper has a key/value pair (the \code{tag} and \code{type}
+respectively), so we can treat this as an associative list.
+
+{\footnotesize
+\begin{verbatim} 
+  typedef pair<Param1, pair<Param2, pair<Param3, pair<Param4,
+	    pair<Param5, list_end_type> > > > > NamedParamList;
+\end{verbatim} 
+}
+
+\noindent For each parameter we perform a look-up in the associative
+list using a template meta-program utility class named
+\code{find\_param}.
+
+{\footnotesize
+\begin{verbatim} 
+  template <class AssociativeList, class Key>
+  struct find_param {
+    typedef ... type;
+  };
+\end{verbatim} 
+}
+
+\noindent So, for example, to retrieve the argument for the
+\code{value\_type} we write the following:
+
+{\footnotesize
+\begin{verbatim} 
+  typedef typename find_param<NamedParamList, value_type_tag>::type Value;
+\end{verbatim} 
+}
+
+The result of this look-up will either be the argument specified by the
+user, or if there is none, the \code{default\_argument} type. If it is
+the default, then a further step is taken to resolve what the default
+should be for the parameter. The defaults for some of the parameters
+depend on other parameters, so the order in which defaults are
+resolved is tailored to respect these dependencies.
 
 
 \subsection{Core Operators}
@@ -732,7 +839,7 @@ appropriate type for the result of an iterator's \code{operator->}:
   {
     // Is it an input iterator, or something more?
     static bool const is_input_iter
-      = is_convertible<Category*,std::input_iterator_tag*>::value
+      = is_convertible<Category*, std::input_iterator_tag*>::value
          && !is_convertible<Category*,std::forward_iterator_tag*>::value;
 
     typedef typename type_if<is_input_iter,
@@ -815,7 +922,6 @@ in a generic algorithm, you can not use \code{operator[]} for
 assignment (on the left hand side) but instead must write \code{*(i +
 n) = x}.
 
-
 Alternatively, it would be nice to return by-reference for some
 iterators and by-value for others. However, the current
 \code{iterator\_\-traits} does not provide enough information make the
@@ -826,11 +932,26 @@ iterator would either return by-value for both \code{operator*} and
 in~\cite{siek01:_improved_iter_cat} would solves these problems, but
 of course that will take some time to gain acceptance.
 
+
 \section{Conclusion}
 
-talk about how this approach generalizes to other things, containers,
-etc.
+Constructing iterators and iterator adaptors is a common task for
+modern C++ programming. Despite the conceptual simplicity of most
+iterators, implementing {C++} Standard conforming iterators requires
+is non-trivial amount of code: some of which is challenging to get
+right, and a lot of which is tedious to write. The
+\code{iterator\_adaptor} class that we present in this paper solves
+this problem by providing a mechanism by which the user provides a
+minimal specification (by way of the policies class) for the iterator,
+and then the \code{iterator\_\-adaptor} takes care of most of the
+implementation details.
 
+Taking a step back, the design approach was to create a canonical
+implementation of a concept (iterator) and then delegate the core
+implementation issues to a policies class. This approach can be
+applied in situations where there is large family of components that
+share the same interface. For example, we plan on applying this design
+approach to containers and algebraic types.
 
 
 \bibliographystyle{abbrv}
@@ -841,6 +962,6 @@ etc.
 % LocalWords:  adaptors istream ostream iter MTL InputIterator adaptor const
 % LocalWords:  RandomAccessIterator dereference interoperate Implementers tmpw
 % LocalWords:  dereferencing adaptor's lvalues iterator's instantiation typedef
-% LocalWords:  AdaptableUnaryFunction templated dereferenced lvalue
+% LocalWords:  AdaptableUnaryFunction templated dereferenced lvalue val param
 % LocalWords:  parameterization implementers combinatorial InputIterators
 % LocalWords:  Convertibility
