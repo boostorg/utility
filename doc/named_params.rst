@@ -36,16 +36,14 @@ parameters with default values, but as the number of parameters
 grows, so does the inconvenience of specifying parameters in the
 correct order, especially in the presence of default values:
 
-.. DWA please show examples of each of these as I've demonstrated below
-
-   * It can become difficult readers to understand the meaning of
+   * It can become difficult for readers to understand the meaning of
      arguments at the call site::
 
        window* w = new_window("alert", true, true, false, 77, 65);
 
    * Since meaning is given by position, we have to choose some,
-      often arbitrary order, for parameters with default values,
-      making some combinations of defaults unusable::
+     often arbitrary order, for parameters with default values,
+     making some combinations of defaults unusable::
 
         window* new_window(
             char const* name, bool border = true
@@ -56,11 +54,19 @@ correct order, especially in the presence of default values:
         window* w = new_window("alert2", movability); // error!
 
    * Default values can not depend on the values of other function
-      parameters.
+     parameters::
+
+        window* new_window(
+            char const* name, bool border, ...
+          , int width = 100, int heigh = width); // error!
 
    * Template types can not be deduced from the default values,
-      meaning we have to resort to overloading to provide default
-      values for parameters with template type.
+     meaning we have to resort to overloading to provide default
+     values for parameters with template type::
+
+        template<class T> void f(T x = 0);
+
+        f(); // error!
 
 This library is an attempt to address the problems outlined above
 by associating each parameter with a keyword identifier.  Using
@@ -80,121 +86,17 @@ argument position::
    The tutorial has to come before all the nasty details below.
    I'm going to comment on that and leave the next stuff alone
 
-``reference_wrapper<>``
-=======================
-
-Our forwarding functions need to take their parameters by const
-reference. This is because we need to be able to pass the temporaries
-created from the operator= call. Because of this, passing non-const
-references isn't possible without some help.
-
-   .. something something ?
-
-.. DWA What is "something something ?" supposed to mean?
-
-::
-
-     float x;
-     foo(value = boost::ref(x));
-
-Will be unwrapped, so the type of ``value`` will actually be ``float&``.
-
-
-SFINAE restrictions
-===================
-
-Sometimes it is necessary to restrict the types on which the forwarding
-functions can be instantiated. This can be accomplished in C++ by using
-SFINAE [#sfinae]_. If type substitution
-during the instantiation of a function template results in an invalid
-type, no compilation error is emitted; instead the overload is removed
-from the overload set. By producing an invalid type in the function
-signature depending on the result of some condition, whether or not an
-overload is considered during overload resolution can be controlled.
-This technique is formalized in the ``enable_if`` pattern [#enable_if]_.
-
-.. [#sfinae] Substitution Failure Is Not An Error.  Some discussion
-   of SFINAE goes here.
-
-.. [#enable_if] Some discussion of ``enable_if`` goes here.
-
-  .. more?
-
-.. DWA What about tutorial for your macro?
-
-Let's say we want to restrict our ``foo()`` so that the ``name``
-parameter must be convertible to ``const char*``.
-
-::
-
-     template<
-         class Keyword
-       , class HasDefaultValue
-       , class Predicate
-     >
-     struct arg;
-
-::
-
-     struct foo_keywords
-         : keywords<
-               arg<
-                   name_t
-                 , mpl::false_
-                 , is_convertible<mpl::_
-                 , const char*>
-               >
-             , value_t
-           >
-     {};
-
-::
-
-     template<class A0>
-     void foo(const A0& a0
-        , foo_keywords::restrict<A0>::type x = foo_keywords())
-     {
-         foo_impl(x(a0));
-     }
-
-     template<class A0, class A1>
-     void foo(const A0& a0, const A1& a1
-        , foo_keywords::restrict<A0,A1>::type x = foo_keywords())
-     {
-         foo_impl(x(a0, a1));
-     }
-
-  .. something more?
-
-
-``BOOST_NAMED_PARAMS_FUN()``
-============================
-
-To reduce the work needed to write functions which has named parameters,
-we supply a macro that generates the boilerplate code.
-
-Synopsis::
-
-     BOOST_NAMED_PARAMS(
-         return_type, function_name, keywords_type
-       , min_arity, max_arity
-     );
-
-Applying this to our original example, we get::
-
-     BOOST_NAMED_PARAMS_FUN(void, foo, foo_keywords, 0, 2)
-     {
-         std::cout
-             << parms[name | "unnamed"] << " = "
-             << parms[value | 0] << "\n";
-     }
-
-
 Tutorial 
 ========
 
 .. DWA you need some set-up here describing the problem you're
    going to solve.
+
+This example shows how to wrap a function::
+
+    void foo(char const* name, float value);
+
+to give both parameters names and default values.
 
 Defining the keywords
 ---------------------
@@ -219,7 +121,7 @@ need to create a keywords list for our function::
          : keywords<
                name_t
              , value_t
-     	  >
+        >
      {};
 
 Defining the forwarding functions
@@ -302,4 +204,113 @@ Now compiles, and prints::
      unnamed = 0
      bar = 0
      unnamed = 3
+
+``reference_wrapper<>``
+=======================
+
+Our forwarding functions need to take their parameters by const
+reference. This is because we need to be able to pass the temporaries
+created from the operator= call. Because of this, passing non-const
+references that aren't bound to a keyword isn't possible without some help.
+
+.. DWA What is "something something ?" supposed to mean?
+.. It's was suppose to mean "more?"..
+
+::
+
+    float x;
+    foo(value = x); // float&
+    foo(x); // type is float const&, need help!
+    foo(ref(x)); // type is float&
+
+Instances of boost::reference_wrapper<> will un unwrapped to it's held
+reference type.
+
+SFINAE restrictions
+===================
+
+Sometimes it is necessary to restrict the types on which the forwarding
+functions can be instantiated. This can be accomplished in C++ by using
+SFINAE [#sfinae]_. If type substitution
+during the instantiation of a function template results in an invalid
+type, no compilation error is emitted; instead the overload is removed
+from the overload set. By producing an invalid type in the function
+signature depending on the result of some condition, whether or not an
+overload is considered during overload resolution can be controlled.
+This technique is formalized in the ``enable_if`` pattern [#enable_if]_.
+
+.. [#sfinae] Substitution Failure Is Not An Error.  Some discussion
+   of SFINAE goes here.
+
+.. [#enable_if] Some discussion of ``enable_if`` goes here.
+
+  .. more?
+
+.. DWA What about tutorial for your macro?
+   Daniel: Under BOOST_NAMED_PARAMS_FUN(), should it be moved?
+           or do we need a more verbose tutorial?
+
+Let's say we want to restrict our ``foo()`` so that the ``name``
+parameter must be convertible to ``const char*``.
+
+::
+
+     template<
+         class Keyword
+       , class HasDefaultValue
+       , class Predicate
+     >
+     struct arg;
+
+::
+
+     struct foo_keywords
+         : keywords<
+               arg<
+                   name_t
+                 , mpl::false_
+                 , is_convertible<mpl::_
+                 , const char*>
+               >
+             , value_t
+           >
+     {};
+
+::
+
+     template<class A0>
+     void foo(const A0& a0
+        , foo_keywords::restrict<A0>::type x = foo_keywords())
+     {
+         foo_impl(x(a0));
+     }
+
+     template<class A0, class A1>
+     void foo(const A0& a0, const A1& a1
+        , foo_keywords::restrict<A0,A1>::type x = foo_keywords())
+     {
+         foo_impl(x(a0, a1));
+     }
+
+``BOOST_NAMED_PARAMS_FUN()``
+============================
+
+To reduce the work needed to write functions which has named parameters,
+we supply a macro that generates the boilerplate code.
+
+Synopsis::
+
+     BOOST_NAMED_PARAMS(
+         return_type, function_name, keywords_type
+       , min_arity, max_arity
+     );
+
+Applying this to our original example, we get::
+
+     BOOST_NAMED_PARAMS_FUN(void, foo, foo_keywords, 0, 2)
+     {
+         std::cout
+             << parms[name | "unnamed"] << " = "
+             << parms[value | 0] << "\n";
+     }
 
