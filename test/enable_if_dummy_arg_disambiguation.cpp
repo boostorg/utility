@@ -15,6 +15,7 @@
 #include <boost/type_traits/is_arithmetic.hpp>
 
 using boost::enable_if;
+using boost::disable_if;
 using boost::is_arithmetic;
 
 template <int N> struct dummy {
@@ -26,7 +27,7 @@ typename enable_if<is_arithmetic<T>, bool>::type
 arithmetic_object(T t, dummy<0> = 0) { return true; }
 
 template<class T>
-typename enable_if<!is_arithmetic<T>, bool>::type
+typename disable_if<is_arithmetic<T>, bool>::type
 arithmetic_object(T t, dummy<1> = 0) { return false; }
 
 
