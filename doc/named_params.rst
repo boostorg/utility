@@ -161,9 +161,9 @@ Defining the implementation function
 ::
 
      template<class Params>
-     void foo_impl(const Params& parms)
+     void foo_impl(const Params& params)
      {
-         std::cout << parms[name] << " = " << parms[value] << "\n";
+         std::cout << params[name] << " = " << params[value] << "\n";
      }
 
 That's it. The user calls the ``foo()`` forwarding functions, with
@@ -189,11 +189,11 @@ All fails.
 Fortunatly, adding default values to parameters is easy::
 
      template<class Params>
-     void foo_impl(const Params& parms)
+     void foo_impl(const Params& params)
      {
          std::cout
-             << parms[name | "unnamed"] << " = "
-             << parms[value | 0] << "\n";
+             << params[name | "unnamed"] << " = "
+             << params[value | 0] << "\n";
      }
 
 We are using ``operator|`` to denote the default value of a named
@@ -253,15 +253,15 @@ don't meet their needs.
 
 __ http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-defects.html#225
 
-This overload control can be accomplished in C++ by taking
+This sort of overload control can be accomplished in C++ by taking
 advantage of SFINAE_ (Substitution Failure Is Not An Error). If
 type substitution during the instantiation of a function template
 results in an invalid type, no compilation error is emitted;
 instead the overload is removed from the overload set. By producing
 an invalid type in the function signature depending on the result
 of some condition, whether or not an overload is considered during
-overload resolution can be controlled.  This technique is
-formalized in the |enable_if| utility.
+overload resolution can be controlled.  The technique is formalized
+in the |enable_if| utility.
 
 The named parameters library provides built-in SFINAE support
 through the following class template::
@@ -333,25 +333,33 @@ when the ``name`` argument is not convertible to ``const char*``.
 Lazy Evaluation of Defaults
 ===========================
 
-Sometimes computation of the default value can be expensive, and
-best avoided if the user does supply the argument. For this the
-default value can be lazily evaluated:
+If computing an argument's default value is expensive, it's best
+avoided when the argument is supplied by the user. In that case,
+the default value can be lazily evaluated using the following
+syntax:
 
 .. parsed-literal::
 
-    parms[value || **nullary_function**];
+    params[keyword **|| nullary_function**];
 
-Where nullary_function is an Adaptable Nullary Function object
-which defines it's return type with a nested ``result_type``
-typedef. On complient compilers a pointer to a nullary function
-can be passed directly, on others it needs to be wrapped.
+``nullary_function`` must be a function object that is callable
+without arguments, and that indicates its return type via a nested
+``result_type``.  Boost.Bind can be used to produce an appropriate
+function object from a regular function pointer::
 
-.. parsed-literal::
+  // expensive default computation function
+  float default_span(float x, float theta);
 
-    int default_value();
-
-    parms[value || default_value]; // OK! on complient compilers
-    parms[value || boost::bind(default_value) ]; // OK!
+  // implementation of bar()
+  template <class Params>
+  void bar_impl(Params const& params)
+  {
+      // Extract arguments
+      float x_ = params[x];
+      float theta_ = params[theta | pi];
+      float span = params[span || boost::bind(default_span, x_, theta_)];
+      ...
+  }
 
 Automatic Overload Generation
 =============================
@@ -368,13 +376,13 @@ Synopsis::
 
 To generate all the forwarding functions and the implementation
 function for our example, we need only apply
-``BOOST_NAMED_PARAMS_FUN`` like this::
+``BOOST_NAMED_PARAMS_FUN`` this way::
 
      BOOST_NAMED_PARAMS_FUN(void, foo, foo_keywords, 0, 2)
      {
          std::cout
-             << parms[name | "unnamed"] << " = "
-             << parms[value | 0] << "\n";
+             << params[name | "unnamed"] << " = "
+             << params[value | 0] << "\n";
      }
 
 -----------------------------
