@@ -52,10 +52,10 @@ int main()
   assert(!(y != y));
 
   assert((z || !z) == indeterminate);
-  assert(!(z == true));
-  assert(!(true == z));
-  assert(!(z == false));
-  assert(!(false == z));
+  assert(indeterminate(z == true));
+  assert(indeterminate(true == z));
+  assert(indeterminate(z == false));
+  assert(indeterminate(false == z));
   assert(z == indeterminate);
   assert(indeterminate == z);
   assert(!(z != indeterminate));
@@ -88,6 +88,16 @@ int main()
   assert(y || indeterminate);
   assert(indeterminate(x || indeterminate));
   assert(indeterminate(indeterminate || x));
+
+  if (z) {
+    assert(false);
+  }
+  else if (!z) {
+    assert(false);
+  }
+  else {
+    assert(true);
+  }
 
   std::cout << "no errors detected\n";
   return 0;
