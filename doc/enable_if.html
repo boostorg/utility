@@ -304,8 +304,6 @@ condition in an enabler (even though the functions could never be ambiguous). Fo
 some compilers (e.g. GCC 3.2) diagnose the following two functions as ambiguous:
 <PRE>
 
-template &lt;class T&gt; struct dummy { dummy(int) {} };
-
 template &lt;class T&gt;
 typename enable_if&lt;boost::is_arithmetic&lt;T&gt;, T&gt;::type 
 foo(T t);
