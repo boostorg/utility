@@ -211,8 +211,8 @@ iterator types from scratch), but a generalized iterator
 \emph{adaptor} is even more useful. An adaptor generator allows one to
 build whole families of iterator instances based on existing
 iterators. In the Boost Iterator Adaptor Library, the
-\iteratoradaptor\ class template plays the roles of both an iterator
-generator and an iterator adaptor generator. The behaviors of
+\iteratoradaptor\ class template plays the roles of both iterator
+generator and iterator adaptor generator. The behaviors of
 \iteratoradaptor{} instances are supplied through a policies
 class~\cite{alexandrescu01:_modern_cpp_design} which allows
 users to specialize adaptation. Users go beyond generating new
@@ -883,7 +883,7 @@ list using a template meta-program utility class named
 \end{verbatim} 
 }
 
-\noindent So, for example, to retrieve the argument for the
+\noindent For example, to retrieve the argument for the
 \valuetype\ we write the following:
 
 {\footnotesize
@@ -986,6 +986,32 @@ templates (as shown in the previous Subsection). This allows the same
 function template to provide the implementation of all the
 combinations of constant and mutable iterator interaction.
 
+Many of the specialized adaptors in the Boost Iterator Adaptor Library supply an
+additional type generator (as described in \S\ref{sec:iter-type-generator}) for
+matched pairs of constant and mutable iterators. For example, an ``indirect
+container'' using a matched pair of indirect iterators might be declared as
+follows:
+
+% jeremy, I didn't want to do this, but it was breaking this tiny example
+% across pages. Do you know a better way to stop that?
+% \newpage\
+% when I added this, it broke an example at the end of the next page across
+% pages, so I just bailed.
+
+{\footnotesize
+\begin{verbatim}
+  template <class BaseContainer>
+  struct indirect
+  {
+      typedef typename BaseContainer::iterator base_iterator;
+      typedef indirect_iterator_pair_generator<base_iterator> iterator_generator;
+
+      typedef typename iterator_generator::iterator iterator;
+      typedef typename iterator_generator::const_iterator const_iterator;
+      ...
+  };
+\end{verbatim}
+}
 
 \subsection{Redundant Operators}
 
@@ -1181,11 +1207,10 @@ policies class) for the iterator, and then the
 \iteratoradaptor\ takes care of most of the implementation
 details.
 
-Taking a step back, the design approach was to create a canonical
-implementation of a concept (iterator) and then delegate the core
-implementation issues to a policies class. This approach can be
-applied in situations where there is large family of components that
-share the same interface. For example, we plan on applying this design
+Taking a step back, the Policy Adaptor design pattern allowed us to easily
+produce both new models of the iterator concept, and new iterator adaptors. This
+strategy can be applied in situations where there is large family of components
+that share the same interface. For example, we plan on applying this design
 approach to containers and algebraic types.
 
 \bibliographystyle{abbrv}
