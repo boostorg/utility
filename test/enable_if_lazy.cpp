@@ -62,12 +62,14 @@ typename lazy_enable_if_c<
 	  mult_traits<T, U> >::type
 mult(const T& x, const U& y) {return x * y;}
 
+double mult(int i, double d) { return (double)i * d; }
 
 int test_main(int, char*[])
 {
  
   BOOST_TEST(mult(1, 2) == 2);
   BOOST_TEST(mult(1.0, 3.0) == 3.0);
+  BOOST_TEST(mult(1, 3.0) == 3.0);
 
   return 0;
 }
