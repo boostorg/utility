@@ -20,11 +20,11 @@ using boost::is_arithmetic;
 
 struct container {
   template <class T>
-  typename enable_if<is_arithmetic<T>::value, bool>::type
+  typename enable_if<is_arithmetic<T>, bool>::type
   arithmetic_object(const T&, const int* /* disambiguate */ = 0) {return true;}
 
   template <class T>
-  typename disable_if<is_arithmetic<T>::value, bool>::type
+  typename disable_if<is_arithmetic<T>, bool>::type
   arithmetic_object(const T&) {return false;}
 };
 

@@ -1,6 +1,6 @@
 CXX = g++ -I${HOME}/boost -I../../..
 
-all: enable_if_constructors.run enable_if_dummy_arg_disambiguation.run enable_if_namespace_disambiguation.run enable_if_no_disambiguation.run enable_if_lazy.run enable_if_member_templates.run enable_if_partial_specializations.run
+all: enable_if_constructors.run enable_if_dummy_arg_disambiguation.run enable_if_namespace_disambiguation.run enable_if_no_disambiguation.run enable_if_lazy.run enable_if_member_templates.run enable_if_partial_specializations.run enable_if_lazy_test.run
 
 enable_if_constructors.run: enable_if_constructors.exe
 	./enable_if_constructors.exe
@@ -51,5 +51,14 @@ enable_if_partial_specializations.run: enable_if_partial_specializations.exe
 enable_if_partial_specializations.exe: enable_if_partial_specializations.cpp
 	$(CXX) -o enable_if_partial_specializations.exe enable_if_partial_specializations.cpp
 
+
+enable_if_lazy_test.run: enable_if_lazy_test.exe
+	./enable_if_lazy_test.exe
+	touch enable_if_lazy_test.run
+
+enable_if_lazy_test.exe: enable_if_lazy_test.cpp
+	$(CXX) -o enable_if_lazy_test.exe enable_if_lazy_test.cpp
+
+
 clean:
-	-rm -f enable_if_constructors.run enable_if_dummy_arg_disambiguation.run enable_if_lazy.run enable_if_member_templates.run enable_if_namespace_disambiguation.run enable_if_no_disambiguation.run enable_if_partial_specializations.run enable_if_constructors.exe enable_if_dummy_arg_disambiguation.exe enable_if_lazy.exe enable_if_member_templates.exe enable_if_namespace_disambiguation.exe enable_if_no_disambiguation.exe enable_if_partial_specializations.exe
+	-rm -f enable_if_constructors.run enable_if_dummy_arg_disambiguation.run enable_if_lazy.run enable_if_member_templates.run enable_if_namespace_disambiguation.run enable_if_no_disambiguation.run enable_if_partial_specializations.run enable_if_lazy_test.run enable_if_constructors.exe enable_if_dummy_arg_disambiguation.exe enable_if_lazy.exe enable_if_member_templates.exe enable_if_namespace_disambiguation.exe enable_if_no_disambiguation.exe enable_if_partial_specializations.exe enable_if_lazy_test.exe

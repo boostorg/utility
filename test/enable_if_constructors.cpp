@@ -22,11 +22,11 @@ struct container {
   bool my_value;
 
   template <class T>
-  container(const T&, const typename enable_if<is_arithmetic<T>::value, T>::type * = 0):
+  container(const T&, const typename enable_if<is_arithmetic<T>, T>::type * = 0):
   my_value(true) {}
 
   template <class T>
-  container(const T&, const typename disable_if<is_arithmetic<T>::value, T>::type * = 0):
+  container(const T&, const typename disable_if<is_arithmetic<T>, T>::type * = 0):
   my_value(false) {}
 };
 
@@ -36,7 +36,7 @@ struct xstring
 {
   template <class It>
   xstring(It begin, It end, typename 
-	 enable_if<!is_arithmetic<It>::value>::type* = 0)
+	 disable_if<is_arithmetic<It> >::type* = 0)
     : data(end-begin) {}
   
   int data;

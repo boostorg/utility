@@ -22,11 +22,11 @@ template <int N> struct dummy {
 };
 
 template<class T>
-typename enable_if<is_arithmetic<T>::value, bool>::type
+typename enable_if<is_arithmetic<T>, bool>::type
 arithmetic_object(T t, dummy<0> = 0) { return true; }
 
 template<class T>
-typename enable_if<!is_arithmetic<T>::value, bool>::type
+typename enable_if<!is_arithmetic<T>, bool>::type
 arithmetic_object(T t, dummy<1> = 0) { return false; }
 
 

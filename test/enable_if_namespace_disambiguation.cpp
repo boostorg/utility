@@ -10,22 +10,24 @@
 //
 
 #include <boost/test/minimal.hpp>
+#include <boost/mpl/not.hpp>
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 
 using boost::enable_if;
+using boost::mpl::not_;
 using boost::is_arithmetic;
 
 namespace A {
   template<class T>
-  typename enable_if<is_arithmetic<T>::value, bool>::type
+  typename enable_if<is_arithmetic<T>, bool>::type
   arithmetic_object(T t) { return true; }
 }
 
 namespace B {
   template<class T>
-  typename enable_if<!is_arithmetic<T>::value, bool>::type
+  typename enable_if<not_<is_arithmetic<T> >, bool>::type
   arithmetic_object(T t) { return false; }
 }
 

@@ -14,8 +14,8 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 
-using boost::enable_if;
-using boost::enable_if_lazy;
+using boost::enable_if_c;
+using boost::lazy_enable_if_c;
 using boost::is_arithmetic;
 
 // This class provides a reduced example of a traits class for computing
@@ -43,25 +43,26 @@ struct mult_traits<double, double> {
 
 // Next, a forwarding function mult() is defined.  It is enabled only when
 // mult_traits<T, U>::exists is true.  The first version, using normal
-// enable_if, works with only some compilers (it does not work in g++):
+// enable_if_c, works with only some compilers (it does not work in g++):
 
 #if 0
 template <class T, class U>
-typename enable_if<
+typename enable_if_c<
 	  mult_traits<T, U>::exists, 
 	  typename mult_traits<T, U>::type>::type
 mult(const T& x, const U& y) {return x * y;}
 #endif
 
-// An improved version that works with more compilers uses enable_if_lazy.
+// An improved version that works with more compilers uses lazy_enable_if_c.
 // This template removes compiler errors from invalid code used as an
-// argument to enable_if.
+// argument to enable_if_c.
 
 template <class T, class U>
-typename enable_if_lazy<
+typename lazy_enable_if_c<
 	  mult_traits<T, U>::exists, 
 	  mult_traits<T, U> >::type
 mult(const T& x, const U& y) {return x * y;}
+
 
 int test_main(int, char*[])
 {
