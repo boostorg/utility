@@ -72,6 +72,12 @@ namespace test
       return f_impl(f_keywords()(t, name_));
   }
 
+  template<class Params>
+  int f_list(Params const& params)
+  {
+      return f_impl(params);
+  }
+
   template <class T>
   bool equal(T const& x, T const& y)
   {
@@ -150,6 +156,12 @@ int main()
        test::values("foo", 666.222, 56)
      , index = boost::ref(x), name = "foo"
    );
+
+   f_list((
+       tester = test::values("foo", 666.222, 56)
+     , index = boost::ref(x)
+     , name = "foo"
+   ));
    
    //f(index = 56, name = 55); // won't compile
    return 0;
