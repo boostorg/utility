@@ -19,8 +19,8 @@ namespace test
   keyword<struct index_> index;
   keyword<struct tester_> tester;
 
-  struct f_keywords // vc6 is happier with inheritance than with a typedef
-    : keywords<
+  struct f_parameters // vc6 is happier with inheritance than with a typedef
+    : parameters<
           tester_
         , name_
         , value_
@@ -49,19 +49,19 @@ namespace test
   int f(Tester const& t, const Name& name_, 
       const Value& value_, const Index& index_)
   {
-      return f_impl(f_keywords()(t, name_, value_, index_));
+      return f_impl(f_parameters()(t, name_, value_, index_));
   }
 
   template<class Tester, class Name, class Value>
   int f(Tester const& t, const Name& name_, const Value& value_)
   {
-      return f_impl(f_keywords()(t, name_, value_));
+      return f_impl(f_parameters()(t, name_, value_));
   }
 
   template<class Tester, class Name>
   int f(Tester const& t, const Name& name_)
   {
-      return f_impl(f_keywords()(t, name_));
+      return f_impl(f_parameters()(t, name_));
   }
 
   template<class Params>
@@ -120,7 +120,7 @@ namespace test
       return values_t<Name,Value,Index>(n,v,i);
   }
 
-  typedef f_keywords g_keywords;
+  typedef f_parameters g_parameters;
   
   template<class Args>
   int g_impl(Args const& args)
@@ -131,13 +131,13 @@ namespace test
   template<class A0>
   int g(A0 const& a0)
   {
-      return g_impl(g_keywords(a0));
+      return g_impl(g_parameters(a0));
   }
 
   template<class A0, class A1>
   int g(A0 const& a0, A1 const& a1)
   {
-      return g_impl(g_keywords(a0, a1));
+      return g_impl(g_parameters(a0, a1));
   }
 }
 
