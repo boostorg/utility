@@ -111,7 +111,8 @@ main()
   // implementation match up.
   boost::function_requires< 
      boost::RandomAccessIteratorPoliciesConcept<
-       boost::default_iterator_policies, int*,
+       boost::default_iterator_policies,
+       boost::iterator_adaptor<int*, boost::default_iterator_policies>,
        boost::iterator<std::random_access_iterator_tag, int, std::ptrdiff_t,
                       int*, int&>
       > >();

@@ -7,6 +7,7 @@
 //  See http://www.boost.org for most recent version including documentation.
 
 //  Revision History
+//  12 Oct 2001 Put static asserts in functions for MWERSK (Dave Abrahams)
 //  04 Mar 2001 Patches for Intel C++ (Dave Abrahams)
 //  19 Feb 2001 Take advantage of improved iterator_traits to do more tests
 //              on MSVC. Reordered some #ifdefs for coherency.
@@ -84,35 +85,41 @@ template <class Iterator,
     class value_type, class difference_type, class pointer, class reference, class category>
 struct non_portable_tests
 {
-    // Unfortunately, the VC6 standard library doesn't supply these :(
-    BOOST_STATIC_ASSERT((
-        boost::is_same<
-        typename boost::detail::iterator_traits<Iterator>::pointer,
-        pointer
-        >::value));
-    
-    BOOST_STATIC_ASSERT((
-        boost::is_same<
-        typename boost::detail::iterator_traits<Iterator>::reference,
-        reference
-        >::value));
+    non_portable_tests()
+    {
+        // Unfortunately, the VC6 standard library doesn't supply these :(
+        BOOST_STATIC_ASSERT((
+            boost::is_same<
+            typename boost::detail::iterator_traits<Iterator>::pointer,
+            pointer
+            >::value));
+
+        BOOST_STATIC_ASSERT((
+            boost::is_same<
+            typename boost::detail::iterator_traits<Iterator>::reference,
+            reference
+            >::value));
+    }
 };
 
 template <class Iterator,
     class value_type, class difference_type, class pointer, class reference, class category>
 struct portable_tests
 {
-    BOOST_STATIC_ASSERT((
-        boost::is_same<
-        typename boost::detail::iterator_traits<Iterator>::difference_type,
-        difference_type
-        >::value));
-    
-    BOOST_STATIC_ASSERT((
-        boost::is_same<
-        typename boost::detail::iterator_traits<Iterator>::iterator_category,
-        category
-        >::value));
+    portable_tests()
+    {
+        BOOST_STATIC_ASSERT((
+            boost::is_same<
+            typename boost::detail::iterator_traits<Iterator>::difference_type,
+            difference_type
+            >::value));
+
+        BOOST_STATIC_ASSERT((
+            boost::is_same<
+            typename boost::detail::iterator_traits<Iterator>::iterator_category,
+            category
+            >::value));
+    }
 };
 
 // Test iterator_traits
@@ -121,11 +128,14 @@ template <class Iterator,
 struct input_iterator_test
     : portable_tests<Iterator,value_type,difference_type,pointer,reference,category>
 {
-    BOOST_STATIC_ASSERT((
-        boost::is_same<
-        typename boost::detail::iterator_traits<Iterator>::value_type,
-        value_type
-        >::value));
+    input_iterator_test()
+    {
+        BOOST_STATIC_ASSERT((
+            boost::is_same<
+            typename boost::detail::iterator_traits<Iterator>::value_type,
+            value_type
+            >::value));
+    }
 };
 
 template <class Iterator,
