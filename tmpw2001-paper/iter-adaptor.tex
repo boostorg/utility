@@ -1,3 +1,29 @@
+% Current TOC outline
+% 0 Abstract
+% 1 Introduction
+%   1.1 Redundant Operators
+%   1.2 Delegation of Operators and Type Definitions
+%   1.3 Iterator Implementation Complexities
+%     1.3.1 Constant/Mutable Iterator Interactions
+%     1.3.2 Constant/Mutable Iterator Code Duplication
+%     1.3.3 Input Iterators and operator->
+%     1.3.4 The Return Type of operator[] for Adaptors
+% 2 The Boost iterator_adaptor Class Template
+%   2.1 Iterator Policies Class
+%   2.2 Default Iterator Policies Class
+%   2.3 Iterator Type Generator
+%   2.4 Iterator Object Generator
+%   2.5 Example Use of the Transform Iterator Adaptor
+% 3 The Implementation of iterator_adaptor
+%   3.1 Deducing the Associates Types
+%     3.1.1 Defaults for the Associated Types
+%     3.1.2 Named Template Parameters
+%   3.2 Core Operators
+%   3.3 Redundant Operators
+%     3.3.1 Implementing operator-> for Input Iterators
+%     3.3.2 Implementation of operator[]
+% 4. Conclusion
+
 % Introduction/Motivation, etc. (Dave & Jeremy)
 
 % iterator policies   (Dave)
@@ -67,20 +93,20 @@ Florham Park, NJ 07932, USA \\
 \maketitle
 
 \begin{abstract}
+
 The iterator abstraction is one of the most commonly used in
-programming and a considerable amount of time is spent building new
-iterator types. However, implementing an iterator type that satisfies
-the C++ Standard requirements for an iterator can be
-challenging. There are a number of common mistakes that people make,
-and there are necessary complexities in a C++ Standard conforming
-implementation that one would rather not have to think about. In this
-paper we present the iterator type generator from the Boost Iterator
-Adaptor Library. This generator simplifies the creation of iterators;
-it automates the error-prone and redundant parts of the implementation
-and greatly simplifies the creation of iterator types that are
-variations on other iterators (adapted iterators). The Iterator
-Adaptor Library is an example of policy-based design and employs
-template meta-programming. We also present the Policy Adapter
+programming, but implementing an iterator type that satisfies the C++
+Standard requirements can be challenging. The requirements for a
+conforming iterator are at once subtle and tedious: subtle because
+there are many details to understand, and tedious because the various
+iterator operations must interact in ways that introduce redundancy
+into their implementations. This paper presents the generalized
+iterator template from the Boost Iterator Adaptor Library. In addition
+to automating the error-prone and redundant job of iterator
+implementation, it greatly simplifies the creation of iterator types
+that are variations on other iterators (adapted iterators). The
+Iterator Adaptor Library is an example of policy-based design and
+employs template meta-programming. We also present the Policy Adapter
 implementation pattern, a strategy used by the library that can also
 be used to generate new representatives of other abstract Concept
 families.
@@ -110,7 +136,12 @@ to name a few.
 In addition, large number of iterator adaptors are now in use:
 iterators that adapt some \code{Base} type, often itself an iterator,
 to produce a new adapted iterator that conforms to the Conceptual
-requirements of its iterator category.
+requirements of its iterator category\footnote{The term
+``\code{Base}'' is not meant to imply the use of inheritance. We have
+followed the lead of the standard library, which provides a
+\code{base()} function to access the underlying iterator object of a
+\code{reverse\_iterator} adaptor.}
+
 %
 % although this may not be the best place for it.
 % I'm not sure if I changed your meaning by striking ``Also'' below:
@@ -173,13 +204,17 @@ redundant.
 An iterator adaptor used to adapt an underlying iterator type often
 changes the meaning of one or two operators while leaving the rest of
 the operators defined in the same way as in the base iterator.  This
-is typically implemented with delegating functions. The following
-example shows an excerpt from an \code{indirect\_iterator} adaptor,
-which takes an iterator over pointers or smart-pointers and creates an
-iterator over the things pointed to. The \code{operator*} and
-\code{operator->} are changed to dereference twice but all the other
-operators stay the same. Writing all of the delegating functions for
-the \code{indirect\_iterator} is a tedious job.
+is typically implemented with delegating functions.\footnote{Although
+one might normally consider parametrized inheritance for cases where
+many functions must be forwarded, that is not possible for a
+generalized iterator adaptor because the underlying type may be a
+pointer} The following example shows an excerpt from an
+\code{indirect\_iterator} adaptor, which takes an iterator over
+pointers or smart-pointers and creates an iterator over the things
+pointed to. The \code{operator*} and \code{operator->} are changed to
+dereference twice but all the other operators stay the same. Writing
+all of the delegating functions for the \code{indirect\_iterator} is a
+tedious job.
 
 {\footnotesize
 \begin{verbatim}
@@ -190,7 +225,7 @@ the \code{indirect\_iterator} is a tedious job.
       return **iter; // dereference twice
     }
     // a ``redundant'' operator
-    pointer operator->() const { return &*(*this); }
+    pointer operator->() const { return &this->operator*(); } % dwa -- changed for clarity. I don't think the review comment was correct.
     // Delegating the implementation to the underlying iterator.
     indirect_iterator& operator++() { ++iter; return *this; }
     indirect_iterator& operator--() { --iter; return *this; }
@@ -359,15 +394,17 @@ needed by the resulting adapted iterator in the policies class rather than
 incorporating it into the \code{Base} type because \code{iterator\_\-adaptor}
 provides so many useful defaults when the \code{Base} type is an iterator.
 
-The policies class
-inherits from \code{default\_\-iterator\_\-policies}, which delegates
-all other operations to the base iterator. The main event of the
+The policies class inherits from
+\code{default\_\-iterator\_\-policies}, which delegates all other
+operations to the base iterator. The main event of the
 \code{transform\_\-iterator\_\-policies} class is the
 \code{dereference()} member function, which simply applies the
 function to the dereferenced value. The base iterator object is the
 second argument to the \code{dereference()} function. The iterator
 type is a template parameter to allow this policy class to be used
-with any base iterator type.
+with any base iterator type.\footnote{The term``\code{BaseIterator}''
+here is meant to denote that the \code{Base} type is expected to be an
+iterator.}
 
 {\footnotesize
 \begin{verbatim}
@@ -387,9 +424,13 @@ with any base iterator type.
 \end{verbatim}
 }
 
-The \code{type<Reference>} parameter is used to convey the appropriate
-return type to the \code{dereference()} function. This method is
-perhaps not the most elegant, but it was the most portable solution.
+The \code{type<Reference>} parameter is used to convey the appropriate return
+type to the \code{dereference()} function. This method is perhaps not the most
+elegant, but it was the most portable solution.\footnote{It would have been more
+elegant to rely on the caller for explicit specification of the \code{Reference}
+template argument as in
+\code{policies.dereference<reference\_type>(base\_iterator)}, but that approach
+proved not to to be portable to all of the targeted compilers.}
 
 A policies class is required to have a default constructor because the
 \code{iterator\_\-adaptor} has an instance of the policies class as a
@@ -438,8 +479,8 @@ namespace boost {
     template <class Base>
     void decrement(Base& x) { --x; }
 
-    template <class Base, class DifferenceType>
-    void advance(Base& x, DifferenceType n) { x += n; }
+    template <class Base, class Difference>
+    void advance(Base& x, Difference n) { x += n; }
 
     template <class Difference, class Base1, class Base2>
     Difference distance(type<Difference>, const Base1& x,
@@ -467,7 +508,7 @@ actual iterator type. The best way to package the construction of the
 transform iterator is to create a \emph{type generator}, which is a
 class template whose sole purpose is to simplify the instantiation of
 some other complicated class template. It fulfills the same need as a
-templated typedef would if that were part of the {C++} language.  The
+template typedef would if that were part of the {C++} language.  The
 first template parameter to the generator is the type of the function
 object and the second is the base iterator type.  The following code
 shows the type generator for the transform iterator.
@@ -529,22 +570,29 @@ following constructor.
 }
 
 It would be cumbersome for the user to call this constructor since
-they would have to separately construct a policies object and
-then the iterator object. We therefore recommend that iterator
-implementers create an \emph{object generator} function for their
-iterator. The following is the generator function for the transform
-iterator adaptor.
+they would have to separately construct a policies object and then the
+iterator object. We therefore recommend that iterator implementers
+create an \emph{object generator} function for their iterator. The
+following is the generator function for the transform iterator
+adaptor.\footnote{
+    There is precedent in the standard for calling such
+an object generator, simply ``\code{transform\_iterator()}''
+(e.g. \code{std::back\_inserter}), but also for the more explicit
+\code{make\_} prefix (e.g. \code{std::make\_pair()}) and occasionally
+for using the simple name for the adaptor type itself
+(e.g. \code{std::reverse\_iterator}).  In the end, the authors decided
+that explicit was better than implicit.  }
 
 {\footnotesize
 \begin{verbatim}
-  template <class AdaptableUnaryFunction, class Iterator>
+  template <class AdaptableUnaryFunction, class BaseIterator>
   typename transform_iterator_generator<
-      AdaptableUnaryFunction, Iterator>::type
-  make_transform_iterator(Iterator base,
+      AdaptableUnaryFunction, BaseIterator>::type
+  make_transform_iterator(BaseIterator base,
       const AdaptableUnaryFunction& f = AdaptableUnaryFunction())
   {
     typedef typename transform_iterator_generator<AdaptableUnaryFunction,
-      Iterator>::type result_t;
+      BaseIterator>::type result_t;
 
     transform_iterator_policies<AdaptableUnaryFunction> policies(f);
 
@@ -565,9 +613,8 @@ important than implementer convenience.
 
 \subsection{Example Use of the Transform Iterator Adaptor}
 
-The following example shows how a transform iterator can be used to
-iterate through a range of numbers, multiplying each of them by 2 and
-printing the result to standard output.
+This example shows how a transform iterator can be used to
+negate the numbers over which it iterates.
 
 {\footnotesize
 \begin{verbatim}
@@ -579,12 +626,11 @@ printing the result to standard output.
   {
     int x[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
     const int N = sizeof(x)/sizeof(int);
-    std::cout << "multiplying the array by 2:" << std::endl;
-    std::copy(boost::make_transform_iterator(x, 
-                std::bind1st(std::multiplies<int>(), 2)),
-              boost::make_transform_iterator(x + N, 
-                std::bind1st(std::multiplies<int>(), 2)),
-              std::ostream_iterator<int>(std::cout, " "));
+    std::cout << "negating the elements of the array:" << std::endl;
+    std::copy(
+        boost::make_transform_iterator(x, std::negate<int>()),
+        boost::make_transform_iterator(x + N, std::negate<int>()),
+        std::ostream_iterator<int>(std::cout, " "));
     std::cout << std::endl;
     return 0;
   }
@@ -594,7 +640,7 @@ printing the result to standard output.
 \noindent This output is: 
 {\footnotesize
 \begin{verbatim}
-2 4 6 8 10 12 14 16
+-1 -2 -3 -4 -5 -6 -7 -8
 \end{verbatim}
 }
 
@@ -602,19 +648,19 @@ printing the result to standard output.
 \section{The Implementation of \code{iterator\_adaptor}}
 
 The outline for the implementation of the \code{iterator\_adaptor}
-class is as follows. In the next few sections we will discuss aspects
-of the implementation in more depth, including how the problems
-discussed in the introduction were solved.
+class template is as follows. In the next few sections we will discuss
+aspects of the implementation in more depth, including how the
+problems discussed in the introduction were solved.
 
 {\footnotesize
 \begin{verbatim}
 namespace boost {
   template <class Base, class Policies, 
-	    class Param1 = default_argument,
-	    class Param2 = default_argument,
-	    class Param3 = default_argument,
-	    class Param4 = default_argument,
-	    class Param5 = default_argument>
+	    class Value = default_argument,
+	    class Reference = default_argument,
+	    class Pointer = default_argument,
+	    class Category = default_argument,
+	    class Distance = default_argument>
   struct iterator_adaptor {
     // Deduce iterator associated types (value_type, etc.) from the
     // named template parameters, and resolve any defaults.
@@ -627,7 +673,7 @@ namespace boost {
     // optimization to conserve space. The base is ``first'' and
     // the policies are ``second''.
     Policies& policies() { return m_iter_p.second(); }
-    Base& iter() { return m_iter_p.first(); }
+    Base& base() { return m_iter_p.first(); }
     // and similarly for const...
   };
   // Core binary operators.
@@ -636,7 +682,7 @@ namespace boost {
 \end{verbatim}
 }
 
-\subsection{Deducing the Associates Types}
+\subsection{Deducing the Associated Types}
 
 Iterators have five associated types: \code{value\_\-type},
 \code{reference}, \code{pointer}, \code{iterator\_\-category}, and
@@ -750,7 +796,7 @@ the case with the \code{reference} type in the implementation of
 {\footnotesize
 \begin{verbatim}
   reference operator*() const {
-    return policies().dereference(type<reference>(), iter());
+    return policies().dereference(type<reference>(), base());
   }
 \end{verbatim}
 }
@@ -764,22 +810,23 @@ iterator interactions, avoiding the combinatorial explosion discussed
 in \S\ref{sec:constant-mutable-iterations}. Note that we only use a
 single \code{Policies} template parameter: this restricts iterator
 interaction to those iterators with the same policies class.  This is
-not restrictive as it should be, however the only real disadvantage to
-not being restrictive enough is in the kind of error message the user
-will see when misusing two unrelated iterators. Instead of an
-``operator not found'' message they will see an error message from
-inside the iterator adaptor.
+not as restrictive as it probably should be, but most iterator
+interaction errors will be caught anyway, when the policies are applied
+disadvantage to not being restrictive enough is in the kind of error
+message the user will see when misusing two unrelated
+iterators. Instead of an ``operator not found'' message they will see
+an error message from inside the iterator adaptor.
 
 {\footnotesize
 \begin{verbatim}
-  template <class Iter1, class Iter2, class Policies, class V1, class V2,
+  template <class Base1, class Base2, class Policies, class V1, class V2,
       class R1, class R2, class P1, class P2, class C1, class C2, 
       class D1, class D2>
   bool operator<(
-    const iterator_adaptor<Iter1,Policies,V1,R1,P1,C1,D1>& x,
-    const iterator_adaptor<Iter2,Policies,V2,R2,P2,C2,D2>& y)
+    const iterator_adaptor<Base1,Policies,V1,R1,P1,C1,D1>& x,
+    const iterator_adaptor<Base2,Policies,V2,R2,P2,C2,D2>& y)
   {
-    return x.policies().less(x.iter(), y.iter());
+    return x.policies().less(x.base(), y.base());
   }
 \end{verbatim}
 }
@@ -904,8 +951,8 @@ the data member. Now consider what happens inside the
 
 {\footnotesize
 \begin{verbatim}
-template <class Iterator> class iterator_adaptor {
-  Iterator iter;
+template <class BaseIterator> class my_iterator_adaptor {
+  BaseIterator iter;
 public:
   reference operator[](difference_type n) const {
     return *(iter + n);
@@ -932,14 +979,13 @@ the Standard, which only says that the return type must be
 \end{verbatim}
 }
 
-Under the current {C++} Standard, when using a random access iterator
-in a generic algorithm, you can not use \code{operator[]} for
-assignment (on the left hand side) but instead must write \code{*(i +
-n) = x}.
+Under the current {C++} Standard, you cannot assign into the result of
+\code{operator[]} applied to a generic random access iterator,
+but instead must write \code{*(i + n) = x}.
 
 It would be nice to return by-reference for iterators that can support
 it, and by-value for the rest. However, the current
-\code{iterator\_\-traits} does not provide enough information make the
+\code{iterator\_\-traits} does not provide enough information to make the
 choice.
 
 % Jeremy: I didn't agree with this part, so commented it out
