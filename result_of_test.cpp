@@ -7,13 +7,13 @@ class int_result_type { typedef int result_type; };
 
 class int_result_of
 {
-  template<typename F> struct result_of { typedef int type; };
+  template<typename F> struct result { typedef int type; };
 };
 
 class int_result_type_and_float_result_of
 {
   typedef int result_type;
-  template<typename F> struct result_of { typedef float type; };
+  template<typename F> struct result { typedef float type; };
 };
 
 struct X {};
@@ -27,6 +27,7 @@ int main()
 
   BOOST_STATIC_ASSERT((is_same<result_of<int_result_type(float)>::type, int>::value));
   BOOST_STATIC_ASSERT((is_same<result_of<int_result_of(double)>::type, int>::value));
+  BOOST_STATIC_ASSERT((is_same<result_of<int_result_of(void)>::type, void>::value));
   BOOST_STATIC_ASSERT((is_same<result_of<int_result_type_and_float_result_of(char)>::type, int>::value));
   BOOST_STATIC_ASSERT((is_same<result_of<func_ptr(char, float)>::type, int>::value));
   BOOST_STATIC_ASSERT((is_same<result_of<mem_func_ptr(X,char)>::type, int>::value));
