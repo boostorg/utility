@@ -5,6 +5,7 @@
  //  in all copies. This software is provided "as is" without express or implied   
  //  warranty, and with no claim as to its suitability for any purpose.   
 
+// standalone test program for <boost/call_traits.hpp>
 
 #include <cassert>
 #include <iostream>

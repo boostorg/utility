@@ -4,6 +4,8 @@
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 
+// standalone test program for <boost/type_traits.hpp>
+
 /* Release notes:
    31st July 2000:
       Added extra tests for is_empty, is_convertible, alignment_of.

@@ -141,7 +141,10 @@ is always defined as a compile time constant).</p>
         <td width="37%"><div align="center"><center><pre>alignment_of&lt;T&gt;::value</pre>
         </center></div></td>
         <td width="36%"><p align="center">An integral value
-        representing the minimum alignment requirements of type T.</p>
+        representing the minimum alignment requirements of type T
+        (strictly speaking defines a multiple of the type's
+        alignment requirement; for all compilers tested so far
+        however it does return the actual alignment).</p>
         </td>
         <td width="27%">&nbsp;</td>
     </tr>
@@ -454,9 +457,10 @@ will also be true.</p>
         or class. If the compiler implements the &quot;zero sized
         empty base classes&quot; optimisation, then is_empty will
         correctly guess whether T is empty. Relies upon is_class
-        to determine whether T is a class type - as a result will
-        not compile when passed an enumerated type unless there
-        is compiler support for is_enum.</td>
+        to determine whether T is a class type. Screens out enum
+        types by using is_convertible&lt;T,int&gt;, this means
+        that empty classes that overload operator int(), will not
+        be classified as empty.</td>
         <td valign="top" width="33%"><p align="center">PCD</p>
         </td>
     </tr>

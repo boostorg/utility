@@ -5,6 +5,8 @@
  //  in all copies. This software is provided "as is" without express or implied   
  //  warranty, and with no claim as to its suitability for any purpose.   
 
+// standalone test program for <boost/compressed_pair.hpp>
+
 #include <iostream>
 #include <typeinfo>
 #include <cassert>

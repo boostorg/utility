@@ -5,6 +5,7 @@
  //  in all copies. This software is provided "as is" without express or implied   
  //  warranty, and with no claim as to its suitability for any purpose.   
 
+// common test code for type_traits_test.cpp/call_traits_test.cpp/compressed_pair_test.cpp
 
 
 #ifndef BOOST_TYPE_TRAITS_TEST_HPP
