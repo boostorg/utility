@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="Latin-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=Latin-1" />
 <meta name="generator" content="Docutils 0.3.1: http://docutils.sourceforge.net/" />
 <title>The Boost.NamedParams Library Boost</title>
 <link rel="stylesheet" href="../../../rst.css" type="text/css" />
@@ -35,22 +35,22 @@ file LICENSE_1_0.txt or copy at
 <div class="contents topic" id="outline">
 <p class="topic-title"><a name="outline">Outline</a></p>
 <ul class="auto-toc simple">
-<li><a class="reference" href="#introduction" id="id7" name="id7">1Â Â Â Introduction</a></li>
-<li><a class="reference" href="#tutorial" id="id8" name="id8">2Â Â Â Tutorial</a><ul class="auto-toc">
-<li><a class="reference" href="#defining-the-keywords" id="id9" name="id9">2.1Â Â Â Defining the keywords</a></li>
-<li><a class="reference" href="#defining-the-forwarding-functions" id="id10" name="id10">2.2Â Â Â Defining the forwarding functions</a></li>
-<li><a class="reference" href="#defining-the-implementation-function" id="id11" name="id11">2.3Â Â Â Defining the implementation function</a></li>
+<li><a class="reference" href="#introduction" id="id7" name="id7">1   Introduction</a></li>
+<li><a class="reference" href="#tutorial" id="id8" name="id8">2   Tutorial</a><ul class="auto-toc">
+<li><a class="reference" href="#defining-the-keywords" id="id9" name="id9">2.1   Defining the keywords</a></li>
+<li><a class="reference" href="#defining-the-forwarding-functions" id="id10" name="id10">2.2   Defining the forwarding functions</a></li>
+<li><a class="reference" href="#defining-the-implementation-function" id="id11" name="id11">2.3   Defining the implementation function</a></li>
 </ul>
 </li>
-<li><a class="reference" href="#limitations-of-the-approach" id="id12" name="id12">3Â Â Â Limitations of the Approach</a></li>
-<li><a class="reference" href="#controlling-overload-resolution" id="id13" name="id13">4Â Â Â Controlling Overload Resolution</a></li>
-<li><a class="reference" href="#lazy-evaluation-of-defaults" id="id14" name="id14">5Â Â Â Lazy Evaluation of Defaults</a></li>
-<li><a class="reference" href="#automatic-overload-generation" id="id15" name="id15">6Â Â Â Automatic Overload Generation</a></li>
-<li><a class="reference" href="#portability" id="id16" name="id16">7Â Â Â Portability</a></li>
+<li><a class="reference" href="#limitations-of-the-approach" id="id12" name="id12">3   Limitations of the Approach</a></li>
+<li><a class="reference" href="#controlling-overload-resolution" id="id13" name="id13">4   Controlling Overload Resolution</a></li>
+<li><a class="reference" href="#lazy-evaluation-of-defaults" id="id14" name="id14">5   Lazy Evaluation of Defaults</a></li>
+<li><a class="reference" href="#automatic-overload-generation" id="id15" name="id15">6   Automatic Overload Generation</a></li>
+<li><a class="reference" href="#portability" id="id16" name="id16">7   Portability</a></li>
 </ul>
 </div>
 <div class="section" id="introduction">
-<h1><a class="toc-backref" href="#id7" name="introduction">1Â Â Â Introduction</a></h1>
+<h1><a class="toc-backref" href="#id7" name="introduction">1   Introduction</a></h1>
 <p>In C++ function arguments are given meaning by their position in
 the parameter list. This protocol is fine when there are few
 parameters with default values, but as the number of parameters
@@ -114,7 +114,7 @@ The tutorial has to come before all the nasty details below.
 I'm going to comment on that and leave the next stuff alone -->
 </div>
 <div class="section" id="tutorial">
-<h1><a class="toc-backref" href="#id8" name="tutorial">2Â Â Â Tutorial</a></h1>
+<h1><a class="toc-backref" href="#id8" name="tutorial">2   Tutorial</a></h1>
 <!-- DWA you need some set-up here describing the problem you're
 going to solve. -->
 <p>This example shows how to wrap a function:</p>
@@ -123,7 +123,7 @@ void foo(char const* name, float value);
 </pre>
 <p>to give both parameters names and default values.</p>
 <div class="section" id="defining-the-keywords">
-<h2><a class="toc-backref" href="#id9" name="defining-the-keywords">2.1Â Â Â Defining the keywords</a></h2>
+<h2><a class="toc-backref" href="#id9" name="defining-the-keywords">2.1   Defining the keywords</a></h2>
 <p>First we define the named parameter keywords. This is done by creating
 &quot;tag&quot; types for each keyword, and declaring <tt class="literal"><span class="pre">keyword&lt;</span></tt><em>tag</em><tt class="literal"><span class="pre">&gt;</span></tt> objects:</p>
 <pre class="literal-block">
@@ -154,7 +154,7 @@ struct foo_keywords
 </pre>
 </div>
 <div class="section" id="defining-the-forwarding-functions">
-<h2><a class="toc-backref" href="#id10" name="defining-the-forwarding-functions">2.2Â Â Â Defining the forwarding functions</a></h2>
+<h2><a class="toc-backref" href="#id10" name="defining-the-forwarding-functions">2.2   Defining the forwarding functions</a></h2>
 <pre class="literal-block">
 template&lt;class Params&gt;
 void foo_impl(const Params&amp;);
@@ -178,7 +178,7 @@ void foo(const A0&amp; a0, const A1&amp; a1)
 </pre>
 </div>
 <div class="section" id="defining-the-implementation-function">
-<h2><a class="toc-backref" href="#id11" name="defining-the-implementation-function">2.3Â Â Â Defining the implementation function</a></h2>
+<h2><a class="toc-backref" href="#id11" name="defining-the-implementation-function">2.3   Defining the implementation function</a></h2>
 <pre class="literal-block">
 template&lt;class Params&gt;
 void foo_impl(const Params&amp; params)
@@ -232,7 +232,7 @@ unnamed = 3
 </div>
 </div>
 <div class="section" id="limitations-of-the-approach">
-<h1><a class="toc-backref" href="#id12" name="limitations-of-the-approach">3Â Â Â Limitations of the Approach</a></h1>
+<h1><a class="toc-backref" href="#id12" name="limitations-of-the-approach">3   Limitations of the Approach</a></h1>
 <p>Because the keywords' <tt class="literal"><span class="pre">operator=</span></tt> returns a temporary, and
 temporaries cannot be bound to non-<tt class="literal"><span class="pre">const</span></tt> reference parameters,
 our forwarding functions need to take their arguments by <tt class="literal"><span class="pre">const</span></tt>
@@ -253,7 +253,7 @@ foo(boost::ref(x)); // held type is float&amp;
 <tt class="literal"><span class="pre">boost::ref</span></tt> will be unwrapped automatically by the library.</p>
 </div>
 <div class="section" id="controlling-overload-resolution">
-<h1><a class="toc-backref" href="#id13" name="controlling-overload-resolution">4Â Â Â Controlling Overload Resolution</a></h1>
+<h1><a class="toc-backref" href="#id13" name="controlling-overload-resolution">4   Controlling Overload Resolution</a></h1>
 <p>The parameters of our templated forwarding functions are completely
 general; in fact, they're a perfect match for any argument type
 whatsoever.  The problems with exposing such general function
@@ -330,7 +330,7 @@ by callers; they merely trigger SFINAE by becoming illegal types
 when the <tt class="literal"><span class="pre">name</span></tt> argument is not convertible to <tt class="literal"><span class="pre">const</span> <span class="pre">char*</span></tt>.</p>
 </div>
 <div class="section" id="lazy-evaluation-of-defaults">
-<h1><a class="toc-backref" href="#id14" name="lazy-evaluation-of-defaults">5Â Â Â Lazy Evaluation of Defaults</a></h1>
+<h1><a class="toc-backref" href="#id14" name="lazy-evaluation-of-defaults">5   Lazy Evaluation of Defaults</a></h1>
 <p>If computing an argument's default value is expensive, it's best
 avoided when the argument is supplied by the user. In that case,
 the default value can be lazily evaluated using the following
@@ -359,7 +359,7 @@ void bar_impl(Params const&amp; params)
 </pre>
 </div>
 <div class="section" id="automatic-overload-generation">
-<h1><a class="toc-backref" href="#id15" name="automatic-overload-generation">6Â Â Â Automatic Overload Generation</a></h1>
+<h1><a class="toc-backref" href="#id15" name="automatic-overload-generation">6   Automatic Overload Generation</a></h1>
 <p>To reduce the work needed to write functions with named parameters,
 we supply a macro that generates the boilerplate code.</p>
 <p>Synopsis:</p>
@@ -382,7 +382,7 @@ BOOST_NAMED_PARAMS_FUN(void, foo, 0, 2, foo_keywords)
 </pre>
 </div>
 <div class="section" id="portability">
-<h1><a class="toc-backref" href="#id16" name="portability">7Â Â Â Portability</a></h1>
+<h1><a class="toc-backref" href="#id16" name="portability">7   Portability</a></h1>
 <p>Boost.NamedParams has been confirmed to work on the following compilers:</p>
 <blockquote>
 <ul class="simple">
@@ -437,7 +437,7 @@ of lack of SFINAE support.</td></tr>
 <hr class="footer" />
 <div class="footer">
 <a class="reference" href="named_params.rst">View document source</a>.
-Generated on: 2004-03-04 10:40 UTC.
+Generated on: 2004-04-14 14:38 UTC.
 Generated by <a class="reference" href="http://docutils.sourceforge.net/">Docutils</a> from <a class="reference" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
 </div>
 </body>
