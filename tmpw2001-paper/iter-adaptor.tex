@@ -311,9 +311,7 @@ function to the dereferenced value. The base iterator object is the
 second argument to the \code{dereference()} function. Because the
 iterator type is a template parameter of the \code{dereference()}
 function, the same concrete policies class can be used with any base
-iterator type, which greatly simplifies adaptation.\footnote{The
-term``\code{BaseIterator}'' here is meant to denote that the
-\code{Base} type is expected to be an iterator.}
+iterator type, which greatly simplifies adaptation.
 
 {\footnotesize
 \begin{verbatim}
@@ -324,27 +322,29 @@ term``\code{BaseIterator}'' here is meant to denote that the
     transform_iterator_policies(const AdaptableUnaryFunction& f)
       : m_f(f) { }
 
-    template <class Reference, class BaseIterator>
-    Reference dereference(type<Reference>, const BaseIterator& i) const
-      { return m_f(*i); } // apply the function and return the result
+    template <class Reference, class Base>
+    Reference dereference(type<Reference>, const Base& x) const
+      { return m_f(*x); } // apply the function and return the result
 
     AdaptableUnaryFunction m_f;
   };
 \end{verbatim}
 }
+Notes on the policies class implementation:\begin{itemize}
 
-The \code{type<Reference>} parameter is used to convey the appropriate return
-type to the \code{dereference()} function. This method is perhaps not the most
-elegant, but it was the most portable solution.\footnote{It would have been more
-elegant to rely on the caller for explicit specification of the \code{Reference}
-template argument as in
-\code{policies.dereference<reference\_type>(base\_iterator)}, but that approach
-proved not to to be portable to all of the targeted compilers.}
-
-Because all iterators are required to have default constructors and
-\iteratoradaptor\ stores an instance of the policies class as a
-data member, policies classes to be used with \iteratoradaptor\ are
+\item Because \iteratoradaptor\ stores an instance of the policies class as
+a data member, and all iterators are required to have default
+constructors, policies classes to be used with \iteratoradaptor\ are
 also required to have default constructors.
+
+\item The \code{type<Reference>} parameter is an empty class used only to
+convey the appropriate return type to the \code{dereference()}
+function. Although it might have been more elegant to rely on the
+caller for explicit specification of the \code{Reference} template
+argument as in
+\code{policies.dereference<reference>(base\_\-iterator)}, that
+approach proved not to to be portable to all of the targeted
+compilers.\end{itemize}
 
 With the policies class complete, the iterator implementer is almost
 finished, and only eleven lines of code have been written. The code
@@ -818,7 +818,7 @@ that there are plenty of iterators which don't fit neatly into the
 system for ordering defaults. For example, the specialized Transform
 Iterator Adaptor described in Section~\ref{sec:iterator-policies-class}
 limits the category of its \code{Base} iterator to
-\stlconcept{InputIterator}, so the we'd only need to supply the
+\stlconcept{InputIterator}, so we'd only need to supply the
 \valuetype{}, \code{reference}, and \iteratorcategory\ if
 the \code{Category} parameter didn't appear last. Iterators where the
 \code{Base} type is not itself an iterator also act this way, since
@@ -829,9 +829,10 @@ the \code{Pointer} and \code{Reference} parameters.
 \label{sec:named-template-parameters}
 
 Instead of matching arguments to parameters based on order, the
-assignment of arguments to parameters can be made explicitly by name, so
-the order no longer matters. The Iterator Adaptors library supplies
-an appropriately-named wrapper class for each parameter. For example:
+assignment of arguments to parameters can be made explicitly by name,
+so that the order no longer matters. The Iterator Adaptors library
+supplies an appropriately-named wrapper class for each parameter. For
+example:
 
 {\footnotesize
 \begin{verbatim} 
@@ -895,11 +896,10 @@ resolved is tailored to respect these dependencies.
 \subsection{Core Operators}
 
 The core operators of the \iteratoradaptor\ are implemented by
-delegating the work to the policies class. Each core operator invokes
-the appropriate policy function and passes in the base
-iterator. Sometimes extra type information is also passed in, as is
-the case with the \code{reference} type in the implementation of
-\code{operator*}.
+delegating the work to the policies class. Each core operator passes
+the base object to the appropriate policy function. Sometimes extra
+type information is also passed in, as is the case with the
+\code{reference} type in the implementation of \code{operator*}.
 
 {\footnotesize
 \begin{verbatim}
