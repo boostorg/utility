@@ -18,7 +18,7 @@ namespace boost
   class lexicographic
   {
     public:
-      enum result_type { minus = -1, equivalent, plus };
+      enum result_type { minus = -1, equivalent = 0, plus = +1 };
     
     private:
       typedef void (lexicographic::*unspecified_bool_type) ();
