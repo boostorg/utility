@@ -271,7 +271,7 @@ through the following class template::
        , class HasDefaultValue // mpl::true_ or mpl::false_
        , class Predicate
      >
-     struct arg;
+     struct named_param;
 
 The key parameter, ``Predicate`` shall be a unary MPL lambda
 expression or `Metafunction Class`_ that, when applied to the
@@ -288,13 +288,13 @@ meets the function's requirements for that parameter position.
 For example, let's say we want to restrict our ``foo()`` so that
 the ``name`` parameter must be convertible to ``const char*``.
 We'll replace our use of the ``name_t`` tag with a specialization
-of ``boost::arg``:
+of ``boost::named_param``:
 
 .. parsed-literal::
 
      struct foo_keywords
        : boost::keywords<
-             **boost::arg<
+             **boost::named_param<
                  name_t
                , mpl::false\_
                , is_convertible<mpl::\_, const char\*>
