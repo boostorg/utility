@@ -75,7 +75,7 @@ int main()
   assert(!(x && z));
   assert((y && z) == indeterminate);
   assert((z && z) == indeterminate);
-  assert((z || z) == indeterminate);
+  assert(indeterminate(z || z));
   assert(x || z == indeterminate);
   assert(y || z);
 
