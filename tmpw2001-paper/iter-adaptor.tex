@@ -117,7 +117,7 @@ families (iterator adaptors). The Iterator Adaptor Library is an
 example of policy-based design and employs template
 meta-programming. We also present the Policy Adapter implementation
 pattern, a strategy which can also be used to generate new
-representatives of other abstract Concept families.
+representatives of other abstract concept families.
 \end{abstract}
 
 
@@ -136,10 +136,12 @@ contexts.
 
 The power of iterators derives from several key
 features:\begin{itemize}
-
- \item Iterators form a rich \emph{family} of Concepts whose
-functionality varies along several axes: movement, dereferencing, and
-associated type exposure.
+  
+\item Iterators form a rich \emph{family} of concepts whose
+  functionality varies along several axes: movement, dereferencing,
+  and associated type exposure\footnote{We use the term \emph{concept}
+    to mean a set of requirements that a type must
+    satisfy to be used with a particular template parameter.}.
 
  \item The iterator concepts of the \Cpp\
 standard form a refinement hierarchy which allows the same basic
@@ -147,7 +149,7 @@ interface elements to implement diverse functionality.
 
  \item Because
 built-in pointer types model the \stlconcept{RandomAccessIterator}
-Concept, iterators can be both efficient and convenient to use.
+concept, iterators can be both efficient and convenient to use.
 
 \end{itemize}
 
@@ -272,22 +274,24 @@ In addition to the behaviors listed above, the core interface elements
 include the associated types exposed through \iteratortraits{}:
 \valuetype{}, \code{reference}, \code{pointer}, and
 \iteratorcategory{}. The library supports two ways of specifying
-these: as traditional and also as \emph{named} template parameters
-(described below), and uses a system of smart defaults which in most
-cases reduces the number of these types that must be specified.
+these: as traditional template parameters and also as \emph{named}
+template parameters (described below), and uses a system of smart
+defaults which in most cases reduces the number of these types that
+must be specified.
 
 \subsection{From Building Models to Building Adaptors}
 
-A generalized iterator is useful, but a generalized iterator
-\emph{adaptor} would be even more useful. One could then build
-specialized adaptors to generate new families of iterator instances
-based on existing iterators. In the Boost Iterator Adaptor Library,
-the \iteratoradaptor\ class template plays the roles of both Model and
-Adaptor. The behaviors of \iteratoradaptor{} instances are supplied
-through a policies class~\cite{alexandrescu01:_modern_cpp_design}
-which allows allows users to specialize adaptation. Users go beyond
-generating new iterator types to easily generating new iterator
-adaptor families.
+A generalized iterator generator is useful (helping to create new
+iterator types from scratch), but a generalized iterator
+\emph{adaptor} is even more useful. An adaptor generator allows one to
+build whole families of iterator instances based on existing
+iterators. In the Boost Iterator Adaptor Library, the
+\iteratoradaptor\ class template plays the roles of both an iterator
+generator and an iterator adaptor generator. The behaviors of
+\iteratoradaptor{} instances are supplied through a policies
+class~\cite{alexandrescu01:_modern_cpp_design} which allows allows
+users to specialize adaptation. Users go beyond generating new
+iterator types to easily generating new iterator adaptor families.
 
 The library contains several examples of specialized adaptors which
 were quickly implemented using \iteratoradaptor{}:\begin{itemize}
@@ -436,7 +440,7 @@ delegating functions. As above, an iterator policies class inherits
 from this class and overrides any functions that should not be
 delegated. The \code{default\_\-iterator\_\-policies} class also
 serves as an example of the iterator policies interface. There are
-seven member functions corresponding to the core iterator operations
+six member functions corresponding to the core iterator operations
 and an \code{initialize()} function which provides a hook for
 customized iterator construction.
 
@@ -638,7 +642,7 @@ negate the numbers over which it iterates.
 \section{The Policy Adaptor Design Pattern}
 
 The Iterator Adaptor Library illustrates how a generalized Model
-(\iteratoradaptor{}) of a Concept family (iterators) combined with
+(\iteratoradaptor{}) of a concept family (iterators) combined with
 default policy delegation allows users to easily build new Models and
 behavioral adaptors for existing Models. We can capture this strategy
 in the Policy Adaptor design pattern:\footnote{This is not quite the
@@ -647,24 +651,29 @@ in the literature~\cite{alexandrescu01:_modern_cpp_design}. The
 construction of an adaptor which can easily transform existing Models
 into new ones is the key difference}\begin{enumerate}
 
- \item First, identify the core elements of the Adaptor Concept's
- public interface. In our case, the Adaptor Concept is Iterator.
+\item First, identify the core elements of the Adaptor's public
+  interface, which will be described by a concept.  In our case, the
+  Adaptor will model one of the iterator concepts:
+  \stlconcept{InputIterator}, \stlconcept{ForwardIterator},
+  \stlconcept{BidirectionalIterator}, or
+  \stlconcept{RandomAccessIterator} (this depends on the
+  base iterator type and the parameters of the Adaptor). 
+   
+\item Encapsulate core elements of the concept family in a
+  Policies concept.
 
- \item then, encapsulate core elements of the Concept family in a
-Policies Concept.
-
- \item Write a default policies class which delegates behavior to the
-public interface of the Adaptor Concept. This is the mechanism that
-supplies default adaptation behavior.
-
- \item build an Adaptor class template parameterized on Policies. The
-Adaptor should be a generalized model of the Adaptor Concept,
-providing the public interface, but delegating functionality to the
-policies class.
-
- \item Store a member of the Policies parameter in the Adaptor
-template so that users can store additional data while taking
-advantage of default behavior delegation.
+\item Write a default policies class which delegates behavior to the
+  public interface of the Adaptor's concept. This is the mechanism that
+  supplies default adaptation behavior.
+  
+\item Build an Adaptor class template parameterized on Policies. The
+  Adaptor should be a generalized model of the Adaptor Concept,
+  providing the public interface, but delegating functionality to the
+  policies class.
+  
+\item Store a member of the Policies parameter in the Adaptor template
+  so that users can store additional data while taking advantage of
+  default behavior delegation.
 
 \end{enumerate}
 
@@ -751,7 +760,7 @@ the \valuetype\ will just be \code{T}. Perhaps
 strangely, a constant iterator's \valuetype\ should never be
 \code{const}, because it would prevent algorithms from declaring
 modifiable temporary objects which are copied from dereferenced
-iterators:
+iterators. For example:
 
 {\footnotesize
 \begin{verbatim}
