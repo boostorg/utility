@@ -1,13 +1,9 @@
-// (C) 2003, Jan Langer (jan@langernetz.de).
-// 
-// This material is provided "as is", with absolutely no warranty expressed
-// or implied. Any use is at your own risk.
-// 
-// Permission to use or copy this software for any purpose is hereby granted
-// without fee, provided the above notices are retained on all copies.
-// Permission to modify the code and to distribute modified code is granted,
-// provided the above notices are retained, and a notice that the code was
-// modified is included with the above copyright notice.
+// Copyright (c) 2003 Jan Langer
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
+// at http://www.boost.org/LICENSE_1_0.txt)
+
+//  See library home page at http://www.boost.org/libs/utility
  
 #ifndef BOOST_UTILITY_LEXICOGRAPHIC_HPP
 #define BOOST_UTILITY_LEXICOGRAPHIC_HPP
