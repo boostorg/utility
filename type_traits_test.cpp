@@ -16,36 +16,9 @@
 #include <typeinfo>
 
 #include <boost/type_traits.hpp>
+#include "type_traits_test.hpp"
 
 using namespace boost;
-
-#ifdef __BORLANDC__
-#pragma option -w-ccc -w-rch -w-eff -w-aus
-#endif
-
-//
-// define tests here
-unsigned failures = 0;
-unsigned test_count = 0;
-
-#define value_test(v, x) ++test_count;\
-                         if(v != x){++failures; std::cout << "checking value of " << #x << "...failed" << std::endl;}
-#define value_fail(v, x) ++test_count; ++failures; std::cout << "checking value of " << #x << "...failed" << std::endl;
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#define type_test(v, x)  ++test_count;\
-                         if(is_same<v, x>::value == false){\
-                           ++failures; \
-                           std::cout << "checking type of " << #x << "...failed" << std::endl; \
-                           std::cout << "   expected type was " << #v << std::endl; \
-                           std::cout << "   " << typeid(is_same<v, x>).name() << "::value is false" << std::endl; }
-#else
-#define type_test(v, x)  ++test_count;\
-                         if(typeid(v) != typeid(x)){\
-                           ++failures; \
-                           std::cout << "checking type of " << #x << "...failed" << std::endl; \
-                           std::cout << "   expected type was " << #v << std::endl; \
-                           std::cout << "   " << "typeid(" #v ") != typeid(" #x ")" << std::endl; }
-#endif
 
 // Since there is no compiler support, we should specialize:
 //  is_enum for all enumerations (is_enum implies is_POD)
@@ -159,6 +132,33 @@ template <> struct is_POD<empty_POD_union_UDT>
 { enum{ value = true }; };
 }
 #endif
+
+class Base { };
+
+class Deriverd : public Base { };
+
+class NonDerived { };
+
+enum enum1
+{
+   one_,two_
+};
+
+enum enum2
+{
+   three_,four_
+};
+
+struct VB
+{
+   virtual ~VB(){};
+};
+
+struct VD : VB
+{
+   ~VD(){};
+};
+
 
 // Steve: All comments that I (Steve Cleary) have added below are prefixed with
 //  "Steve:"  The failures that BCB4 has on the tests are due to Borland's
@@ -529,6 +529,52 @@ int main()
    value_test(false, is_POD<UDT>::value)
    value_test(false, is_POD<empty_UDT>::value)
    value_test(true, is_POD<enum_UDT>::value)
+
+   value_test(true, (boost::is_convertible<Deriverd,Base>::value));
+   value_test(true, (boost::is_convertible<Deriverd,Deriverd>::value));
+   value_test(true, (boost::is_convertible<Base,Base>::value));
+   value_test(false, (boost::is_convertible<Base,Deriverd>::value));
+   value_test(true, (boost::is_convertible<Deriverd,Deriverd>::value));
+   value_test(false, (boost::is_convertible<NonDerived,Base>::value));
+   //value_test(false, (boost::is_convertible<boost::noncopyable, boost::noncopyable>::value));
+   value_test(true, (boost::is_convertible<float,int>::value));
+#if defined(BOOST_MSVC6_MEMBER_TEMPLATES) || !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+   value_test(false, (boost::is_convertible<float,void>::value));
+   value_test(false, (boost::is_convertible<void,float>::value));
+   value_test(true, (boost::is_convertible<void,void>::value));
+#endif
+   value_test(true, (boost::is_convertible<enum1, int>::value));
+   value_test(true, (boost::is_convertible<Deriverd*, Base*>::value));
+   value_test(false, (boost::is_convertible<Base*, Deriverd*>::value));
+   value_test(true, (boost::is_convertible<Deriverd&, Base&>::value));
+   value_test(false, (boost::is_convertible<Base&, Deriverd&>::value));
+   value_test(true, (boost::is_convertible<const Deriverd*, const Base*>::value));
+   value_test(false, (boost::is_convertible<const Base*, const Deriverd*>::value));
+   value_test(true, (boost::is_convertible<const Deriverd&, const Base&>::value));
+   value_test(false, (boost::is_convertible<const Base&, const Deriverd&>::value));
+
+   value_test(false, (boost::is_convertible<const int *, int*>::value));
+   value_test(false, (boost::is_convertible<const int&, int&>::value));
+   value_test(false, (boost::is_convertible<int*, int[2]>::value));
+   value_test(false, (boost::is_convertible<const int*, int[3]>::value));
+   value_test(true, (boost::is_convertible<const int&, int>::value));
+   value_test(true, (boost::is_convertible<int(&)[4], const int*>::value));
+   value_test(true, (boost::is_convertible<int(&)(int), int(*)(int)>::value));
+   value_test(true, (boost::is_convertible<int *, const int*>::value));
+   value_test(true, (boost::is_convertible<int&, const int&>::value));
+   value_test(true, (boost::is_convertible<int[2], int*>::value));
+   value_test(true, (boost::is_convertible<int[2], const int*>::value));
+   value_test(false, (boost::is_convertible<const int[2], int*>::value));
+
+   align_test(int);
+   align_test(char);
+   align_test(double);
+   align_test(int[4]);
+   //align_test(int&);
+   align_test(int*);
+   //align_test(const int);
+   align_test(VB);
+   align_test(VD);
 
    std::cout << std::endl << test_count << " tests completed (" << failures << " failures)... press any key to exit";
    std::cin.get();
