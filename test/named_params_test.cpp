@@ -6,40 +6,36 @@
 #include <boost/named_params.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <cassert>
-#include <cstring>
+#include <string.h>
 
 namespace test
 {
 
   using boost::keyword;
   using boost::keywords;
-   
-  struct name_t : keyword<name_t>
+  using boost::arg;
+
+  struct name_t
   {
-      // this should go in a wrapper type, like arg<keyword, predicate>
+      // At some point maybe we should use has_xxx to allow this
       typedef boost::is_convertible<boost::mpl::_1, const char*> predicate;
-      using keyword<name_t>::operator=;
-  } name;
+  };
 
-  struct value_t : keyword<value_t>
-  {
-      using keyword<value_t>::operator=;
-  } value;
+  keyword<name_t> name;
 
-  struct index_t : keyword<index_t>
-  {
-      using keyword<index_t>::operator=;
-  } index;
+  struct value_t;
+  keyword <value_t> value;
 
-  struct tester_t : keyword<tester_t>
-  {
-      using keyword<tester_t>::operator=;
-  } tester;
+  struct index_t;
+  keyword<index_t> index;
+
+  struct tester_t;
+  keyword<tester_t> tester;
 
   struct f_keywords // vc6 is happier with inheritance than with a typedef
     : keywords<
           tester_t
-        , name_t
+        , arg<name_t, boost::mpl::false_, boost::is_convertible<boost::mpl::_1, const char*> >
         , value_t
         , index_t
       >
@@ -85,7 +81,7 @@ namespace test
   
   bool equal(char const* s1, char const* s2)
   {
-      return !std::strcmp(s1,s2);
+      return !strcmp(s1,s2);
   }
   
   template <class Name, class Value, class Index>
@@ -132,14 +128,10 @@ int main()
        test::values("foo", "bar", "baz")
      , "foo", "bar", "baz"
    );
-   
+
    f(
        test::values("foo", 666.222, 56)
-#if BOOST_MSVC == 1200  // sadly templated operator= just doesn't work.
-     , index(56), name("foo")
-#else 
      , index = 56, name = "foo"
-#endif
    );
    
    //f(index = 56, name = 55); // won't compile
