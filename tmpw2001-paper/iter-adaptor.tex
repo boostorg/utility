@@ -115,8 +115,8 @@ on other iterators (adapted iterators) and generators of new iterator
 families (iterator adaptors). The Iterator Adaptor Library is an
 example of policy-based design and employs template
 meta-programming. We also present the Policy Adapter implementation
-pattern, a strategy used by the library that can also be used to
-generate new representatives of other abstract Concept families.
+pattern, a strategy which can also be used to generate new
+representatives of other abstract Concept families.
 \end{abstract}
 
 
@@ -152,14 +152,17 @@ Concept, iterators can be both efficient and convenient to use.
 
 The \Cpp\ Standard Library contains a wide variety of useful
 iterators. Every one of the standard containers comes with constant
-and mutable iterators (iterators that point to constant objects and
-iterators that point to objects that can be changed or assigned to),
-and also \code{reverse\_} versions of the iterators that traverse the
+and mutable iterators\footnote{The term \emph{mutable iterator} refers
+to iterators over objects that can be changed by assigning to the
+dereferenced iterator, while \emph{constant iterator} refers to
+iterators over objects that cannot be modified}, and also
+\code{reverse\_} versions of those same iterators which traverse the
 container in the opposite direction. The Standard also supplies
 \code{istream\_\-iterator} and \code{ostream\_\-iterator} for reading
-from and writing to streams, \code{insert\_iterator} and
-\code{back\_insert\_iterator} for inserting elements in containers,
-and \code{raw\_\-storage\_\-iterator} for initializing raw
+from and writing to streams, \code{insert\_iterator},
+\code{front\_insert\_iterator} and \code{back\_insert\_iterator} for
+inserting elements into containers, and
+\code{raw\_\-storage\_\-iterator} for initializing raw
 memory~\cite{iso98:_cpp_final_draft_standard}.
 
 Despite the many iterators supplied by the Standard Library, many
@@ -169,7 +172,7 @@ several of these, for example
 \code{line\_iterator}~\cite{austern99:_gener_progr_stl}
 \code{Constant\_iterator}~\cite{koenig97:_rumin_cpp}. The iterator
 abstraction is so powerful, however, that we expect programmers will
-always invent new iterator types.
+always need to invent new iterator types.
 
 \subsection{Adaptors}
 
@@ -191,8 +194,8 @@ bounds-checking to an existing iterator.
 Library~\cite{TMPW00:Weiser}, which adapts containers, are themselves
 adaptors over the underlying iterators.
 
- \item smart iterators~\cite{becker98:_smart_iterators},
-which adapt an iterator's dereferencing behavior by applying a
+ \item smart iterators~\cite{becker98:_smart_iterators}
+adapt an iterator's dereferencing behavior by applying a
 function object to the object being referenced and returning the
 result.
 
@@ -235,7 +238,7 @@ have followed the lead of the standard library, which provides a
 \code{base()} function to access the underlying iterator object of a
 \reverseiterator\ adaptor.}
 
-\subsection{Core Elements of the Concept}
+\subsection{Core Elements of the Iterator Concept}
 
 The first step in designing such a generalized Model is to identify
 the core elements of its interface. We have identified the following
@@ -286,8 +289,9 @@ were quickly implemented using \iteratoradaptor{}:\begin{itemize}
 smart pointers and applies an extra level of dereferencing.
 
  \item Reverse Iterator Adaptor, which inverts the direction of a
-\code{Base} iterator's motion.
-% say something about how this one is better than the std one?
+\code{Base} iterator's motion, while allowing adapted constant and
+mutable iterators to interact in the expected ways. We will discuss
+this further in Section \ref{sec:constant-mutable-iterations}.
 
  \item Transform Iterator Adaptor, which applies a user-defined
 function object to the underlying values when dereferenced. We will
@@ -328,7 +332,7 @@ and delegating functions and by taking care of the complex details of
 iterator implementation.
 
 The central design feature of \iteratoradaptor\ is parameterization by
-an iterator policies class. The policies class is the primary
+a policies class. The policies class is the primary
 communication mechanism between the iterator implementer and the
 \iteratoradaptor{}; it specifies how the new iterator type
 behaves. Unlike the policy classes
@@ -339,12 +343,18 @@ implementation.
 \subsection{Iterator Policies Class}
 \label{sec:iterator-policies-class}
 
-The following example shows how to implement the policies class for a transform
-iterator adaptor: an iterator that applies some function to the value returned
-by dereferencing the base iterator.  The
-\code{transform\_\-iterator\_\-policies} class is templated on the function
-object type, and a function object is stored as a data member of the policies
-class. When adapting an underlying iterator, it is easiest to store any extra state
+The following example shows how to implement the policies class for a
+transform iterator adaptor: an iterator that applies some function to
+the value returned by dereferencing the base iterator.  The
+\code{transform\_\-iterator\_\-policies} class is templated on the
+function object type, and a function object is stored as a data member
+of the policies class.\footnote{We might instead have composed the
+underlying iterator and the function object into a single \code{Base}
+type, but that would have been much more work because so many useful
+defaults are provided when the \code{Base} type is itself an
+iterator.}
+
+When adapting an underlying iterator, it is easiest to store any extra state
 needed by the resulting adapted iterator in the policies class rather than
 incorporating it into the \code{Base} type because \iteratoradaptor\
 provides so many useful defaults when the \code{Base} type is an iterator.
@@ -357,11 +367,12 @@ operations to the base iterator. The main event of the
 \code{transform\_\-iterator\_\-policies} class is the
 \code{dereference()} member function, which simply applies the
 function to the dereferenced value. The base iterator object is the
-second argument to the \code{dereference()} function. The iterator
-type is a template parameter to allow this policy class to be used
-with any base iterator type.\footnote{The term``\code{BaseIterator}''
-here is meant to denote that the \code{Base} type is expected to be an
-iterator.}
+second argument to the \code{dereference()} function. Because the
+iterator type is a template parameter of the \code{dereference()}
+function, the same concrete policies class can be used with any base
+iterator type, which greatly simplifies adaptation.\footnote{The
+term``\code{BaseIterator}'' here is meant to denote that the
+\code{Base} type is expected to be an iterator.}
 
 {\footnotesize
 \begin{verbatim}
@@ -460,10 +471,10 @@ namespace boost {
 \label{sec:iter-type-generator}
 
 In Section~\ref{sec:iterator-policies-class} we showed how to create
-the policy class for the transform iterator, so the next step is to
-use the \iteratoradaptor\ template to construct the actual iterator
+the policy class for the transform iterator; the next step is to use
+the \iteratoradaptor\ template to construct the actual iterator
 type. The best way to package the construction of the transform
-iterator is to create a \emph{type generator}, which is a class
+iterator is to create a \emph{type generator}: a class
 template whose sole purpose is to simplify the instantiation of some
 other complicated class template. It fulfills the same need as a
 template typedef would if that were part of the \Cpp\ language.  The
@@ -486,11 +497,11 @@ shows the type generator for the transform iterator.
 \end{verbatim}
 }
 
-We use \iteratoradaptor\ to define the transform iterator type
-as a nested \code{typedef} inside the
+We use \iteratoradaptor\ to define the transform iterator type as a
+nested \code{typedef} inside the
 \code{transform\_\-iterator\_\-generator} class. The first parameter
-to \iteratoradaptor\ is the base iterator type and the second
-is the policies class. The remaining parameters specify the iterators
+to \iteratoradaptor\ is the base iterator type and the second is the
+policies class. The remaining parameters specify the iterator's
 associated types and are given as \emph{named parameters}.  We will
 discuss this technique in \S\ref{sec:named-template-parameters}.
 
@@ -503,11 +514,11 @@ the \code{pointer} type defaults to \code{value\_type*} and the
 \differencetype{} defaults to the \differencetype{} of
 the base iterator.
 
-It is tempting to create a \code{transform\_\-iterator} by deriving
-from \iteratoradaptor\ (as an alternative to using the
-generator).  This approach does not work, for example, because the
+It is tempting to create a \code{transform\_\-iterator} class template
+which is derived from \iteratoradaptor\, instead of using the
+generator.  This approach does not work, for example, because the
 return type of \code{operator++} of an iterator is required to be the
-same iterator type, but in this case the return type would be
+same iterator type, while in this case the return type would be
 \iteratoradaptor\ and not \code{transform\_\-iterator}.
 
 %It
@@ -532,14 +543,15 @@ they would have to separately construct a policies object and then the
 iterator object. We therefore recommend that iterator implementers
 create an \emph{object generator} function for their iterator. The
 following is the generator function for the transform iterator
-adaptor.\footnote{
-    There is precedent in the standard for calling such
-an object generator, simply ``\code{transform\_iterator()}''
-(e.g. \code{std::back\_inserter}), but also for the more explicit
-\code{make\_} prefix (e.g. \code{std::make\_pair()}) and occasionally
-for using the simple name for the adaptor type itself
-(e.g. \code{std::reverse\_iterator}).  In the end, the authors decided
-that explicit was better than implicit.  }
+adaptor.\footnote{ Although there is precedent in the standard for
+calling such an object generator, simply
+``\code{transform\_iterator()}'' (e.g. \code{std::back\_inserter}),
+the standard also uses the more explicit ``\code{make\_}'' prefix
+(e.g. \code{std::make\_pair()}) and occasionally also uses the simple
+name for the iterator type itself
+(e.g. \code{std::reverse\_iterator}).  In the end, the authors felt
+that explicit was better than implicit and decided to use the
+``\code{make\_}'' prefix for object generators.  }
 
 {\footnotesize
 \begin{verbatim}
@@ -714,7 +726,7 @@ iterator takes its \valuetype\ from the \code{Base}
 iterator's \iteratortraits{}. However, if the \code{Value} parameter \emph{is} supplied,
 an adjustment is made which allows the user to more easily create a
 constant iterator: if the \code{Value} parameter is \code{const T},
-the \valuetype\ will just be \code{T}.Perhaps
+the \valuetype\ will just be \code{T}. Perhaps
 strangely, a constant iterator's \valuetype\ should never be
 \code{const}, because it would prevent algorithms from declaring
 modifiable temporary objects which are copied from dereferenced
@@ -812,8 +824,7 @@ associated types used to look something like this:
 Unfortunately, this strategy can only take us so far. It turns out
 that there are plenty of iterators which don't fit neatly into the
 system for ordering defaults. For example, the specialized Transform
-Iterator Adaptor described earlier
-% When we reorganize the paper it may appear later. check this out.
+Iterator Adaptor described in Section~\ref{sec:iterator-policies-class}
 limits the category of its \code{Base} iterator to
 \stlconcept{InputIterator}, so the we'd only need to supply the
 \valuetype{}, \code{reference}, and \iteratorcategory\ if
@@ -840,7 +851,7 @@ an appropriately-named wrapper class for each parameter. For example:
 }
 
 Instead of passing the argument \code{Value} directly to
-\iteratoradaptor\ the user passes
+\iteratoradaptor\ the user can pass
 \code{value\_type\_is<Value>}. The \iteratoradaptor\ has
 five arguments for the associated types, each of which could be used
 to specify any of the actual parameters. The
@@ -967,7 +978,9 @@ kinds of iterators should propagate the ability to interact. For
 example, a reverse iterator adaptor applied to \code{C::iterator} and
 \code{C::const\_iterator} should result in mutable and constant
 reverse iterator types that have the same ability to interact as the
-\code{Base} iterators do.
+\code{Base} iterators do. The \reverseiterator{} adaptor supplied by
+the Iterator Adaptor Library have this ability, although those
+supplied by the \Cpp\ standard library do not.
 
 The iterator adaptor binary operators are implemented using function
 templates (as shown in the previous Subsection). This allows the same
@@ -1117,13 +1130,13 @@ dangling reference.
 
 The \Cpp\ Standard specifies that the return type of \code{operator[]}
 of a random access iterator must be ``convertible to \code{T}''.  This
-opens up the possibility of returning by-balue from \code{operator[]}
-instead of by-reference, and thereby avoiding the above problem.  This
+opens up the possibility of returning by-value from \code{operator[]}
+instead of by-reference, thereby avoiding the above problem.  This
 approach, though safer, has the disadvantage of being a less
 orthogonal design since \code{operator*} is required to return the
 exact type \code{T\&}, and one might think that \code{operator[]} and
 \code{operator*} should be same in this respect.  The \Cpp\ Standards
-Committee is currently debating as to whether the random access
+Committee is currently debating the question of whether the random access
 iterator requirements should be changed.
 
 Boost's \iteratoradaptor\ takes the safe route and returns the result
@@ -1143,9 +1156,11 @@ Under the current \Cpp\ Standard, you cannot assign into the result of
 but instead must write \code{*(i + n) = x}.
 
 It would be nice to return by-reference for iterators that can support
-it, and by-value for the rest. However, the current
-\iteratortraits\ does not provide enough information to make the
-choice.
+it, and by-value for the rest. However, the current \iteratortraits\
+does not provide enough information to make the choice. The proposal
+in~\cite{siek01:_improved_iter_cat} would solve this problem, but of
+course that will take some time to gain acceptance.
+
 
 % Jeremy: I didn't agree with this part, so commented it out
 % temporarily. I think an iterator which can return by-reference for
@@ -1156,10 +1171,6 @@ choice.
 % and \code{operator*} will be surprising to people. Preferably an
 % iterator would either return by-value for both \code{operator*} and
 % \code{operator[]} or return by-reference for both. 
-
-The proposal in~\cite{siek01:_improved_iter_cat} would solve this
-problem, but of course that will take some time to gain acceptance.
-
 
 \section{Conclusion}
 
