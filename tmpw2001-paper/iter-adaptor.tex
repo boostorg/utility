@@ -89,7 +89,8 @@
 
 \title{Generating Iterator Types}
 
-\author{David Abrahams$^\dag$ and Jeremy Siek$^\ddag$ \\
+\author{David Abrahams$^\dag$ and Jeremy Siek$^\ddag$\thanks{This work
+was partially supported by NSF grant ACI-9982205.} \\
 \\
 $^\dag$ Altra Broadband \\
 \texttt{abrahams@altrabroadband.com}\\
@@ -194,7 +195,7 @@ bounds-checking to an existing iterator.
 Library~\cite{TMPW00:Weiser}, which adapts containers, are themselves
 adaptors over the underlying iterators.
 
- \item smart iterators~\cite{becker98:_smart_iterators}
+ \item smart iterators~\cite{becker98:_smart_iteraters}
 adapt an iterator's dereferencing behavior by applying a
 function object to the object being referenced and returning the
 result.
@@ -203,13 +204,18 @@ result.
 in which a variety of adaptor types are enumerated.
 
 % Jeremy, I don't know what to say about these two. Can you fill it in?
- \item compound iterators~\cite{alexandrescu98:_compound_iters}
+ \item compound iterators~\cite{alexandrescu98:_compound_iters},
+   which access a slice out of a container of containers. 
 
- \item Several iterators from the MTL~\cite{siek99:_scitools}.
+ \item Several iterator adaptors from the MTL~\cite{siek99:_scitools}.
+  The MTL contains a strided iterator, where each call to \code{operator++()}
+  moved the iterator ahead by some constant factor, and a 
+  scaled iterator which multiplies the dereferenced value by some
+  constant. 
 
 \end{itemize}
 
-\section{The Boost Iterator Adaptor Library}
+\section{The Design of the Boost Iterator Adaptor Library}
 
 % We need an intro here (do we?), but I don't think the text below
 % fits in. Suggestions?
@@ -223,7 +229,7 @@ in which a variety of adaptor types are enumerated.
 % fact that most iterators are conceptually simple. The Boost Iterator
 % Adaptor Library addresses these problems.
 
-\subsection{Overall Design}
+%\subsection{Overall Design}
 
 To automate the repetitive work of constructing iterators, one would
 need a generator of new iterator types that can accommodate all the
@@ -240,16 +246,17 @@ have followed the lead of the standard library, which provides a
 
 \subsection{Core Elements of the Iterator Concept}
 
-The first step in designing such a generalized Model is to identify
-the core elements of its interface. We have identified the following
-core behaviors for iterators:\begin{itemize}
+The first step in designing such a generalized model of the iterator
+concept is to identify the core elements of its interface. We have
+identified the following core behaviors for iterators:
+\begin{itemize}
  \item dereferencing
  \item incrementing
  \item decrementing
  \item equality comparison
  \item random-access motion
  \item distance measurement
- \item ordered comparison
+%% \item ordered comparison
 %% Yikes, Jeremy! I think that including both less and distance in the
 %% design might be a design mistake. Doesn't that introduce redundancy?
 %% Shouldn't operator<() be implemented in terms of distance?
@@ -354,12 +361,13 @@ type, but that would have been much more work because so many useful
 defaults are provided when the \code{Base} type is itself an
 iterator.}
 
-When adapting an underlying iterator, it is easiest to store any extra state
-needed by the resulting adapted iterator in the policies class rather than
-incorporating it into the \code{Base} type because \iteratoradaptor\
-provides so many useful defaults when the \code{Base} type is an iterator.
-% this last sentence may need more explaining, I didn't get it on the
-% first read through. -JGS
+When adapting an underlying iterator, it is easiest to store any extra
+state needed by the resulting iterator in the policies class.  The
+alternative is to wrap the underlying iterator in another class that
+contains the state, thereby incorporating the state into the
+\code{Base} type. This approach is much more work since the wrapping
+class will have to delegate lots of operations (instead of allowing
+the \iteratoradaptor\ to implement the delegations).
 
 The policies class inherits from
 \code{default\_\-iterator\_\-policies}, which delegates all other
@@ -529,8 +537,8 @@ same iterator type, while in this case the return type would be
 \label{sec:iter-object-generator}
 
 The next question is how users of the transform iterator will
-construct the iterator. The \iteratoradaptor\ class has the
-following constructor.
+construct the iterator. The \iteratoradaptor\o class has the following
+constructor.
 
 {\footnotesize
 \begin{verbatim}
@@ -538,17 +546,31 @@ following constructor.
 \end{verbatim}
 }
 
-It would be cumbersome for the user to call this constructor since
-they would have to separately construct a policies object and then the
-iterator object. We therefore recommend that iterator implementers
-create an \emph{object generator} function for their iterator. The
-following is the generator function for the transform iterator
-adaptor.\footnote{ Although there is precedent in the standard for
-calling such an object generator, simply
-``\code{transform\_iterator()}'' (e.g. \code{std::back\_inserter}),
-the standard also uses the more explicit ``\code{make\_}'' prefix
-(e.g. \code{std::make\_pair()}) and occasionally also uses the simple
-name for the iterator type itself
+There are two reasons why it is cumbersome for the user to use this
+constructor. First, to call the constructor the user needs to write
+down the exact type of the iterator adaptor. Writing down the type is
+complex, and often requires an extra line of code. If instead we
+provide an \emph{object generator} function, the type of the iterator
+adaptor need not be written down explicitly by the user.  The
+generator function deduces the type of the iterator adaptor and
+returns the new iterator adaptor object, which can then be passed
+directly to the function operating on the iterator.
+
+The second reason it is cumbersome, in this case, to use the
+\iteratoradaptor\ constructor, is that the policies object has to be
+explicitly constructed and passed to the iterator object.  For a
+transform iterator it would be nicer to create the new iterator based
+on the adapted iterator and the function object, thereby not exposing
+the policies class to the user.
+
+We therefore recommend that iterator implementers create an
+\emph{object generator} function for their iterator. The following is
+the generator function for the transform iterator adaptor.\footnote{
+Although there is precedent in the standard for calling such an object
+generator, simply ``\code{transform\_iterator()}''
+(e.g. \code{std::back\_inserter}), the standard also uses the more
+explicit ``\code{make\_}'' prefix (e.g. \code{std::make\_pair()}) and
+occasionally also uses the simple name for the iterator type itself
 (e.g. \code{std::reverse\_iterator}).  In the end, the authors felt
 that explicit was better than implicit and decided to use the
 ``\code{make\_}'' prefix for object generators.  }
@@ -992,8 +1014,8 @@ combinations of constant and mutable iterator interaction.
 
 Most of the redundant operators are implemented in a straightforward
 way based on the core operators. For example, the \code{operator+} is
-implemented in terms of \code{operator+=}. There are a total of 7 core
-operators and 10 redundant operators.
+implemented in terms of \code{operator+=}. There are a total of 6 core
+operators and 11 redundant operators.
 
 {\footnotesize
 \begin{verbatim}
@@ -1082,14 +1104,11 @@ iterator categories derived from the standard ones.
 \label{sec:op-bracket-impl}
 
 The implementation of \code{operator[]} would be trivial except for
-the issue surrounding what the return type should be, whether the
-return type should be by-reference or by-value.
-
-It is dangerous to make the \iteratoradaptor\ always return a
-reference for \code{operator[]} for there are certain situations in
-which this can cause run-time errors.  Suppose the base iterator is
-reading in elements from a file and caching each element as a data
-member of the iterator.
+the question of whether it should return a reference or a
+value. Although it would be more useful to return a reference, this
+can cause run-time errors when adapting a certain class of legal base
+iterators.  Suppose the base iterator is reading in elements from a
+file and caching each element as a data member of the iterator.
 
 {\footnotesize
 \begin{verbatim}
@@ -1132,12 +1151,12 @@ The \Cpp\ Standard specifies that the return type of \code{operator[]}
 of a random access iterator must be ``convertible to \code{T}''.  This
 opens up the possibility of returning by-value from \code{operator[]}
 instead of by-reference, thereby avoiding the above problem.  This
-approach, though safer, has the disadvantage of being a less
-orthogonal design since \code{operator*} is required to return the
-exact type \code{T\&}, and one might think that \code{operator[]} and
-\code{operator*} should be same in this respect.  The \Cpp\ Standards
-Committee is currently debating the question of whether the random access
-iterator requirements should be changed.
+approach, though safer, has the disadvantage of being unintuitive
+since \code{operator*} is required to return the exact type \code{T\&}
+and one might expect that \code{operator[]} and \code{operator*} would
+be same in this respect.  The \Cpp\ Standards Committee is currently
+debating the question of whether the random access iterator
+requirements should be changed.
 
 Boost's \iteratoradaptor\ takes the safe route and returns the result
 by-value. This meets the random access iterator requirements of the
