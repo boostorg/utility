@@ -3,15 +3,12 @@
 subproject libs/utility/test ;
 
 # bring in rules for testing
-SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
-include testing.jam ;
+import testing ;
 
 {
-    # look in BOOST_ROOT for sources first, just in this Jamfile
-    local SEARCH_SOURCE = $(BOOST_ROOT) $(SEARCH_SOURCE) ;
-
     test-suite "utility"
-       : [ run libs/utility/test/lexicographic_test.cpp ]
-         [ run libs/utility/test/lex_performance_test.cpp ]
+       : [ run lexicographic_test.cpp ]
+         [ run lex_performance_test.cpp ]
+         [ run named_params_test.cpp ]
        ;
 }
