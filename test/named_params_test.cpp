@@ -4,31 +4,19 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/named_params.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <cassert>
 #include <string.h>
-//#include <iostream>
+#include <boost/bind.hpp>
 #include <boost/ref.hpp>
-/*
-BOOST_NAMED_PARAMS_FUN(int, f, 0, 3, f_keywords)
-{
-    return p[index];
-}
-*/
 
 namespace test
 {
 
   using boost::keyword;
   using boost::keywords;
-  using boost::arg;
+  using boost::named_param;
 
-  struct name_t
-  {
-      // At some point maybe we should use has_xxx to allow this
-      typedef boost::is_convertible<boost::mpl::_1, const char*> predicate;
-  };
-
+  struct name_t;
   keyword<name_t> name;
 
   struct value_t;
@@ -40,68 +28,48 @@ namespace test
   struct tester_t;
   keyword<tester_t> tester;
 
-  struct X
-  {
-     X(const char*) {}
-  };
-
-  template<class T>
-  struct convertible_from
-  {
-     template<class U>
-     struct apply : boost::is_convertible<U, T>
-     {};
-  };
-
   struct f_keywords // vc6 is happier with inheritance than with a typedef
     : keywords<
           tester_t
-          , arg<name_t, boost::mpl::false_, convertible_from<const char*> >
+        , name_t
         , value_t
         , index_t
       >
   {};
 
-  struct value_default
+  double value_default()
   {
-      typedef double result_type;
-
-      double operator()() const
-      {
-          return 666.222;
-      }
-  };
-
+      return 666.222;
+  }
+  
   template<class Params>
   int f_impl(const Params& p)
   { 
       p[tester](
           p[name]
-        , p[value || value_default() ]
+        , p[value || boost::bind(&value_default) ]
         , p[index | 999]
       );
       return 1;
   }
 
   template<class Tester, class Name, class Value, class Index>
-  int f(Tester const& t, const Name& name_, const Value& value_, const Index& index_,
-        typename f_keywords::restrict<Tester, Name, Value, Index>::type x = f_keywords())
+  int f(Tester const& t, const Name& name_, 
+      const Value& value_, const Index& index_)
   {
-      return f_impl(x(t, name_, value_, index_));
+      return f_impl(f_keywords()(t, name_, value_, index_));
   }
 
   template<class Tester, class Name, class Value>
-  int f(Tester const& t, const Name& name_, const Value& value_, 
-        typename f_keywords::restrict<Tester, Name, Value>::type x = f_keywords())
+  int f(Tester const& t, const Name& name_, const Value& value_)
   {
-      return f_impl(x(t, name_, value_));
+      return f_impl(f_keywords()(t, name_, value_));
   }
 
   template<class Tester, class Name>
-  int f(Tester const& t, const Name& name_, 
-        typename f_keywords::restrict<Tester, Name>::type x = f_keywords())
+  int f(Tester const& t, const Name& name_)
   {
-      return f_impl(x(t, name_));
+      return f_impl(f_keywords()(t, name_));
   }
 
   template <class T>
