@@ -42,9 +42,8 @@ class reference_wrapper_without_result_type
 {
 public:
   template<typename F>
-  struct result_of
+  struct result_of : boost::result_of<F>
   {
-    typedef typename result_of<F>::type type;
   };
 
   operator T& () const { return *(this->t_); }
