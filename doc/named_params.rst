@@ -4,6 +4,7 @@
 
 .. |(logo)| image:: ../../../c++boost.gif
    :alt: Boost
+   :class: boost-logo
 
 __ ../../../index.htm
 
@@ -370,19 +371,19 @@ we supply a macro that generates the boilerplate code.
 Synopsis::
 
      BOOST_NAMED_PARAMS_FUN(
-         return_type, function_name, keywords_type
-       , min_arity, max_arity
+         return_type, function_name
+       , min_arity, max_arity, keywords_type
      );
 
 To generate all the forwarding functions and the implementation
 function for our example, we need only apply
 ``BOOST_NAMED_PARAMS_FUN`` this way::
 
-     BOOST_NAMED_PARAMS_FUN(void, foo, foo_keywords, 0, 2)
+     BOOST_NAMED_PARAMS_FUN(void, foo, 0, 2, foo_keywords)
      {
          std::cout
-             << params[name | "unnamed"] << " = "
-             << params[value | 0] << "\n";
+             << p[name | "unnamed"] << " = "
+             << p[value | 0] << "\n";
      }
 
 Portability
