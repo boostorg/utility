@@ -219,9 +219,9 @@ references that aren't bound to a keyword isn't possible without some help.
 ::
 
     float x;
-    foo(value = x); // float&
-    foo(x); // type is float const&, need help!
-    foo(ref(x)); // type is float&
+    foo(value = x); // held type is float&
+    foo(x); // held type is float const&, need help!
+    foo(ref(x)); // held type is float&
 
 Instances of boost::reference_wrapper<> will un unwrapped to it's held
 reference type.
