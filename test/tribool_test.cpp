@@ -79,6 +79,16 @@ int main()
   assert(x || z == indeterminate);
   assert(y || z);
 
+  assert(indeterminate(y && indeterminate));
+  assert(indeterminate(indeterminate && y));
+  assert(!(x && indeterminate));
+  assert(!(indeterminate && x));
+
+  assert(indeterminate || y);
+  assert(y || indeterminate);
+  assert(indeterminate(x || indeterminate));
+  assert(indeterminate(indeterminate || x));
+
   std::cout << "no errors detected\n";
   return 0;
 }
