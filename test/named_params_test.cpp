@@ -12,29 +12,19 @@
 
 namespace test
 {
-
-  using boost::keyword;
-  using boost::keywords;
-  using boost::named_param;
-
-  struct name_t;
-  keyword<name_t> name;
-
-  struct value_t;
-  keyword <value_t> value;
-
-  struct index_t;
-  keyword<index_t> index;
-
-  struct tester_t;
-  keyword<tester_t> tester;
+  using namespace boost::named_params;
+  
+  keyword<struct name_> name;
+  keyword<struct value_> value;
+  keyword<struct index_> index;
+  keyword<struct tester_> tester;
 
   struct f_keywords // vc6 is happier with inheritance than with a typedef
     : keywords<
-          tester_t
-        , name_t
-        , value_t
-        , index_t
+          tester_
+        , name_
+        , value_
+        , index_
       >
   {};
 
@@ -49,7 +39,8 @@ namespace test
       p[tester](
           p[name]
         , p[value || boost::bind(&value_default) ]
-        , p[index | 999]
+//        , p[value | 666.222 ]
+        , p[index | 999 ]
       );
       return 1;
   }
@@ -127,6 +118,26 @@ namespace test
   values(Name const& n, Value const& v, Index const& i)
   {
       return values_t<Name,Value,Index>(n,v,i);
+  }
+
+  typedef f_keywords g_keywords;
+  
+  template<class Args>
+  int g_impl(Args const& args)
+  {
+      return f(args);
+  }
+  
+  template<class A0>
+  int g(A0 const& a0)
+  {
+      return g_impl(g_keywords(a0));
+  }
+
+  template<class A0, class A1>
+  int g(A0 const& a0, A1 const& a1)
+  {
+      return g_impl(g_keywords(a0, a1));
   }
 }
 

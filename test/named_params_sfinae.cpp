@@ -11,25 +11,21 @@
 
 namespace test
 {
-  using boost::keyword;
-  using boost::keywords;
-  using boost::named_param;
+  using namespace boost::named_params;
 
-  struct name_t; keyword<name_t> name;
-  struct value_t; keyword<value_t> value;
+  keyword<struct name_> name;
+  keyword<struct value_> value;
   
   struct f_keywords
-      : keywords<
-            named_param<
-                name_t
-              , boost::mpl::true_
-              , boost::is_convertible<boost::mpl::_, std::string>
-            >
-          , named_param<
-                value_t
-              , boost::mpl::true_
-              , boost::is_convertible<boost::mpl::_, float>
-            >
+    : keywords<
+          optional<
+              name_
+            , boost::is_convertible<boost::mpl::_, std::string>
+          >
+        , optional<
+              value_
+            , boost::is_convertible<boost::mpl::_, float>
+          >
       >
   {};
 
