@@ -4,9 +4,9 @@
 //
 //    See the file enable_if_LICENSE for licensing conditions.
 //
-//    Authors: Jaakko Järvi (jajarvi@osl.iu.edu)
-//             Jeremiah Willcock (jewillco@osl.iu.edu)
-//             Andrew Lumsdaine (lums@osl.iu.edu)
+//    Authors: Jaakko Järvi (jajarvi at osl.iu.edu)
+//             Jeremiah Willcock (jewillco at osl.iu.edu)
+//             Andrew Lumsdaine (lums at osl.iu.edu)
 //
 
 #include <boost/test/minimal.hpp>
