@@ -7,6 +7,16 @@
 //  See http://www.boost.org for most recent version including documentation.
 
 //  Revision History
+//  04 Mar 2001 Patches for Intel C++ (Dave Abrahams)
+//  19 Feb 2001 Take advantage of improved iterator_traits to do more tests
+//              on MSVC. Reordered some #ifdefs for coherency.
+//              (David Abrahams)
+//  13 Feb 2001 Test new VC6 workarounds (David Abrahams)
+//  11 Feb 2001 Final fixes for Borland (David Abrahams)
+//  11 Feb 2001 Some fixes for Borland get it closer on that compiler
+//              (David Abrahams)
+//  07 Feb 2001 More comprehensive testing; factored out static tests for
+//              better reuse (David Abrahams)
 //  21 Jan 2001 Quick fix to my_iterator, which wasn't returning a
 //              reference type from operator* (David Abrahams)
 //  19 Jan 2001 Initial version with iterator operators (David Abrahams)
@@ -21,105 +31,162 @@
 #include <cassert>
 #include <iostream>
 
-struct my_iterator
-    : public boost::forward_iterator_helper<my_iterator, const char, long>
+// An iterator for which we can get traits.
+struct my_iterator1
+    : boost::forward_iterator_helper<my_iterator1, char, long, const char*, const char&>
 {
-    my_iterator(const char* p) : m_p(p) {}
+    my_iterator1(const char* p) : m_p(p) {}
     
-    bool operator==(const my_iterator& rhs) const
+    bool operator==(const my_iterator1& rhs) const
         { return this->m_p == rhs.m_p; }
 
-    my_iterator& operator++() { ++this->m_p; return *this; }
+    my_iterator1& operator++() { ++this->m_p; return *this; }
     const char& operator*() { return *m_p; }
  private:
     const char* m_p;
 };
 
-// Test difference_type and iterator_category
+// Used to prove that we don't require std::iterator<> in the hierarchy under
+// MSVC6, and that we can compute all the traits for a standard-conforming UDT
+// iterator.
+struct my_iterator2
+    : boost::equality_comparable<my_iterator2
+    , boost::incrementable<my_iterator2
+    , boost::dereferenceable<my_iterator2,const char*> > >
+{
+    typedef char value_type;
+    typedef long difference_type;
+    typedef const char* pointer;
+    typedef const char& reference;
+    typedef std::forward_iterator_tag iterator_category;
+    
+    my_iterator2(const char* p) : m_p(p) {}
+    
+    bool operator==(const my_iterator2& rhs) const
+        { return this->m_p == rhs.m_p; }
 
-// istream_iterator (forward_iterator_tag, ptrdiff_t)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::istream_iterator<int> >::iterator_category,
-      std::input_iterator_tag
-    >::value));
+    my_iterator2& operator++() { ++this->m_p; return *this; }
+    const char& operator*() { return *m_p; }
+ private:
+    const char* m_p;
+};
 
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::istream_iterator<int> >::difference_type,
-      std::ptrdiff_t
-    >::value));
+// Used to prove that we're not overly confused by the existence of
+// std::iterator<> in the hierarchy under MSVC6 - we should find that
+// boost::detail::iterator_traits<my_iterator3>::difference_type is int.
+struct my_iterator3 : my_iterator1
+{
+    typedef int difference_type;
+    my_iterator3(const char* p) : my_iterator1(p) {}
+};
 
-// ostream_iterator (output_iterator_tag, void)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::ostream_iterator<int> >::iterator_category,
-      std::output_iterator_tag
-    >::value));
+template <class Iterator,
+    class value_type, class difference_type, class pointer, class reference, class category>
+struct non_portable_tests
+{
+    // Unfortunately, the VC6 standard library doesn't supply these :(
+    BOOST_STATIC_ASSERT((
+        boost::is_same<
+        typename boost::detail::iterator_traits<Iterator>::pointer,
+        pointer
+        >::value));
+    
+    BOOST_STATIC_ASSERT((
+        boost::is_same<
+        typename boost::detail::iterator_traits<Iterator>::reference,
+        reference
+        >::value));
+};
 
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::ostream_iterator<int> >::difference_type,
-      void
-    >::value));
+template <class Iterator,
+    class value_type, class difference_type, class pointer, class reference, class category>
+struct portable_tests
+{
+    BOOST_STATIC_ASSERT((
+        boost::is_same<
+        typename boost::detail::iterator_traits<Iterator>::difference_type,
+        difference_type
+        >::value));
+    
+    BOOST_STATIC_ASSERT((
+        boost::is_same<
+        typename boost::detail::iterator_traits<Iterator>::iterator_category,
+        category
+        >::value));
+};
 
-// list<int>::iterator (bidirectional_iterator_tag, ptrdiff_t)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::list<int>::iterator>::iterator_category,
-      std::bidirectional_iterator_tag
-    >::value));
+// Test iterator_traits
+template <class Iterator,
+    class value_type, class difference_type, class pointer, class reference, class category>
+struct input_iterator_test
+    : portable_tests<Iterator,value_type,difference_type,pointer,reference,category>
+{
+    BOOST_STATIC_ASSERT((
+        boost::is_same<
+        typename boost::detail::iterator_traits<Iterator>::value_type,
+        value_type
+        >::value));
+};
+
+template <class Iterator,
+    class value_type, class difference_type, class pointer, class reference, class category>
+struct non_pointer_test
+    : input_iterator_test<Iterator,value_type,difference_type,pointer,reference,category>
+      , non_portable_tests<Iterator,value_type,difference_type,pointer,reference,category>
+{
+};
+
+template <class Iterator,
+    class value_type, class difference_type, class pointer, class reference, class category>
+struct maybe_pointer_test
+    : portable_tests<Iterator,value_type,difference_type,pointer,reference,category>
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+      , non_portable_tests<Iterator,value_type,difference_type,pointer,reference,category>
+#endif
+{
+};
+
+input_iterator_test<std::istream_iterator<int>, int, std::ptrdiff_t, int*, int&, std::input_iterator_tag>
+        istream_iterator_test;
+
+// 
+#if defined(__BORLANDC__) && !defined(__SGI_STL_PORT)
+typedef ::std::char_traits<char>::off_type distance;
+non_pointer_test<std::ostream_iterator<int>,int,
+    distance,int*,int&,std::output_iterator_tag> ostream_iterator_test;
+#elif defined(BOOST_MSVC_STD_ITERATOR)
+non_pointer_test<std::ostream_iterator<int>,
+    int, void, void, void, std::output_iterator_tag>
+        ostream_iterator_test;
+#else
+non_pointer_test<std::ostream_iterator<int>,
+    void, void, void, void, std::output_iterator_tag>
+        ostream_iterator_test;
+#endif
+
 
 #ifdef __KCC
   typedef long std_list_diff_type;
 #else
   typedef std::ptrdiff_t std_list_diff_type;
 #endif
+non_pointer_test<std::list<int>::iterator, int, std_list_diff_type, int*, int&, std::bidirectional_iterator_tag>
+        list_iterator_test;
 
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::list<int>::iterator>::difference_type,
-      std_list_diff_type
-    >::value));
+maybe_pointer_test<std::vector<int>::iterator, int, std::ptrdiff_t, int*, int&, std::random_access_iterator_tag>
+        vector_iterator_test;
 
-// vector<int>::iterator (random_access_iterator_tag, ptrdiff_t)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::vector<int>::iterator>::iterator_category,
-      std::random_access_iterator_tag
-    >::value));
+maybe_pointer_test<int*, int, std::ptrdiff_t, int*, int&, std::random_access_iterator_tag>
+        int_pointer_test;
+
+non_pointer_test<my_iterator1, char, long, const char*, const char&, std::forward_iterator_tag>
+       my_iterator1_test;
                     
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<std::vector<int>::iterator>::difference_type,
-      std::ptrdiff_t
-    >::value));
+non_pointer_test<my_iterator2, char, long, const char*, const char&, std::forward_iterator_tag>
+       my_iterator2_test;
                     
-// int* (random_access_iterator_tag, ptrdiff_t)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<int*>::iterator_category,
-      std::random_access_iterator_tag
-    >::value));
-                    
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<int*>::difference_type,
-    std::ptrdiff_t
-    >::value));
-                    
-// my_iterator (forward_iterator_tag, long)
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<my_iterator>::iterator_category,
-      std::forward_iterator_tag
-    >::value));
-                    
-BOOST_STATIC_ASSERT((
-    boost::is_same<
-      boost::detail::iterator_traits<my_iterator>::difference_type,
-      long
-    >::value));
+non_pointer_test<my_iterator3, char, int, const char*, const char&, std::forward_iterator_tag>
+       my_iterator3_test;
                     
 int main()
 {
@@ -135,7 +202,9 @@ int main()
         assert(boost::detail::distance(v.begin(), v.end()) == length);
 
         assert(boost::detail::distance(&ints[0], ints + length) == length);
-        assert(boost::detail::distance(my_iterator(chars), my_iterator(chars + length)) == length);
+        assert(boost::detail::distance(my_iterator1(chars), my_iterator1(chars + length)) == length);
+        assert(boost::detail::distance(my_iterator2(chars), my_iterator2(chars + length)) == length);
+        assert(boost::detail::distance(my_iterator3(chars), my_iterator3(chars + length)) == length);
     }
     return 0;
 }
