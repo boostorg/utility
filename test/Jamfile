@@ -10,6 +10,7 @@ import testing ;
        : [ run lexicographic_test.cpp ]
          [ run lex_performance_test.cpp ]
          [ run named_params_test.cpp ]
+         [ run named_params_sfinae.cpp ]
 	 [ run enable_if_constructors.cpp ]
          [ run enable_if_member_templates.cpp ]
          [ run enable_if_dummy_arg_disambiguation.cpp ]
