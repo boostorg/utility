@@ -87,7 +87,7 @@
 
 \begin{document}
 
-\title{Policy Adaptors in the Boost Iterator Adaptor Library}
+\title{Policy Adaptors and the Boost Iterator Adaptor Library}
 
 \author{David Abrahams$^\dag$ and Jeremy Siek$^\ddag$\thanks{This work
 was partially supported by NSF grant ACI-9982205.} \\
@@ -156,7 +156,7 @@ iterators. Every one of the standard containers comes with constant
 and mutable iterators\footnote{The term \emph{mutable iterator} refers
 to iterators over objects that can be changed by assigning to the
 dereferenced iterator, while \emph{constant iterator} refers to
-iterators over objects that cannot be modified}, and also
+iterators over objects that cannot be modified.}, and also
 \code{reverse\_} versions of those same iterators which traverse the
 container in the opposite direction. The Standard also supplies
 \code{istream\_\-iterator} and \code{ostream\_\-iterator} for reading
@@ -356,18 +356,20 @@ transform iterator adaptor: an iterator that applies some function to
 the value returned by dereferencing the base iterator.  The
 \code{transform\_\-iterator\_\-policies} class is templated on the
 function object type, and a function object is stored as a data member
-of the policies class.\footnote{We might instead have composed the
-underlying iterator and the function object into a single \code{Base}
-type, but that would have been much more work because so many useful
-defaults are provided when the \code{Base} type is itself an
-iterator.}
+of the policies class.
+
+% \footnote{We might instead have composed the
+% underlying iterator and the function object into a single \code{Base}
+% type, but that would have been much more work because so many useful
+% defaults are provided when the \code{Base} type is itself an
+% iterator.}
 
 When adapting an underlying iterator, it is easiest to store any extra
 state needed by the resulting iterator in the policies class.  The
 alternative is to wrap the underlying iterator in another class that
 contains the state, thereby incorporating the state into the
 \code{Base} type. This approach is much more work since the wrapping
-class will have to delegate lots of operations (instead of allowing
+class will have to delegate many operations (instead of allowing
 the \iteratoradaptor\ to implement the delegations).
 
 The policies class inherits from
@@ -466,10 +468,6 @@ namespace boost {
     template <class Base1, class Base2>
     bool equal(const Base1& x, const Base2& y) const
       { return x == y; }
-
-    template <class Base1, class Base2>
-    bool less(const Base1& x, const Base2& y) const
-      { return x < y; }
   };
 } // namespace boost
 \end{verbatim}
@@ -538,7 +536,7 @@ same iterator type, while in this case the return type would be
 \label{sec:iter-object-generator}
 
 The next question is how users of the transform iterator will
-construct the iterator. The \iteratoradaptor\o class has the following
+construct the iterator. The \iteratoradaptor\ class has the following
 constructor.
 
 {\footnotesize
