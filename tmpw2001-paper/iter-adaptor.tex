@@ -61,22 +61,21 @@ contexts.
 \subsection{Iterators}
 
 The power of iterators derives from several key
-features:\begin{itemize}
+features:
+\begin{itemize}
+\item Iterators form a rich \emph{family} of concepts\footnote{We use
+    the term \emph{concept} to mean a set of requirements that a type
+    must satisfy to be used with a particular template parameter.}
+  whose functionality varies along several axes: movement,
+  dereferencing, and associated type exposure.
   
-\item Iterators form a rich \emph{family} of concepts whose
-  functionality varies along several axes: movement, dereferencing,
-  and associated type exposure\footnote{We use the term \emph{concept}
-    to mean a set of requirements that a type must
-    satisfy to be used with a particular template parameter.}.
-
- \item The iterator concepts of the \Cpp\
-standard form a refinement hierarchy which allows the same basic
-interface elements to implement diverse functionality.
-
- \item Because
-built-in pointer types model the \stlconcept{RandomAccessIterator}
-concept, iterators can be both efficient and convenient to use.
-
+\item The iterator concepts of the \Cpp\ standard form a refinement
+  hierarchy which allows the same basic interface elements to
+  implement diverse functionality.
+  
+\item Because built-in pointer types model the
+  \stlconcept{RandomAccessIterator} concept, iterators can be both
+  efficient and convenient to use.
 \end{itemize}
 
 The \Cpp\ Standard Library contains a wide variety of useful
@@ -408,15 +407,15 @@ namespace boost {
 
 In Section~\ref{sec:iterator-policies-class} we showed how to create
 the policy class for the transform iterator; the next step is to use
-the \iteratoradaptor\ template to construct the actual iterator
-type. The best way to package the construction of the transform
-iterator is to create a \emph{type generator}: a class
-template whose sole purpose is to simplify the instantiation of some
-other complicated class template. It fulfills the same need as a
-template typedef would, if that were part of the \Cpp\ language.  The
-first template parameter to the generator is the type of the function
-object and the second is the base iterator type.  The following code
-shows the type generator for the transform iterator.
+the \iteratoradaptor\ template to construct the actual iterator type.
+The best way to package the construction of the transform iterator is
+to create a \emph{type generator}: a class template whose sole purpose
+is to simplify the instantiation of some other complicated class
+template. It fulfills the same need as a template typedef would, if
+that were part of the \Cpp\ language.  The first template parameter to
+the type generator is the type of the function object and the second
+is the base iterator type.  The following code shows the type
+generator for the transform iterator.
 
 {\footnotesize
 \begin{verbatim}
@@ -452,7 +451,7 @@ the base iterator.
 
 It is tempting to create a \code{transform\_\-iterator} class template
 which is derived from \iteratoradaptor\, instead of using the
-generator.  This approach does not work, for example, because the
+type generator.  This approach does not work, for example, because the
 return type of \code{operator++} of an iterator is required to be the
 same iterator type, while in this case the return type would be
 \iteratoradaptor\ and not \code{transform\_\-iterator}.
@@ -521,21 +520,21 @@ In the example above, \code{std::back\_\-inserter} is a type of
 function called an \emph{object generator} which returns an object of
 type \code{std::back\_\-insert\_\-iterator<my\_\-list>}. An object
 generator allows the user to build adapted types ``on the fly'' and
-pass them directly to functions, so that no declaration is
-needed. This idiom is especially convenient in the case of iterators,
-since so many algorithms are implemented in terms of iterator
-ranges. We therefore recommend that iterator implementers create an
-object generator for their iterators. The generator
-function for the transform iterator adaptor,
-\code{make\_\-transform\_\-iterator}, is shown below.\footnote{
-Although there is precedent in the standard for calling such an object
-generator, simply ``\code{transform\_iterator()}''
-(e.g. \code{std::back\_\-inserter}), the standard also uses the more
-explicit ``\code{make\_}'' prefix (e.g. \code{std::make\_pair()}) and
-occasionally also reserves the simple name for the iterator type itself
-(e.g. \code{std::reverse\_iterator}).  In the end, the authors felt
-that explicit was better than implicit and decided to use the
-``\code{make\_}'' prefix for object generators.  }
+pass them directly to functions, so that no declaration is needed.
+This idiom is especially convenient in the case of iterators, since so
+many algorithms are implemented in terms of iterator ranges. We
+therefore recommend that iterator implementers create an object
+generator for their iterators. The object generator function for the
+transform iterator adaptor, \code{make\_\-transform\_\-iterator}, is
+shown below.\footnote{ Although there is precedent in the standard for
+  calling such an object generator, simply
+  ``\code{transform\_iterator()}'' (e.g.
+  \code{std::back\_\-inserter}), the standard also uses the more
+  explicit ``\code{make\_}'' prefix (e.g. \code{std::make\_pair()})
+  and occasionally also reserves the simple name for the iterator type
+  itself (e.g. \code{std::reverse\_iterator}).  In the end, the
+  authors felt that explicit was better than implicit and decided to
+  use the ``\code{make\_}'' prefix for object generators.  }
 
 {\footnotesize
 \begin{verbatim}
