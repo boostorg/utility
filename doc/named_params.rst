@@ -141,19 +141,19 @@ Defining the forwarding functions
 
      void foo()
      {
-         foo_impl(foo_keywords());
+         foo_impl(foo_keywords()());
      }
 
      template<class A0>
      void foo(const A0& a0)
      {
-         foo_impl(foo_keywords(a0));
+         foo_impl(foo_keywords()(a0));
      }
 
      template<class A0, class A1>
      void foo(const A0& a0, const A1& a1)
      {
-         foo_impl(foo_keywords(a0, a1));
+         foo_impl(foo_keywords()(a0, a1));
      }
 
 Defining the implementation function
