@@ -8,11 +8,13 @@
 //             Andrew Lumsdaine (lums at osl.iu.edu)
 //
 
+// Testing all variations of lazy_enable_if.
+
 #include <boost/test/minimal.hpp>
 #include <boost/mpl/not.hpp>
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_arithmetic.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 using boost::lazy_enable_if;
 using boost::lazy_disable_if;
@@ -20,22 +22,26 @@ using boost::lazy_disable_if;
 using boost::lazy_enable_if_c;
 using boost::lazy_disable_if_c;
 
-using boost::is_arithmetic;
+
+template <class T>
+struct is_int_or_double {
+  BOOST_STATIC_CONSTANT(bool, 
+    value = (boost::is_same<T, int>::value || 
+	     boost::is_same<T, double>::value));
+};
 
 template <class T>
 struct some_traits {
-  BOOST_STATIC_CONSTANT(bool, value = false);
+  typedef typename T::does_not_exist type;
 };
 
 template <>
 struct some_traits<int> {
-  BOOST_STATIC_CONSTANT(bool, value = true);
   typedef bool type;
 };
 
 template <>
 struct some_traits<double> {
-  BOOST_STATIC_CONSTANT(bool, value = true);
   typedef bool type;
 };
 
@@ -53,21 +59,21 @@ struct make_bool<double> {};
 namespace A {
 
   template<class T>
-  typename lazy_enable_if<some_traits<T>, some_traits<T> >::type
+  typename lazy_enable_if<is_int_or_double<T>, some_traits<T> >::type
   foo(T t) { return true; }
 
   template<class T>
-  typename lazy_enable_if_c<some_traits<T>::value, some_traits<T> >::type
+  typename lazy_enable_if_c<is_int_or_double<T>::value, some_traits<T> >::type
   foo2(T t) { return true; }
 }
 
 namespace B {
   template<class T>
-  typename lazy_disable_if<some_traits<T>, make_bool<T> >::type
+  typename lazy_disable_if<is_int_or_double<T>, make_bool<T> >::type
   foo(T t) { return false; }
 
   template<class T>
-  typename lazy_disable_if_c<some_traits<T>::value, make_bool<T> >::type
+  typename lazy_disable_if_c<is_int_or_double<T>::value, make_bool<T> >::type
   foo2(T t) { return false; }
 }
 
