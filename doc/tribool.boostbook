@@ -150,4 +150,18 @@ else {
   </section>
 
   <xi:include href="reference.boostbook"/>
+
+  <testsuite>
+    <run-test filename="tribool_test.cpp">
+      <purpose><para>Test all features of the
+      <code><classname>boost::tribool</classname></code>
+      class.</para></purpose>
+    </run-test>
+
+    <run-test filename="tribool_rename_test.cpp">
+      <purpose><para>Test the use of the
+      <code><macroname>BOOST_TRIBOOL_THIRD_STATE</macroname></code>
+      macro.</para></purpose>
+    </run-test>
+  </testsuite>
 </library>
