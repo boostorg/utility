@@ -90,6 +90,11 @@
   }
 </pre>
 
+<p> Users may introduce additional keywords for the indeterminate value in addition to the implementation-supplied <code>indeterminate</code> using the <code>BOOST_TRIBOOL_THIRD_STATE</code> macro. For instance, the following macro instantiation (at the global scope) will introduce the keyword <code>maybe</code> as a synonym for <code>indeterminate</code> (also residing in the <code>boost</code> namespace):
+<pre>
+  BOOST_TRIBOOL_THIRD_STATE(maybe)
+</pre>
+
 <a name="tables"><h2>Truth Tables</h2></a>
 <p>
 <table>
