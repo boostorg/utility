@@ -35,11 +35,11 @@ inline void swap(T& lhs, T& rhs)
 {
     T tmp( move(lhs) );
     lhs = move(rhs);
-    rhs = move(tmp)
+    rhs = move(tmp);
 }
 
 #ifdef __GNUC__
-using using boost::detail::move_swap::swap;
+using boost::detail::move_swap::swap;
 #endif // __GNUC_ workaround
 
 template <typename T>
