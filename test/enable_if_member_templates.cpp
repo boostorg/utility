@@ -30,11 +30,11 @@ struct container {
 int test_main(int, char*[])
 {
  
-  BOOST_TEST(container().arithmetic_object(1));
-  BOOST_TEST(container().arithmetic_object(1.0));
+  BOOST_CHECK(container().arithmetic_object(1));
+  BOOST_CHECK(container().arithmetic_object(1.0));
 
-  BOOST_TEST(!container().arithmetic_object("1"));  
-  BOOST_TEST(!container().arithmetic_object(static_cast<void*>(0)));  
+  BOOST_CHECK(!container().arithmetic_object("1"));  
+  BOOST_CHECK(!container().arithmetic_object(static_cast<void*>(0)));  
 
   return 0;
 }

@@ -45,14 +45,14 @@ struct xstring
 int test_main(int, char*[])
 {
  
-  BOOST_TEST(container(1).my_value);
-  BOOST_TEST(container(1.0).my_value);
+  BOOST_CHECK(container(1).my_value);
+  BOOST_CHECK(container(1.0).my_value);
 
-  BOOST_TEST(!container("1").my_value);  
-  BOOST_TEST(!container(static_cast<void*>(0)).my_value);  
+  BOOST_CHECK(!container("1").my_value);  
+  BOOST_CHECK(!container(static_cast<void*>(0)).my_value);  
 
   char sa[] = "123456";
-  BOOST_TEST(xstring<char>(sa, sa+6).data == 6);
+  BOOST_CHECK(xstring<char>(sa, sa+6).data == 6);
 
 
   return 0;

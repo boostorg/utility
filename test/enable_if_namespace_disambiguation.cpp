@@ -34,11 +34,11 @@ int test_main(int, char*[])
 {
   using namespace A;
   using namespace B;
-  BOOST_TEST(arithmetic_object(1));
-  BOOST_TEST(arithmetic_object(1.0));
+  BOOST_CHECK(arithmetic_object(1));
+  BOOST_CHECK(arithmetic_object(1.0));
 
-  BOOST_TEST(!arithmetic_object("1"));  
-  BOOST_TEST(!arithmetic_object(static_cast<void*>(0)));  
+  BOOST_CHECK(!arithmetic_object("1"));  
+  BOOST_CHECK(!arithmetic_object(static_cast<void*>(0)));  
 
   return 0;
 }

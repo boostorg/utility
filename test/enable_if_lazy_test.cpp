@@ -75,17 +75,17 @@ int test_main(int, char*[])
 {
   using namespace A;
   using namespace B;
-  BOOST_TEST(foo(1));
-  BOOST_TEST(foo(1.0));
+  BOOST_CHECK(foo(1));
+  BOOST_CHECK(foo(1.0));
 
-  BOOST_TEST(!foo("1"));  
-  BOOST_TEST(!foo(static_cast<void*>(0)));  
+  BOOST_CHECK(!foo("1"));  
+  BOOST_CHECK(!foo(static_cast<void*>(0)));  
 
-  BOOST_TEST(foo2(1));
-  BOOST_TEST(foo2(1.0));
+  BOOST_CHECK(foo2(1));
+  BOOST_CHECK(foo2(1.0));
 
-  BOOST_TEST(!foo2("1"));  
-  BOOST_TEST(!foo2(static_cast<void*>(0)));  
+  BOOST_CHECK(!foo2("1"));  
+  BOOST_CHECK(!foo2(static_cast<void*>(0)));  
 
   return 0;
 }

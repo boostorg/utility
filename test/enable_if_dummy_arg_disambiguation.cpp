@@ -33,11 +33,11 @@ arithmetic_object(T t, dummy<1> = 0) { return false; }
 int test_main(int, char*[])
 {
  
-  BOOST_TEST(arithmetic_object(1));
-  BOOST_TEST(arithmetic_object(1.0));
+  BOOST_CHECK(arithmetic_object(1));
+  BOOST_CHECK(arithmetic_object(1.0));
 
-  BOOST_TEST(!arithmetic_object("1"));  
-  BOOST_TEST(!arithmetic_object(static_cast<void*>(0)));  
+  BOOST_CHECK(!arithmetic_object("1"));  
+  BOOST_CHECK(!arithmetic_object(static_cast<void*>(0)));  
 
   return 0;
 }

@@ -48,17 +48,17 @@ struct tester2<T, typename disable_if<is_arithmetic<T> >::type> {
 int test_main(int, char*[])
 {
  
-  BOOST_TEST(tester<int>::value);
-  BOOST_TEST(tester<double>::value);
+  BOOST_CHECK(tester<int>::value);
+  BOOST_CHECK(tester<double>::value);
 
-  BOOST_TEST(!tester<char*>::value);
-  BOOST_TEST(!tester<void*>::value);
+  BOOST_CHECK(!tester<char*>::value);
+  BOOST_CHECK(!tester<void*>::value);
 
-  BOOST_TEST(tester2<int>::value);
-  BOOST_TEST(tester2<double>::value);
+  BOOST_CHECK(tester2<int>::value);
+  BOOST_CHECK(tester2<double>::value);
 
-  BOOST_TEST(!tester2<char*>::value);
-  BOOST_TEST(!tester2<void*>::value);
+  BOOST_CHECK(!tester2<char*>::value);
+  BOOST_CHECK(!tester2<void*>::value);
 
   return 0;
 }
