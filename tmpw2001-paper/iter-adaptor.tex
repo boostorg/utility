@@ -1,4 +1,3 @@
-
 % Introduction/Motivation, etc. (Dave & Jeremy)
 
 % iterator policies   (Dave)
@@ -60,12 +59,9 @@
 $^\dag$ Altra Broadband \\
 \texttt{abrahams@altrabroadband.com}\\
 \\
-$^\ddag$ Computer Science Department \\
-Indiana University \\
-Lindley Hall \\
-150 S. Woodlawn Ave. \\
-Bloomington, IN\ \ 47405-7104\\
-\texttt{jsiek@cs.indiana.edu}
+$^\ddag$ AT\&T Labs - Research \\
+Florham Park, NJ 07932, USA \\
+\texttt{jsiek@research.att.com}
 }
 
 \maketitle
@@ -79,7 +75,7 @@ the C++ Standard requirements for an iterator can be
 challenging. There are a number of common mistakes that people make,
 and there are necessary complexities in a C++ Standard conforming
 implementation that one would rather not have to think about. In this
-paper we present the iterator type generator in the Boost Iterator
+paper we present the iterator type generator from the Boost Iterator
 Adaptor Library. This generator simplifies the creation of iterators;
 it automates the error-prone and redundant parts of the implementation
 and greatly simplifies the creation of iterator types that are
@@ -122,7 +118,7 @@ despite the fact that most iterators are conceptually simple.
 \subsection{Redundant Operators}
 
 Perhaps the most obvious of reasons that implementing an iterator can
-be tediuos is that there are lots of redundant operators.  That is,
+be tedious is that there are lots of redundant operators.  That is,
 there are many operators that can be trivially defined in terms of
 other operators. For example, the \code{operator++(int)} is often best
 implemented in terms of \code{operator++()} as the example below
@@ -157,7 +153,7 @@ redundant.
 % \code{operator>=}
 
 
-\subsection{Delagation of Operators for Iterator Adaptors}
+\subsection{Delegation of Operators for Iterator Adaptors}
 
 It is often the case that an iterator adaptor changes the meaning of
 one or two operators while leaving the rest of the operators defined
@@ -178,8 +174,8 @@ for the \code{indirect\_iterator} would be a tedious task.
       return **iter; // dereference twice
     }
     // Delegating the implementation to the underlying iterator.
-    iter_adaptor& operator++() { ++iter; return *this; }
-    iter_adaptor& operator--() { --iter; return *this; }
+    indirect_iterator& operator++() { ++iter; return *this; }
+    indirect_iterator& operator--() { --iter; return *this; }
     // delegate for all the other operators...
   private:
     Iterator iter;
@@ -212,12 +208,12 @@ version of \code{operator==}.
 \end{verbatim}
 }
 
-Implementers often forget to define the operators for const/mutable
+Implementers often forget to define the operators for constant/mutable
 iterator interaction. In addition, iterator adaptors applied to these
 kinds of iterators should propagate the ability to interact. For
 example, a reverse iterator adaptor applied to \code{C::iterator} and
 \code{C::const\_iterator} should result in reverse iterator types that
-also have operators defined for the const/mutable interactions.
+also have operators defined for the constant/mutable interactions.
 
 
 \subsubsection{Constant/Mutable Iterator Implementation}
@@ -227,7 +223,7 @@ distinction between constant and mutable iterators affects the
 implementation. It is obvious that a constant iterator should have a
 const \code{reference} type, while a mutable iterator should have a
 non-const \code{reference}, though in other regards the constant and
-mutable versions of an iterator are the same. It is therefore
+mutable versions of an iterator are very similar. It is therefore
 desirable to implement both versions of the iterator with a single
 class. It is possible to do this, however some care must be taken.
 One common mistake is that the programmer will confuse the difference
@@ -248,11 +244,11 @@ The right way to implement both a constant and mutable iterators using
 the same class is to make the iterator a class template and make the
 reference type a parameter. To create the constant iterator a const
 reference would be used as the template argument and to create the
-mutable iterator a non-const reference would be used as the template
-argument. There should be only one \code{operator*} that returns the
-\code{reference} type and the member function should be const since
-dereferencing an iterator does not change the state of the iterator
-object itself (unlike \code{operator++}).
+mutable iterator a non-const reference would be used. There should be
+only one \code{operator*} that returns the \code{reference} type and
+the member function should be const since dereferencing an iterator
+does not change the state of the iterator object itself (unlike
+\code{operator++}).
 
 {\footnotesize
 \begin{verbatim}
@@ -270,6 +266,65 @@ taken in the implementation of \code{operator->}. \Note{Dave fills in
 the rest}
 
 
+\subsubsection{The Return Type of \code{operator[]} for Adaptors}
+
+The C++ Standard specifies that the return type of \code{operator[]}
+of a random access iterator must be ``convertible to \code{T}''.  This
+is a rather lenient requirement since \code{operator*} is required to
+return the exact type \code{T\&}, and one might think that
+\code{operator[]} and \code{operator*} should be same in this respect.
+The C++ Standards Committee is currently debating as to whether the
+random access iterator requirements should be changed.
+
+To complicate the matter, returning \code{T\&} from \code{operator[]}
+causes a run-time error in a certain class of situations.  Suppose the
+adapted iterator is reading in elements from a file and caching each
+element as a data member of the iterator.  
+
+{\footnotesize
+\begin{verbatim}
+class file_iter {
+  T x;
+  int pos;
+public:
+  file_iter(int pos = 0) { x = read_from_file(pos); }
+  T& operator*() const { return x; }
+  file_iter operator+(int n) const { return file_iter(pos + n); }
+  file_iter& operator++() { x = read_from_file(++pos); return *this; }
+  // ...
+};
+\end{verbatim}
+}
+
+\noindent The \code{operator*} of this iterator returns a reference to
+the data member. Now consider what happens inside the
+\code{operator[]} of the adaptor:
+
+{\footnotesize
+\begin{verbatim}
+template <class Iterator> class iter_adaptor {
+  Iterator iter;
+public:
+  reference operator[](difference_type n) const {
+    return *(iter + n);
+  }
+ // ...
+};
+\end{verbatim}
+}
+
+\noindent The iterator addition creates a temporary iterator and the
+dereference returns a reference to a data member of this
+temporary. The result is a dangling reference being returned from
+\code{operator[]}.
+
+Under the current state of affairs returning by-value from the
+\code{operator[]} of an adaptor is the safer and therefore better
+approach.  Ideally the return type of an iterator adaptor's
+\code{operator[]} would be varied depending on the characteristics of
+the underlying iterator, and there would be a standard iterator
+category for describing random access iterators that do not return
+lvalues such as proposed in~\cite{siek01:_improved_iter_cat}.
 
 % Automatic implementation of redundant operators
 % Default delegation to adapted iterator
@@ -317,14 +372,11 @@ to convey the appropriate return type. The complete code for
   struct transform_iterator_policies : public default_iterator_policies
   {
     transform_iterator_policies() { }
-
     transform_iterator_policies(const AdaptableUnaryFunction& f)
       : m_f(f) { }
-
     template <class Reference, class BaseIterator>
     Reference dereference(type<Reference>, const BaseIterator& i) const
       { return m_f(*i); }
-
     AdaptableUnaryFunction m_f;
   };
 \end{verbatim}
@@ -421,3 +473,8 @@ and printing the result to standard output.
 \bibliography{refs,tmpw00}
 
 \end{document}
+% LocalWords:  Iterator Siek Altra Broadband Florham iterator Adaptor iterators
+% LocalWords:  adaptors istream ostream iter MTL InputIterator adaptor const
+% LocalWords:  RandomAccessIterator dereference interoperate Implementers tmpw
+% LocalWords:  dereferencing adaptor's lvalues iterator's instantiation typedef
+% LocalWords:  AdaptableUnaryFunction templated
