@@ -79,9 +79,12 @@ paper we present the iterator type generator from the Boost Iterator
 Adaptor Library. This generator simplifies the creation of iterators;
 it automates the error-prone and redundant parts of the implementation
 and greatly simplifies the creation of iterator types that are
-variations on other iterators (creating iterator adaptors).  The
-design of the Iterator Adaptor Library is an example of policy-based
-design, and the implementation employs template meta-programming.
+variations on other iterators (adapted iterators). The Iterator
+Adaptor Library employs template meta-programming and is an example of
+policy-based design. It uses an extremeley flexible implementation
+pattern which can be easily adapted to generate new representatives of
+other abstract Concept families.
+
 \end{abstract}
 
 
@@ -98,14 +101,27 @@ common tasks for C++ programmers. There are plenty of examples of
 custom-made iterators in the literature: the
 \code{line\_iterator}~\cite{austern99:_gener_progr_stl},
 \code{Constant\_iterator}~\cite{koenig97:_rumin_cpp}, 
-\code{istream\_iterator} and
-\code{ostream\_iterator}~\cite{iso98:_cpp_final_draft_standard} to
-name a few. Also a growing number of generic iterator adaptors are
-available: \code{Checked\_iter}~\cite{stroustrup00:_cpp_prog_lang},
-iterators of the View Template Library~\cite{TMPW00:Weiser}, custom
-and smart iterators~\cite{becker98:_smart_iteraters,TMPW00:Baus},
-compound iterators~\cite{alexandrescu98:_compound_iters}, and several
-iterators in the MTL~\cite{siek99:_scitools}.
+\code{std::istream\_iterator} and
+\code{std::ostream\_iterator}~\cite{iso98:_cpp_final_draft_standard}n to
+name a few. 
+
+% right here you introduce the notion of iterator adaptor as a
+% byproduct of saying something else. Should say: 
+
+An iterator adaptor's job is to adapt some \code{Base} type, often
+itself an iterator, to produce a new adapted iterator that conforms to
+the Conceptual requirements of its iterator category.
+
+% although this may not be the best place for it.
+% I'm not sure if I changed your meaning by striking ``Also'' below:
+
+A growing number of generic iterator adaptors are available:
+\code{std::reverse\_iterator}~\cite{iso98:_cpp_final_draft_standard},
+\code{Checked\_iter}~\cite{stroustrup00:_cpp_prog_lang}, iterators of
+the View Template Library~\cite{TMPW00:Weiser}, custom and smart
+iterators~\cite{becker98:_smart_iteraters,TMPW00:Baus}, compound
+iterators~\cite{alexandrescu98:_compound_iters}, and several iterators
+in the MTL~\cite{siek99:_scitools}.
 
 For an iterator to be usable with the Standard algorithms (and other
 generic algorithms in third-party libraries), it must fulfill the
@@ -117,12 +133,11 @@ despite the fact that most iterators are conceptually simple.
 
 \subsection{Redundant Operators}
 
-Perhaps the most obvious of reasons that implementing an iterator can
+Perhaps the most obvious reason that implementing an iterator can
 be tedious is that there are lots of redundant operators.  That is,
 there are many operators that can be trivially defined in terms of
-other operators. For example, the \code{operator++(int)} is often best
-implemented in terms of \code{operator++()} as the example below
-shows.
+other operators. For example, the postfix \code{operator++(int)} is often best
+implemented in terms of prefix \code{operator++()} as shown below.
 
 {\footnotesize
 \begin{verbatim}
@@ -153,17 +168,18 @@ redundant.
 % \code{operator>=}
 
 
-\subsection{Delegation of Operators for Iterator Adaptors}
+\subsection{Delegation of Operators and Type Definitions}
 
-It is often the case that an iterator adaptor changes the meaning of
-one or two operators while leaving the rest of the operators defined
-in the same way as the underlying iterator.  This is typically
-implemented with delegating functions. The following example shows an
-excerpt from an \code{indirect\_iterator} adaptor which takes an
-iterator over pointers and creates an iterator over the things pointed
-to. The \code{operator*} is changed to dereference twice but all the
-other operators stay the same. Writing all of the delegating functions
-for the \code{indirect\_iterator} would be a tedious task.
+An iterator adaptor used to adapt an underlying iterator type often
+changes the meaning of one or two operators while leaving the rest of
+the operators defined in the same way as in the base iterator.  This
+is typically implemented with delegating functions. The following
+example shows an excerpt from an \code{indirect\_iterator} adaptor,
+which takes an iterator over pointers or smart-pointers and creates an
+iterator over the things pointed to. The \code{operator*} and
+\code{operator->} are changed to dereference twice but all the other
+operators stay the same. Writing all of the delegating functions for
+the \code{indirect\_iterator} is a tedious job.
 
 {\footnotesize
 \begin{verbatim}
@@ -172,6 +188,9 @@ for the \code{indirect\_iterator} would be a tedious task.
     // Adapt the meaning of dereference
     reference operator*() const {
       return **iter; // dereference twice
+    }
+    pointer operator->() const {
+      return &**iter; // dereference twice
     }
     // Delegating the implementation to the underlying iterator.
     indirect_iterator& operator++() { ++iter; return *this; }
@@ -183,6 +202,16 @@ for the \code{indirect\_iterator} would be a tedious task.
 \end{verbatim}
 }
 
+% I think it would be better to use reverse_iterator as an example
+% here, because it delegates more types than indirect_iterator does.
+In addition, a standard-conforming iterator must either come with a
+specialization of \code{std::iterator\_traits<>} or it must define
+five nested types: \code{value\_type}, \code{reference},
+\code{pointer}, \code{difference\_type}, and
+\code{iterator\_category}. In the example above, the last two would be
+delegated to the \code{Base} iterator type. For many iterator
+adaptors, all five must be delegated.
+
 \subsection{Iterator Complexities}
 
 In addition to the tedious aspects of iterator implementation, there
@@ -191,13 +220,17 @@ programmers.
 
 \subsubsection{Constant/Mutable Iterator Interactions}
 
-One of the main situations in which iterators are used is inside
-containers. These iterators usually come in pairs: a constant iterator
-type and a mutable iterator type. It is desirable to allow the
-constant and mutable iterators to interoperate in terms of their
-binary operators. For example, suppose that you are implementing a
-container type \code{C}. Then you ought to define the following four
-version of \code{operator==}.
+Iterators over containers and other sequences of stored objects
+usually come in pairs: a constant iterator type and a mutable iterator
+type. It is desirable to allow the constant and mutable iterators to
+interoperate through comparison and
+subtraction. For example, suppose
+that you are implementing a container type \code{C}. Then you ought to
+define the following four version of \code{operator==}, along with
+corresponding versions of \code{operator!=}, and (for
+RandomAccessIterators), operators \code{<}, \code{>},
+\code{<=}, \code{>=}, and \code{-}.
+
 
 {\footnotesize
 \begin{verbatim}
@@ -212,24 +245,26 @@ Implementers often forget to define the operators for constant/mutable
 iterator interaction. In addition, iterator adaptors applied to these
 kinds of iterators should propagate the ability to interact. For
 example, a reverse iterator adaptor applied to \code{C::iterator} and
-\code{C::const\_iterator} should result in reverse iterator types that
-also have operators defined for the constant/mutable interactions.
-
+\code{C::const\_iterator} should result in mutable and constant reverse iterator types that
+have the same ability to interact as the \code{Base} iterators do.
 
 \subsubsection{Constant/Mutable Iterator Implementation}
 
+% Is this section really worthwhile? It was confusing to read until I
+% finally figured out what you were driving at. Who makes this conceptual mistake?
 Another subtlety in the implementation of iterators is how the the
 distinction between constant and mutable iterators affects the
-implementation. It is obvious that a constant iterator should have a
-const \code{reference} type, while a mutable iterator should have a
-non-const \code{reference}, though in other regards the constant and
-mutable versions of an iterator are very similar. It is therefore
-desirable to implement both versions of the iterator with a single
-class. It is possible to do this, however some care must be taken.
-One common mistake is that the programmer will confuse the difference
-between a const iterator object and a constant iterator. Such a
-misunderstanding can, for example, lead to an iterator class that has
-two versions of \code{operator*}, one that is a const member function
+implementation. It is obvious that a constant iterator should have
+\code{const} \code{reference} and \code{pointer} types, while a mutable iterator should have a
+non-\code{const} \code{reference} and \code{pointer}, though in other regards the constant and
+mutable versions of an iterator are the same. It is therefore
+desirable to implement both versions of the iterator with a the same
+code. It is possible to do this, however some care must be taken.
+
+One common mistake is that the programmer will confuse the ideas of
+a \code{const} iterator object and a \emph{constant iterator}. Such a
+misunderstanding can, for example, lead to a single iterator class that has
+two versions of \code{operator*}, one that is a \code{const} member function
 and one that is not.
  
 {\footnotesize
@@ -241,14 +276,14 @@ and one that is not.
 }
 
 The right way to implement both a constant and mutable iterators using
-the same class is to make the iterator a class template and make the
-reference type a parameter. To create the constant iterator a const
+the same code is to use a class template parameterized on the
+\code{reference} type. To create the constant iterator a \code{const}
 reference would be used as the template argument and to create the
-mutable iterator a non-const reference would be used. There should be
-only one \code{operator*} that returns the \code{reference} type and
-the member function should be const since dereferencing an iterator
-does not change the state of the iterator object itself (unlike
-\code{operator++}).
+mutable iterator a non-\code{const} reference would be used instead. 
+There should be only one \code{operator*} that returns the
+\code{reference} type and the member function should be \code{const} since
+dereferencing an iterator does not change the state of the iterator
+object itself (unlike \code{operator++}).
 
 {\footnotesize
 \begin{verbatim}
@@ -260,11 +295,64 @@ does not change the state of the iterator object itself (unlike
 
 \subsubsection{Input Iterators and \code{operator->}}
 
-When creating an iterator adaptor that can accept an
-\stlconcept{InputIterator} as the adapted type some extra care must be
-taken in the implementation of \code{operator->}. \Note{Dave fills in
-the rest}
+When creating an iterator adaptor that produces an
+\stlconcept{InputIterator} some extra care must be
+taken in the implementation of \code{operator->}. Remember that an
+input iterator need not iterate over stored objects: it
+can manufacture new objects when it is dereferenced as is the case for
+\code{std::istream\_iterator}. If the iterator's \code{value\_type} is
+of class type, we need to support \code{operator->}. Since the result
+of using \code{operator->} must produce a true pointer even when
+dereferencing the iterator does not yeild a true reference type, we
+need a \code{const} lvalue to which a pointer can be formed.
 
+Fortunately, the standard gives us a way: section 13.3.1.2 paragraph 8
+describes a seemingly quirky rule that the \code{->} operator will be
+applied to the \emph{result} of any call to \code{operator->}. This is
+a convenient way to describe the semantics of ordinary
+\code{operator->}, which returns a pointer: it just uses the pointer
+to perform the usual member dereferencing. It also turns out to be
+what we need to make conforming \stlconcept{InputIterators}. By making
+the return type of \code{operator->} a proxy containing an instance of
+the iterator's \code{value\_type}, we can eventually form a
+\code{const} pointer to the returned temporary:
+
+{\footnotesize
+\begin{verbatim}
+  template <class T>
+  struct operator_arrow_proxy
+  {
+      operator_arrow_proxy(const T& x) : m_value(x) {}
+      const T* operator->() const { return &m_value; }
+      T m_value;
+  };
+\end{verbatim}
+}
+
+The iterator adaptor library uses a small meta-program to select the
+appropriate type for the result of an iterator's \code{operator->}:
+
+{\footnotesize
+\begin{verbatim}
+  template <class Category, class Value, class Pointer>
+  struct operator_arrow_result_generator
+  {
+    // Is it an input iterator, or something more?
+    static bool const is_input_iter
+      = is_convertible<Category*,std::input_iterator_tag*>::value
+         && !is_convertible<Category*,std::forward_iterator_tag*>::value;
+
+    typedef typename type_if<is_input_iter,
+        operator_arrow_proxy<Value>, /*else*/ Pointer>::type type;
+  };
+\end{verbatim}
+}
+
+The boost Type Traits library is used to check whether the iterator's
+category is no more refined than \stlconcept{InputIterator}. If so,
+the appropriate \code{operator\_arrow\_proxy} is selected.
+Convertibility is used as a criterion to allow for user-defined
+iterator categories derived from the standard ones.
 
 \subsubsection{The Return Type of \code{operator[]} for Adaptors}
 
