@@ -38,7 +38,7 @@
 	specified order at one relation between two data items at a time and 
 	result in a lexicographic comparision of all these relations the 
 	programmer often has to write long if-else cascades. These cascades
-	are often cpomplex and difficult to maintain. The class 
+	are often complex and difficult to maintain. The class 
 	<code>boost::lexicographic</code> helps in this scenario. Its constructor
 	and function call operator takes two data items which need to be
 	compared as arguments and performs to comparision. The order in which
@@ -133,7 +133,7 @@ bool operator &lt; (person const &amp;p1, person const &amp;p2)
 	
 	<h2><a name="members">Members</a></h2>
 	<h3>result_type</h3>
-	<code>enum result_type { minus = -1, equivalent, plus };</code>
+	<code>enum result_type { minus = -1, equivalent = 0, plus = +1 };</code>
 	<blockquote><p>
 		Defines the result type of the class. It is kept as internal state
 		and is returned by <code>result ()</code>.
@@ -223,11 +223,10 @@ bool operator &lt; (person const &amp;p1, person const &amp;p2)
 	<h2><a name="credits">Credits</a></h2>
 	<p>
 	The author of <code>boost::lexicographic</code> is Jan Langer (jan@langernetz.de).
-	Ideas and suggestions from Steve Cleary, David Abrahams and Gennaro Proata 
-	were used.
+	Ideas and suggestions from Steve Cleary, David Abrahams, Gennaro Proata and Paul Bristow were used.
 	</p>
 	<hr>
-	<p>April 17, 2003<br><br>
+	<p>August 22, 2003<br><br>
 	© Copyright Jan Langer 2003. Permission to copy, use, modify, sell and distribute this document is granted provided this copyright notice appears in all copies. This document is provided "as is" without express or implied warranty, and with no claim as to its suitability for any purpose.
 	</p>	
 </body>
