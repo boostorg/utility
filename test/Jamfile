@@ -15,4 +15,8 @@ import testing ;
       :  [ run named_params_test.cpp ]
          [ run named_params_sfinae.cpp ]
        ;
+
+    test-suite "result_check"
+      :  [ compile result_check_test.cpp ]
+       ;
 }
