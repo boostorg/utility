@@ -12,5 +12,6 @@ include testing.jam ;
 
     test-suite "utility"
        : [ run libs/utility/test/lexicographic_test.cpp ]
+         [ run libs/utility/test/lex_performance_test.cpp ]
        ;
 }
