@@ -77,7 +77,7 @@ void test ( T const& y, T const& z )
   x_c_ref = z ;
   BOOST_TEST ( x_c == z ) ;
 
-#if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+#if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
   boost::value_initialized<T const> cx ;
   BOOST_TEST ( y == cx ) ;
   BOOST_TEST ( y == boost::get(cx) ) ;
