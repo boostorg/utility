@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>queue</title>
+  </head>
+  <body>
+    <h1><img src="../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />queue</h1>
+    <p>A <tt>boost::queue</tt> is a container adaptor that provides both <a href="http://www.sgi.com/tech/stl/queue.html">std::queue</a> and <a href="./Buffer.html">Buffer</a> functionality.</p>
+
+    <h3>Where Defined</h3>
+    <p><a href="../../boost/pending/queue.hpp"><tt>boost/queue.hpp</tt></a></p>
+
+    <h3>Template Parameters</h3>
+    <table border="1">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>T</tt></td>
+        <td>The type of object stored in the <tt>queue</tt>.</td>
+        <td> </td>
+      </tr>
+      <tr valign="top">
+        <td><tt>Sequence</tt></td>
+        <td>The type of the underlying container used to implement the <tt>queue</tt>.</td>
+        <td><tt><a href="http://www.sgi.com/tech/stl/Deque.html">std::deque</a>&lt;T&gt;</tt></td>
+      </tr>
+    </table>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="http://www.sgi.com/tech/stl/DefaultConstructible.html">Default Constructible</a></li>
+      <li><a href="./Buffer.html">Buffer</a></li>
+    </ul>
+
+    <h3>Type Requirements</h3>
+    <ul>
+      <li><tt>T</tt> is a model of <a href="http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.</li>
+      <li><tt>Sequence</tt> is a model of <a href="./CopyConstructible.html">Copy Constructible</a>.</li>
+      <li><tt>Sequence</tt> is a model of <a href="http://www.sgi.com/tech/stl/FrontInsertionSequence.html">FrontInsertionSequence</a></li>
+      <li><tt>Sequence</tt> is a model of <a href="http://www.sgi.com/tech/stl/BackInsertionSequence.html">BackInsertionSequence</a></li>
+      <li><tt>Sequence::value_type</tt> is the same type as <tt>T</tt>.</li>
+      <li>If <tt>operator==</tt> is used, then <tt>T</tt> is a model of <a href="http://www.sgi.com/tech/stl/EqualityComparable.html">Equality Comparable</a>.</li>
+      <li>If <tt>operator&lt;</tt> is used, then <tt>T</tt> is a model of <a href="http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan Comparable</a>.</li>
+    </ul>
+
+    <h3>Public Base Classes</h3>
+    <p>None.</p>
+
+    <h3>Members</h3>
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Where Defined</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>The type of object stored in the <tt>queue</tt>.  This is the same as <tt>T</tt> and <tt>Sequence::value_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>An unsigned integral type.  This is the same as <tt>Sequence::size_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>queue()</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/DefaultConstructible.html">Default Constructible</a></td>
+        <td>The default constructor.  Creates an empty <tt>queue</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>queue(const Sequence&amp; c)</tt></td>
+        <td><tt>boost::queue</tt></td>
+        <td>The constructor.  Creates a <tt>queue</tt> initialized to contain the elements in <tt>c</tt>, in back-insertion order.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool empty() const</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Returns <tt>true</tt> if the <tt>queue</tt> contains no elements, and <tt>false</tt> otherwise.  <tt>empty()</tt> is equivalent to <tt>size() == 0</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type size() const</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Returns the number of elements contained in the <tt>queue</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type&amp; top()</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Returns a mutable reference to the least recently inserted element in the <tt>queue</tt>.  Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type&amp; front()</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/queue.html">std::queue</a></td>
+        <td>Serves the same function as <tt>value_type&amp; top()</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const value_type&amp; top() const</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Returns a const reference to the least recently inserted element in the <tt>queue</tt>.  Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const value_type&amp; front() const</tt></td>
+        <td><tt>boost::queue</tt>, not <a href="http://www.sgi.com/tech/stl/queue.html">std::queue</a></td>
+        <td>Serves the same function as <tt>const value_type&amp; top() const</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void push(const value_type&amp; x)</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Inserts <tt>x</tt> into the <tt>queue</tt>.  Postcondition: <tt>size()</tt> will be incremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void pop()</tt></td>
+        <td><a href="./Buffer.html">Buffer</a></td>
+        <td>Removes the least recently inserted element from the <tt>queue</tt>.  Postcondition: <tt>size()</tt> will be decremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool operator==(const queue&amp;, const queue&amp;)</tt></td>
+        <td><tt>boost::queue</tt></td>
+        <td>Compares two queues for equality.  Two queues are equal if they contain the same number of elements and if they are equal element-by-element.  This is a global function, not a member function.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool operator&lt;(const queue&amp;, const queue&amp;)</tt></td>
+        <td><tt>boost::queue</tt></td>
+        <td>Lexicographical ordering of two queues.  This is a global function, not a member function.</td>
+      </tr>
+    </table>
+
+    <h3>Complexity</h3>
+    <ul>
+      <li>The time complexity of all three structure-modifying operations--<tt>push()</tt>, <tt>pop()</tt>, and <tt>update()</tt>--is <tt>O(1)</tt>.</li>
+      <li>The time complexity of the constructor that takes in a <tt>Sequence</tt> argument is linear time in the size of the <tt>Sequence</tt>.</li>
+    </ul>
+
+    <h3>Example</h3>
+<pre>#include &lt;boost/queue&gt;
+#include &lt;cassert&gt;
+
+int main()
+{
+  boost::queue&lt;int&gt; Q;
+
+  Q.push(8);
+  Q.push(7);
+  Q.push(6);
+  Q.push(2);
+  
+  assert(Q.size() == 4);
+  assert(Q.top() == 8);
+  Q.pop();
+
+  assert(Q.top() == 7);
+  Q.pop();
+
+  assert(Q.top() == 6);
+  Q.pop();
+  
+  assert(Q.top() == 2);
+  Q.pop();
+
+  assert(Q.empty());
+
+  return 0;
+}
+</pre>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+

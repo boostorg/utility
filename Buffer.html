@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Buffer Concept</title>
+  </head>
+  <body>
+    <h1><img src="../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />Buffer Concept</h1>
+    <p>A Buffer is something in which items can be put and removed.  The Buffer <em>concept</em> has very few requirements.  It does not require any particular ordering of how the items are stored or in what order they will appear when removed, however, there is typically some sort of ordering policy.</p>
+
+    <h3>Notation</h3>
+    <ul>
+      <li><tt>B</tt> is a type that models <tt>Buffer</tt>.</li>
+      <li><tt>T</tt> is the value type of <tt>B</tt>.</li>
+      <li><tt>t</tt> is an object of type <tt>T</tt>.</li>
+    </ul>
+
+    <h3>Members</h3>
+    <p>For a type to model the Buffer concept it must have the following members.</p>
+
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type</tt></td>
+        <td>The type of object stored in the Buffer.  The value type must be <a href="http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type</tt></td>
+        <td>An unsigned integral type for representing the number of objects in the Buffer.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void push(const T&amp; t)</tt></td>
+        <td>Inserts <tt>t</tt> into the Buffer.  <tt>size()</tt> will be incremented by one.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void pop()</tt></td>
+        <td>Removes an object from the Buffer.  <tt>size()</tt> will be decremented by one.  Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>T&amp; top()</tt></td>
+        <td>Returns a mutable reference to some object in the Buffer.  Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const T&amp; top() const</tt></td>
+        <td>Returns a const reference to some object in the Buffer.  Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void size() const</tt></td>
+        <td>Returns the number of objects in the Buffer.  Invariant: <tt>size() &gt;= 0</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool empty() const</tt></td>
+        <td>Equivalent to <tt>b.size() == 0</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Complexity Guarantees</h3>
+    <ul>
+      <li><tt>push()</tt>, <tt>pop()</tt>, and <tt>size()</tt> must be at most linear time complexity in the size of the Generalized Queue.</li>
+      <li><tt>top()</tt> and <tt>empty()</tt> must be amortized constant time.</li>
+    </ul>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="http://www.sgi.com/tech/stl/stack.html"><tt>std::stack</tt></a></li>
+      <li><a href="./queue.html"><tt>boost::queue</tt></a></li>
+      <li><a href="../pri_queue/doc/mutable_queue.html"><tt>boost::mutable_queue</tt></a></li>
+      <li><a href="../pri_queue/doc/fibonacci_heap.html"><tt>boost::fibonacci_heap</tt></a></li>
+      <li><a href="../pri_queue/doc/fenced_priority_queue.html"><tt>boost::fenced_priority_queue</tt></a></li>
+    </ul>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html> 
+
