@@ -700,12 +700,12 @@ that users would be able to use as many defaults as possible. The list
 of associated types begins with the most fundamental element, the
 iterator's \code{value\_\-type}. If no \code{Value} parameter is supplied,
 the \code{Base} type is assumed to be an iterator, and the adapted
-iterator takes its \code{value_type} value_type from the \code{Base}
+iterator takes its \code{value\_type} from the \code{Base}
 iterator's \code{iterator\_traits}. However, if the \code{Value} parameter \emph{is} supplied,
 an adjustment is made which allows the user to more easily create a
 constant iterator: if the \code{Value} parameter is \code{const T},
 the \code{value\_type} will just be \code{T}.Perhaps
-strangely, a constant iterator's \code{value_\type} should never be
+strangely, a constant iterator's \code{value\_type} should never be
 \code{const}, because it would prevent algorithms from declaring
 modifiable temporary objects which are copied from dereferenced
 iterators:
@@ -731,7 +731,7 @@ iterators:
 The defaults for the \code{pointer} and \code{reference} types
 cooperate with the \code{Value} parameter: if the \code{Value}
 parameter is supplied, the \code{pointer} and \code{reference} types
-default to simply \code{Value*} and \code{Value&} respectively
+default to simply \code{Value*} and \code{Value\&} respectively
 (without the \code{const}-ness stripped). Otherwise, as above the
 \code{Base} type is assumed to be an iterator and the \code{pointer}
 and \code{reference} types are taken from its
@@ -742,7 +742,7 @@ the \code{reference}, \code{pointer}, \code{value\_type} for all
 constant and mutable \stlconcept{ForwardIterator}s, it is often
 sufficient to supply just the \code{Value} parameter when there is no
 \code{Base} iterator with appropriate
-\code{iterator_traits}.\footnote{The \code{Reference} parameter
+\code{iterator\_traits}.\footnote{The \code{Reference} parameter
 precedes the \code{Pointer} parameter because it must be often
 customized for \stlconcept{OutputIterator}s and other iterator types
 (e.g. \code{std::vector<bool>::iterator}, which uses a proxy
@@ -807,7 +807,7 @@ Iterator Adaptor described earlier
 % When we reorganize the paper it may appear later. check this out.
 limits the category of its \code{Base} iterator to
 \stlconcept{InputIterator}, so the we'd only need to supply the
-\code{value_type}, \code{reference}, and \code{iterator\_category} if
+\code{value\_type}, \code{reference}, and \code{iterator\_category} if
 the \code{Category} parameter didn't appear last. Iterators where the
 \code{Base} type is not itself an iterator also act this way, since
 there are no appropriate \code{iterator\_traits} from which to derive
