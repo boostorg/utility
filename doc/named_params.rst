@@ -334,7 +334,8 @@ Lazy Evaluation of Defaults
 ===========================
 
 Sometimes computation of the default value can be expensive, and
-best avoided if the user does supply the argument.
+best avoided if the user does supply the argument. For this the
+default value can be lazily evaluated:
 
 .. parsed-literal::
 
