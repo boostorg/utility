@@ -14,6 +14,7 @@
 
 #include <iostream>
 
+#include <algorithm>
 #include <functional>
 #include <boost/iterator_adaptors.hpp>
 #include <boost/iterator_tests.hpp>
