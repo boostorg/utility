@@ -668,10 +668,11 @@ namespace boost {
     // Core operators, delegate to policies class.
     // Redundant operators, implemented in terms of the core operators.
   private:
+    // If the policies class is empty, compressed_pair applies the
+    // empty-base class optimization to conserve space. The base is
+    // ``first'' and the policies are ``second''.
     compressed_pair<Base, Policies> m_iter_p;
-    // If the policies class is empty, apply the empty-base class
-    // optimization to conserve space. The base is ``first'' and
-    // the policies are ``second''.
+
     Policies& policies() { return m_iter_p.second(); }
     Base& base() { return m_iter_p.first(); }
     // and similarly for const...
@@ -693,37 +694,132 @@ for the type.
 
 \subsubsection{Defaults for the Associated Types}
 
-The defaults for the \code{value\_type}, \code{iterator\_\-category},
+Because an iterator has so many type parameters, the order and
+semantics of the associated type parameters was carefully chosen so
+that users would be able to use as many defaults as possible. The list
+of associated types begins with the most fundamental element, the
+iterator's \code{value\_\-type}. If no \code{Value} parameter is supplied,
+the \code{Base} type is assumed to be an iterator, and the adapted
+iterator takes its \code{value_type} value_type from the \code{Base}
+iterator's \code{iterator\_traits}. However, if the \code{Value} parameter \emph{is} supplied,
+an adjustment is made which allows the user to more easily create a
+constant iterator: if the \code{Value} parameter is \code{const T},
+the \code{value\_type} will just be \code{T}.Perhaps
+strangely, a constant iterator's \code{value_\type} should never be
+\code{const}, because it would prevent algorithms from declaring
+modifiable temporary objects which are copied from dereferenced
+iterators:
+
+{\footnotesize
+\begin{verbatim}
+  template <class ForwardIterator>
+  typename iterator_traits<ForwardIterator>::value_type
+  accumulate(ForwardIterator start, ForwardIterator finish)
+  {
+      typedef typename
+          iterator_traits<ForwardIterator>::value_type value;
+      if (start == finish)
+          return value();
+      value x = *start;
+      while (++start != finish)
+          x += *start; // error?
+      return x;
+  }
+\end{verbatim}
+}
+
+The defaults for the \code{pointer} and \code{reference} types
+cooperate with the \code{Value} parameter: if the \code{Value}
+parameter is supplied, the \code{pointer} and \code{reference} types
+default to simply \code{Value*} and \code{Value&} respectively
+(without the \code{const}-ness stripped). Otherwise, as above the
+\code{Base} type is assumed to be an iterator and the \code{pointer}
+and \code{reference} types are taken from its
+\code{iterator\_\-traits}.
+
+Since these defaults correspond to the required relationships between
+the \code{reference}, \code{pointer}, \code{value\_type} for all
+constant and mutable \stlconcept{ForwardIterator}s, it is often
+sufficient to supply just the \code{Value} parameter when there is no
+\code{Base} iterator with appropriate
+\code{iterator_traits}.\footnote{The \code{Reference} parameter
+precedes the \code{Pointer} parameter because it must be often
+customized for \stlconcept{OutputIterator}s and other iterator types
+(e.g. \code{std::vector<bool>::iterator}, which uses a proxy
+\code{reference}).}
+
+The defaults for the \code{iterator\_\-category},
 and \code{difference\_\-type} are straightforward: they are the
-respective types from the base iterator. So, for example, the default
-for the \code{value\_type} is
-\code{std::iterator\_\-traits\-<Base>::\-value\_type}.
+respective types from the \code{Base} iterator. These work out well as
+the final parameters, because one usually wants all of the 
+capabilities supplied by the iterator being adapted, and it is
+difficult to provide more capabilities.
 
-Computing the defaults for \code{reference} and \code{pointer} is a
-bit more complicated. If a \code{value\_type} is specified by the
-user, then \code{value\_type\&} and \code{value\_type*} are used for
-the \code{reference} and \code{pointer} type. Otherwise, if the
-default was used for \code{value\_type} then the \code{reference} and
-\code{pointer} types are taken from the base iterator using
-\code{std::iterator\_traits}.
-% Dave, is the above right? I'm not sure...
+The code used to select the appropriate defaults for the iterator's
+associated types used to look something like this:
 
+{\footnotesize
+\begin{verbatim}
+  // compute default pointer and reference types.
+  template <class Iterator,class Value>
+  struct iterator_defaults : iterator_traits<Iterator>
+  {
+     // If the Value parameter is not the same as its default, the
+     // user supplied it. 
+     static const bool value_type_supplied
+      = !is_same<Value,typename iterator_traits<Iterator>::value_type>::value;
+
+     typedef typename type_if<value_type_supplied,
+             Value*,
+        // else
+              typename iterator_traits<Iterator>::pointer
+     >::type pointer;
+
+     typedef typename type_if<value_type_supplied,
+             Value*,
+        // else
+              typename iterator_traits<Iterator>::reference
+     >::type reference;
+  };
+
+  template <class Base, class Policies, 
+      class Value = typename std::iterator_traits<Base>::value_type,
+      class Reference = typename iterator_defaults<Base,Value>::reference,
+      class Pointer = typename iterator_defaults<Base,Value>::pointer,
+      class Category = typename std::iterator_traits<Base>::iterator_category,
+      class Distance = typename std::iterator_traits<Base>::difference_type
+           >
+  class iterator_adaptor
+  {
+   public:
+      typedef Distance difference_type;
+      typedef remove_const<Value>::type value_type;
+      typedef Pointer pointer;
+      typedef Reference reference;
+      typedef Category iterator_category;
+\end{verbatim}
+}
+
+Unfortunately, this strategy can only take us so far. It turns out
+that there are plenty of iterators which don't fit neatly into the
+system for ordering defaults. For example, the specialized Transform
+Iterator Adaptor described earlier
+% When we reorganize the paper it may appear later. check this out.
+limits the category of its \code{Base} iterator to
+\stlconcept{InputIterator}, so the we'd only need to supply the
+\code{value_type}, \code{reference}, and \code{iterator\_category} if
+the \code{Category} parameter didn't appear last. Iterators where the
+\code{Base} type is not itself an iterator also act this way, since
+there are no appropriate \code{iterator\_traits} from which to derive
+the \code{Pointer} and \code{Reference} parameters.
 
 \subsubsection{Named Template Parameters}
 \label{sec:named-template-parameters}
 
-Since each of the parameters for the associated types has a default
-user may specify zero or more of them. One difficulty with {C++}
-templates is that if a default is used for a parameter then all the
-following parameters must also be default. When there are a large
-number of parameters this becomes inconvenient.
-
-A solution to this problem is the idea of named parameters.  Instead
-of matching arguments to parameters based on order, the assignment of
-arguments to parameters is made explicitly by name (so the ordering no
-longer matters). The way this works for the \code{iterator\_\-adaptor}
-class is that there is a wrapper class for each parameter, for
-example:
+Instead of matching arguments to parameters based on order, the
+assignment of arguments to parameters can be made explicitly by name, so
+the order no longer matters. The Iterator Adaptors library supplies
+an appropriately-named wrapper class for each parameter. For example:
 
 {\footnotesize
 \begin{verbatim} 
