@@ -1,0 +1,13 @@
+
+project
+    :
+    : default-build debug
+    ;
+
+lib debug
+    : #sources
+      ../src/obj_id.cpp
+      ../src/object_tracked.cpp
+      ../src/trace_scope_stk.cpp
+    ;
+
