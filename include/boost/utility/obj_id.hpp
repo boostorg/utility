@@ -11,8 +11,6 @@ namespace utility
         unsigned
       id_type
         ;
-          virtual //To make subj_described* start with obj_id*
-                  //See stl_container.log@@2003-06-05.0750
       ~obj_id(void)
         {}
       obj_id(void)
@@ -39,5 +37,13 @@ namespace utility
         ;
     };//end obj_id struct
   }//exit utility namespace
+//----------------------------  
+//ChangeLog:
+//  2005-06-17: Larry Evans
+//    WHAT:
+//      rm'ed virtual DTOR
+//    WHY:
+//      comment that had accompanied it and justified use of
+//      virtual DTOR is no longer relevant.
 #endif
 
