@@ -1,15 +1,21 @@
 //Simple class which keeps track of members
 #ifndef UTILITY_OBJECT_TRACKED_HPP_LJE20040112
 #define UTILITY_OBJECT_TRACKED_HPP_LJE20040112
+//#define UTILITY_OBJECT_TRACKED_SET_OF_OBJECTS_TRACE_MODE
+//#define UTILITY_OBJECT_TRACKED_TRACE_MODE
 #include <set>
 #include "boost/utility/obj_id.hpp"
+#if defined(UTILITY_OBJECT_TRACKED_SET_OF_OBJECTS_TRACE_MODE)\
+ || defined(UTILITY_OBJECT_TRACKED_TRACE_MODE)
 #include "boost/io/filters/mout.hpp"
+#endif
 namespace utility
 {
 class object_tracked
 : public obj_id
 {
- public:
+ private:
+ 
       struct 
     set_of_objects_tracked
       : public std::set<object_tracked const*>
@@ -18,8 +24,18 @@ class object_tracked
           std::set<object_tracked const*>
         super_type
         ;
+        ~set_of_objects_tracked(void)
+        {
+          #ifdef UTILITY_OBJECT_TRACKED_SET_OF_OBJECTS_TRACE_MODE
+            mout()<<"set_of_objects_tracked-\n";
+          #endif
+        }
         set_of_objects_tracked(void)
-        {}
+        {
+          #ifdef UTILITY_OBJECT_TRACKED_SET_OF_OBJECTS_TRACE_MODE
+            mout()<<"set_of_objects_tracked+\n";
+          #endif
+        }
           void
         reset(void)
         {
@@ -37,23 +53,36 @@ class object_tracked
       set_of_objects_tracked
     our_members
     ;
+ public:
+        static
+      void
+    reset(void)
+    {
+        our_members.reset();
+    }
         static
       unsigned
     members_size(void)
     {
-        return our_members.size();
+          return our_members.size();
     }
     
     object_tracked(void)
     {
         our_members.insert(this);
       #ifdef UTILITY_OBJECT_TRACKED_TRACE_MODE
-        mout()<<"object_tracked+:id="<<id_get()<<"\n";
+        mout()<<"object_tracked+:id="<<id_get()<<":default\n";
       #endif
     }
-    #if 0
+    object_tracked(object_tracked const& a_obj)
+    {
+        our_members.insert(this);
+      #ifdef UTILITY_OBJECT_TRACKED_TRACE_MODE
+        mout()<<"object_tracked+:id="<<id_get()<<":copy\n";
+      #endif
+    }
+
         virtual 
-    #endif
     ~object_tracked(void) 
     { 
       #ifdef UTILITY_OBJECT_TRACKED_TRACE_MODE

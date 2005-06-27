@@ -1,5 +1,5 @@
-#ifndef TRACE_SCOPE_HPP
-#define TRACE_SCOPE_HPP
+#ifndef UTILITY_TRACE_SCOPE_HPP
+#define UTILITY_TRACE_SCOPE_HPP
 #include "boost/io/filters/mout.hpp"
 #include <string>
 namespace utility
@@ -20,17 +20,17 @@ trace_scope
       ;}
     ~trace_scope(void)
       {
-			; --mout()
+      ; --mout()
       ; std::string l_context("===>Exit:")
-			; mout()<<l_context<<m_scopeName<<std::endl
+      ; mout()<<l_context<<m_scopeName<<std::endl
       ;}
   private:
       void
     init(void)
       { 
       ; std::string l_context("===>Enter:")
-			; mout()<<l_context<<m_scopeName<<std::endl
-			; ++mout()
+      ; mout()<<l_context<<m_scopeName<<std::endl
+      ; ++mout()
       ;}
       std::string
     m_scopeName
