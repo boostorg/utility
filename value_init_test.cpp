@@ -8,10 +8,12 @@
 //
 // Initial: 21 Agu 2002
 
+#include <cstring>  // For memcmp.
 #include <iostream>
 #include <string>
 
 #include "boost/utility/value_init.hpp"
+#include <boost/shared_ptr.hpp>
 
 #ifdef __BORLANDC__
 #pragma hdrstop
@@ -152,6 +154,8 @@ struct AggregatePODStructWrapper
 bool operator == ( AggregatePODStructWrapper const& lhs, AggregatePODStructWrapper const& rhs )
 { return lhs.dataMember == rhs.dataMember ; }
 
+typedef unsigned char ArrayOfBytes[256];
+
 //
 // This test function tests boost::value_initialized<T> for a specific type T.
 // The first argument (y) is assumed have the value of a value-initialized object.
@@ -175,6 +179,9 @@ bool test ( T const& y, T const& z )
   x_c_ref = z ;
   BOOST_CHECK ( x_c == z ) ;
 
+  boost::shared_ptr<boost::value_initialized<T> > ptr( new boost::value_initialized<T> );
+  BOOST_CHECK ( y == *ptr ) ;
+
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
   boost::value_initialized<T const> cx ;
   BOOST_CHECK ( y == cx ) ;
@@ -184,6 +191,7 @@ bool test ( T const& y, T const& z )
   BOOST_CHECK ( y == cx_c ) ;
   BOOST_CHECK ( y == boost::get(cx_c) ) ;
 #endif
+
   return boost::minimal_test::errors_counter() == counter_before_test ;
 }
 
@@ -231,6 +239,10 @@ int test_main(int, char **)
   aggregatePODStructWrapper0.dataMember = zeroInitializedAggregatePODStruct;
   aggregatePODStructWrapper1.dataMember = nonZeroInitializedAggregatePODStruct;
   BOOST_CHECK ( test(aggregatePODStructWrapper0, aggregatePODStructWrapper1) );
+
+  ArrayOfBytes zeroInitializedArrayOfBytes = { 0 };
+  boost::value_initialized<ArrayOfBytes> valueInitializedArrayOfBytes;
+  BOOST_CHECK (std::memcmp(get(valueInitializedArrayOfBytes), zeroInitializedArrayOfBytes, sizeof(ArrayOfBytes)) == 0);
 
   return 0;
 }
