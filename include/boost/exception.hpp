@@ -7,7 +7,7 @@
 #define UUID_1D94A7C6054E11DB9804B622A1EF5492
 
 #include <boost/exception/info_tuple.hpp>
-#include <boost/exception/cloning.hpp>
+#include <boost/exception_ptr.hpp>
 #include <boost/throw_exception.hpp>
 
 #endif
