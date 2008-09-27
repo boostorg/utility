@@ -1420,9 +1420,9 @@ T operator+( T lhs, const T&amp; rhs )
 
       <tr>
         <td><code><a name=
-        "euclidian_ring_operators1">euclidian_ring_operators&lt;T&gt;</a></code><br>
+        "euclidean_ring_operators1">euclidean_ring_operators&lt;T&gt;</a></code><br>
 
-         <code>euclidian_ring_operators1&lt;T&gt;</code></td>
+         <code>euclidean_ring_operators1&lt;T&gt;</code></td>
 
         <td>
           <ul>
@@ -1439,9 +1439,9 @@ T operator+( T lhs, const T&amp; rhs )
 
       <tr>
         <td><code><a name=
-        "euclidian_ring_operators2">euclidian_ring_operators&lt;T,
+        "euclidean_ring_operators2">euclidean_ring_operators&lt;T,
         U&gt;</a></code><br>
-         <code>euclidian_ring_operators2&lt;T, U&gt;</code></td>
+         <code>euclidean_ring_operators2&lt;T, U&gt;</code></td>
 
         <td>
           <ul>
@@ -1464,14 +1464,14 @@ T operator+( T lhs, const T&amp; rhs )
 
       <tr>
         <td><code><a name=
-        "ordered_euclidian_ring_operators1">ordered_euclidian_ring_operators&lt;T&gt;</a></code><br>
+        "ordered_euclidean_ring_operators1">ordered_euclidean_ring_operators&lt;T&gt;</a></code><br>
 
-         <code>ordered_euclidian_ring_operators1&lt;T&gt;</code></td>
+         <code>ordered_euclidean_ring_operators1&lt;T&gt;</code></td>
 
         <td>
           <ul>
             <li><code><a href=
-            "#euclidian_ring_operators1">euclidian_ring_operators&lt;T&gt;</a></code></li>
+            "#euclidean_ring_operators1">euclidean_ring_operators&lt;T&gt;</a></code></li>
 
             <li><code><a href=
             "#totally_ordered1">totally_ordered&lt;T&gt;</a></code></li>
@@ -1481,14 +1481,14 @@ T operator+( T lhs, const T&amp; rhs )
 
       <tr>
         <td><code><a name=
-        "ordered_euclidian_ring_operators2">ordered_euclidian_ring_operators&lt;T,
+        "ordered_euclidean_ring_operators2">ordered_euclidean_ring_operators&lt;T,
         U&gt;</a></code><br>
-         <code>ordered_euclidian_ring_operators2&lt;T, U&gt;</code></td>
+         <code>ordered_euclidean_ring_operators2&lt;T, U&gt;</code></td>
 
         <td>
           <ul>
             <li><code><a href=
-            "#euclidian_ring_operators2">euclidian_ring_operators&lt;T,
+            "#euclidean_ring_operators2">euclidean_ring_operators&lt;T,
             U&gt;</a></code></li>
 
             <li><code><a href="#totally_ordered2">totally_ordered&lt;T,
@@ -1497,6 +1497,15 @@ T operator+( T lhs, const T&amp; rhs )
         </td>
       </tr>
     </table>
+
+    <h4>Spelling: euclidean vs. euclidian</h4>
+
+    <p>Older versions of the Boost.Operators library used
+    &quot;<code>euclidian</code>&quot;, but it was pointed out that
+    &quot;<code>euclidean</code>&quot; is the more common spelling.
+    To be compatible with older version, the library now supports
+    both spellings.
+    </p>
 
     <h3><a name="ex_oprs">Example</a> Templates</h3>
 
@@ -1576,9 +1585,8 @@ T operator+( T lhs, const T&amp; rhs )
 
     <p>The <cite><a href="operators_test.cpp">operators_test.cpp</a></cite>
     program demonstrates the use of the arithmetic operator templates, and
-    can also be used to verify correct operation. Check the <a href=
-    "../../status/compiler_status.html">compiler status report</a> for the
-    test results with selected platforms.</p>
+    can also be used to verify correct operation. Check the compiler status
+    report for the test results with selected platforms.</p>
 
     <h2><a name="deref">Dereference</a> Operators and Iterator Helpers</h2>
 
@@ -2029,13 +2037,13 @@ public:
     <h2><a name="contributors">Contributors</a></h2>
 
     <dl>
-      <dt><a href="../../people/dave_abrahams.htm">Dave Abrahams</a></dt>
+      <dt><a href="http://www.boost.org/people/dave_abrahams.htm">Dave Abrahams</a></dt>
 
       <dd>Started the library and contributed the arithmetic operators in
       <cite><a href=
       "../../boost/operators.hpp">boost/operators.hpp</a></cite>.</dd>
 
-      <dt><a href="../../people/jeremy_siek.htm">Jeremy Siek</a></dt>
+      <dt><a href="http://www.boost.org/people/jeremy_siek.htm">Jeremy Siek</a></dt>
 
       <dd>Contributed the <a href="#deref">dereference operators and iterator
       helpers</a> in <cite><a href=
@@ -2043,19 +2051,19 @@ public:
       contributed <cite><a href=
       "iterators_test.cpp">iterators_test.cpp</a></cite>.</dd>
 
-      <dt><a href="../../people/aleksey_gurtovoy.htm">Aleksey
+      <dt><a href="http://www.boost.org/people/aleksey_gurtovoy.htm">Aleksey
       Gurtovoy</a></dt>
 
       <dd>Contributed the code to support <a href="#chaining">base class
       chaining</a> while remaining backward-compatible with old versions of
       the library.</dd>
 
-      <dt><a href="../../people/beman_dawes.html">Beman Dawes</a></dt>
+      <dt><a href="http://www.boost.org/people/beman_dawes.html">Beman Dawes</a></dt>
 
       <dd>Contributed <cite><a href=
       "operators_test.cpp">operators_test.cpp</a></cite>.</dd>
 
-      <dt><a href="../../people/daryle_walker.html">Daryle Walker</a></dt>
+      <dt><a href="http://www.boost.org/people/daryle_walker.html">Daryle Walker</a></dt>
 
       <dd>Contributed classes for the shift operators, equivalence, partial
       ordering, and arithmetic conversions. Added the grouped operator
@@ -2119,10 +2127,10 @@ public:
     backward-compatible.</p>
     <hr>
 
-    <p>Revised: 29 Oct 2004</p>
+    <p>Revised: 7 Aug 2008</p>
 
     <p>Copyright &copy; Beman Dawes, David Abrahams, 1999-2001.</p>
-    <p>Copyright &copy; Daniel Frey, 2002-2004.</p>
+    <p>Copyright &copy; Daniel Frey, 2002-2008.</p>
     <p>Use, modification, and distribution is subject to the Boost Software 
     License, Version 1.0. (See accompanying file
     <a href="../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or copy at

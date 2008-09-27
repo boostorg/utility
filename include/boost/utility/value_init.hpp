@@ -1,151 +1,110 @@
-// (C) Copyright 2002-2007, Fernando Luis Cacciola Carballal.
+// (C) Copyright 2002-2008, Fernando Luis Cacciola Carballal.
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // 21 Ago 2002 (Created) Fernando Cacciola
-// 07 Set 2007 (Worked around MSVC++ bug) Fernando Cacciola, Niels Dekker
+// 24 Dec 2007 (Refactored and worked around various compiler bugs) Fernando Cacciola, Niels Dekker
+// 23 May 2008 (Fixed operator= const issue, added initialized_value) Niels Dekker, Fernando Cacciola
+// 21 Ago 2008 (Added swap) Niels Dekker, Fernando Cacciola
 //
 #ifndef BOOST_UTILITY_VALUE_INIT_21AGO2002_HPP
 #define BOOST_UTILITY_VALUE_INIT_21AGO2002_HPP
 
-#include <boost/detail/select_type.hpp>
-#include <boost/type_traits/cv_traits.hpp>
-#include <boost/detail/workaround.hpp>
+// Note: The implementation of boost::value_initialized had to deal with the
+// fact that various compilers haven't fully implemented value-initialization.
+// The constructor of boost::value_initialized<T> works around these compiler
+// issues, by clearing the bytes of T, before constructing the T object it
+// contains. More details on these issues are at libs/utility/value_init.htm
 
-#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1500) )
-// Microsoft Visual C++ does not correctly support value initialization, as reported by
-// Pavel Kuznetsov (MetaCommunications Engineering), 7/28/2005, Feedback ID 100744,
-// Feedback Title: Value-initialization in new-expression
-// https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=100744
-// The report was closed at 11/14/2006, and its status was set to "Closed (Won't Fix)".
-// Luckily, even in the presence of this compiler bug, boost::value_initialized will still
-// do its job correctly, when using the following workaround:
-#define BOOST_UTILITY_VALUE_INIT_WORKAROUND
-#endif
-
-#ifdef BOOST_UTILITY_VALUE_INIT_WORKAROUND
 #include <boost/aligned_storage.hpp>
+#include <boost/detail/workaround.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/cv_traits.hpp>
 #include <boost/type_traits/alignment_of.hpp>
+#include <boost/swap.hpp>
 #include <cstring>
 #include <new>
 
 namespace boost {
 
-namespace vinit_detail {
-
 template<class T>
-class const_T_base
+class value_initialized
 {
-  protected :
-
-    const_T_base()
-    {
-      std::memset(&x, 0, sizeof(x));
-      new (&x) T();
-    }
-
-    ~const_T_base()
-    {
-      void const * ptr = &x;
-      static_cast<T*>(ptr)->T::~T();
-    }
-
-    T & get() const
-    {
-      void const * ptr = &x;
-      return *static_cast<T*>(ptr);
-    }
-
   private :
-    typename ::boost::aligned_storage<sizeof(T), ::boost::alignment_of<T>::value>::type x;
-} ;
-
-template<class T>
-class non_const_T_base
-{
-  protected :
-
-    non_const_T_base()
+    struct wrapper
     {
-      std::memset(&x, 0, sizeof(x));
-      new (&x) T();
-    }
-
-    ~non_const_T_base()
-    {
-      void * ptr = &x;
-      static_cast<T*>(ptr)->T::~T();
-    }
-
-    T & get() const
-    { 
-      void * ptr = &x;
-      return *static_cast<T*>(ptr);
-    }
-
-  private :
-    mutable typename ::boost::aligned_storage<sizeof(T), ::boost::alignment_of<T>::value>::type x;
-} ;
-
-#else
-
-namespace boost {
-
-namespace vinit_detail {
-
-template<class T>
-class const_T_base
-{
-  protected :
-
-   const_T_base() : x() {}
-   T & get() const { return x; }
-
-  private :
-   T x ;
-} ;
-
-template<class T>
-class non_const_T_base
-{
-  protected :
-
-   non_const_T_base() : x() {}
-   T & get() const { return x; }
-
-  private :
-   mutable T x ;
-} ;
-
-#endif
-
-template<class T>
-struct select_base
-{
-  typedef
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-  typename
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
+      typename
 #endif 
-    ::boost::detail::if_true< ::boost::is_const<T>::value >
-      ::template then< const_T_base<T>, non_const_T_base<T> >::type type ;
-} ;
+      remove_const<T>::type data;
+    };
 
-} // namespace vinit_detail
+    mutable
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
+      typename
+#endif 
+      aligned_storage<sizeof(wrapper), alignment_of<wrapper>::value>::type x;
 
-template<class T>
-class value_initialized : private vinit_detail::select_base<T>::type
-{
+    wrapper * wrapper_address() const
+    {
+      return static_cast<wrapper *>( static_cast<void*>(&x));
+    }
+
   public :
 
-    value_initialized() {}
+    value_initialized()
+    {
+      std::memset(&x, 0, sizeof(x));
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#if _MSC_VER >= 1310
+// When using MSVC 7.1 or higher, the following placement new expression may trigger warning C4345:
+// "behavior change: an object of POD type constructed with an initializer of the form ()
+// will be default-initialized".  It is safe to ignore this warning when using value_initialized.
+#pragma warning(disable: 4345)
+#endif
+#endif
+      new (wrapper_address()) wrapper();
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+    }
 
-    operator T&() const { return this->get(); }
+    value_initialized(value_initialized const & arg)
+    {
+      new (wrapper_address()) wrapper( static_cast<wrapper const &>(*(arg.wrapper_address())));
+    }
 
-    T& data() const { return this->get(); }
+    value_initialized & operator=(value_initialized const & arg)
+    {
+      // Assignment is only allowed when T is non-const.
+      BOOST_STATIC_ASSERT( ! is_const<T>::value );
+      *wrapper_address() = static_cast<wrapper const &>(*(arg.wrapper_address()));
+      return *this;
+    }
+
+    ~value_initialized()
+    {
+      wrapper_address()->wrapper::~wrapper();
+    }
+
+    T& data() const
+    {
+      return wrapper_address()->data;
+    }
+
+    void swap(value_initialized & arg)
+    {
+      ::boost::swap( this->data(), arg.data() );
+    }
+
+    operator T&() const { return this->data(); }
 
 } ;
+
+
 
 template<class T>
 T const& get ( value_initialized<T> const& x )
@@ -158,8 +117,27 @@ T& get ( value_initialized<T>& x )
   return x.data() ;
 }
 
+template<class T>
+void swap ( value_initialized<T> & lhs, value_initialized<T> & rhs )
+{
+  lhs.swap(rhs) ;
+}
+
+
+class initialized_value_t
+{
+  public :
+    
+    template <class T> operator T() const
+    {
+      return get( value_initialized<T>() );
+    }
+};
+
+initialized_value_t const initialized_value = {} ;
+
+
 } // namespace boost
 
 
 #endif
-
