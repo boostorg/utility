@@ -6,14 +6,6 @@
 #ifndef UUID_1D94A7C6054E11DB9804B622A1EF5492
 #define UUID_1D94A7C6054E11DB9804B622A1EF5492
 
-#include <boost/exception/diagnostic_information.hpp>
-#include <boost/exception/error_info.hpp>
-#include <boost/exception/exception.hpp>
-#include <boost/exception/get_error_info.hpp>
-#include <boost/exception/info.hpp>
-#include <boost/exception/info_tuple.hpp>
-#ifndef BOOST_NO_EXCEPTIONS
-#include <boost/exception_ptr.hpp>
-#endif
+#include <boost/exception/all.hpp>
 
 #endif
