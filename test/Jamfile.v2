@@ -17,6 +17,7 @@ alias unit_test_framework
 test-suite utility
     :
         [ run ../addressof_fn_test.cpp ]
+        [ run ../addressof_np_test.cpp ]
         [ run ../addressof_test.cpp ]
         [ run ../addressof_test2.cpp ]
         [ run ../assert_test.cpp ]
