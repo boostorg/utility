@@ -22,18 +22,12 @@ template<class Generator>
 class generator_iterator
   : public iterator_facade<
         generator_iterator<Generator>
-      , typename Generator::result_type
+      , decltype(std::declval<Generator>()())
       , single_pass_traversal_tag
-      , typename Generator::result_type const&
+      , decltype(std::declval<Generator>()()) const&
     >
 {
-    typedef iterator_facade<
-        generator_iterator<Generator>
-      , typename Generator::result_type
-      , single_pass_traversal_tag
-      , typename Generator::result_type const&
-    > super_t;
-    
+    typedef decltype(std::declval<Generator>()()) value_type;
  public:
     generator_iterator() {}
     generator_iterator(Generator* g) : m_g(g), m_value((*m_g)()) {}
@@ -43,7 +37,7 @@ class generator_iterator
         m_value = (*m_g)();
     }
 
-    const typename Generator::result_type&
+    const value_type&
     dereference() const
     {
         return m_value;
@@ -56,7 +50,7 @@ class generator_iterator
 
  private:
     Generator* m_g;
-    typename Generator::result_type m_value;
+    value_type m_value;
 };
 
 template<class Generator>

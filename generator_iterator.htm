@@ -124,20 +124,15 @@ make_generator_iterator(Generator &amp; gen);
 #include &lt;iostream&gt;
 #include &lt;boost/generator_iterator.hpp&gt;
 
-class my_generator
-{
-public:
-  typedef int result_type;
-  my_generator() : state(0) { }
-  int operator()() { return ++state; }
-private:
-  int state;
-};
-
 int main()
 {
-  my_generator gen;
-  boost::generator_iterator_generator&lt;my_generator&gt;::type it = boost::make_generator_iterator(gen);
+  int state;
+  auto gen = [&amp;state]()
+  {
+    return ++state;
+  };
+  auto it = boost::make_generator_iterator(gen);
+
   for(int i = 0; i &lt; 10; ++i, ++it)
     std::cout &lt;&lt; *it &lt;&lt; std::endl;
 }
@@ -149,8 +144,8 @@ int main()
   "../../doc/images/valid-html401.png" alt="Valid HTML 4.01 Transitional"
   height="31" width="88"></a></p>
 
-  <p>Revised 
-  <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->05 December, 2006<!--webbot bot="Timestamp" endspan i-checksum="38516" --></p>
+  <p>Revised
+  <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->16 December, 2013<!--webbot bot="Timestamp" endspan i-checksum="38516" --></p>
 
   <p><i>Copyright &copy; 2001 <a href=
   "http://www.boost.org/people/jens_maurer.htm">Jens Maurer</a></i></p>
