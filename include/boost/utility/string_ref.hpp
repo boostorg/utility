@@ -122,7 +122,7 @@ namespace boost {
         BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT { return ptr_; }
 
         // modifiers
-        void clear() BOOST_NOEXCEPT { len_ = 0; }
+        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = NULL; }
         void remove_prefix(size_type n) {
             if ( n > len_ )
                 n = len_;
