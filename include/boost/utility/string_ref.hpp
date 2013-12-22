@@ -44,8 +44,10 @@ namespace boost {
     class basic_string_ref {
     public:
         // types
+        typedef traits traits_type;
         typedef charT value_type;
         typedef const charT* pointer;
+        typedef const charT* const_pointer;
         typedef const charT& reference;
         typedef const charT& const_reference;
         typedef pointer const_iterator; // impl-defined

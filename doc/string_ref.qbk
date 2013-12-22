@@ -21,7 +21,7 @@
 [/===============]
 
 Boost.StringRef is an implementation of Jeffrey Yaskin's [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html N3442:
-string_ref: a non-owning reference to a string]. 
+string_ref: a non-owning reference to a string], updated with some changes in [@http://isocpp.org/files/papers/N3762.html N3762: string_view: a non-owning reference to a string, revision 5].
 
 When you are parsing/processing strings from some external source, frequently you want to pass a piece of text to a procedure for specialized processing. The canonical way to do this is as a `std::string`, but that has certain drawbacks:
 
@@ -82,6 +82,16 @@ No memory allocations. No copying of character data. No changes to the code othe
 The header file "string_ref.hpp" defines a template `boost::basic_string_ref`, and four specializations - for `char` / `wchar_t` / `char16_t` / `char32_t` .
 
 `#include <boost/utility/string_ref.hpp>`
+
+Type aliases:
+
+    typedef traits traits_type;
+    typedef charT value_type;
+    typedef const charT* pointer;
+    typedef const charT* const_pointer;
+    typedef const charT& reference;
+    typedef const charT& const_reference;
+    typedef pointer const_iterator; // impl-defined
 
 Construction and copying:
 
@@ -145,10 +155,14 @@ Searching:
 String-like operations:
 
     BOOST_CONSTEXPR basic_string_ref substr(size_type pos, size_type n=npos) const ; // Creates a new string_ref
+    int compare(basic_string_ref x) const ; // like std::string::compare
+    // The following methods were removed from proposal in N3685
     bool starts_with(charT c) const ;
     bool starts_with(basic_string_ref x) const ;
     bool ends_with(charT c) const ;
     bool ends_with(basic_string_ref x) const ;
+
+Note that `starts_with` and `ends_with` were removed from the proposed interface in N3685 but are currently retained in Boost.
 
 [endsect]
 
@@ -158,10 +172,8 @@ String-like operations:
 
 [heading boost 1.53]
 * Introduced
-    
+
+[heading boost 1.56]
+* Updated with changes in N3762
 
 [endsect]
-
-
-
-
