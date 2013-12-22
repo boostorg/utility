@@ -138,23 +138,23 @@ Modifying the `string_ref` (but not the underlying data):
 
 Searching:
 
-    size_type find(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type find(charT c) const BOOST_NOEXCEPT ;
-    size_type rfind(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type rfind(charT c) const BOOST_NOEXCEPT ;
-    size_type find_first_of(charT c) const BOOST_NOEXCEPT ;
-    size_type find_last_of (charT c) const BOOST_NOEXCEPT ;
+    size_type find(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type rfind(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type rfind(charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_first_of(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_of (charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
         
-    size_type find_first_of(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type find_last_of(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type find_first_not_of(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type find_first_not_of(charT c) const BOOST_NOEXCEPT ;
-    size_type find_last_not_of(basic_string_ref s) const BOOST_NOEXCEPT ;
-    size_type find_last_not_of(charT c) const BOOST_NOEXCEPT ;
+    size_type find_first_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
 
 String-like operations:
 
-    BOOST_CONSTEXPR basic_string_ref substr(size_type pos, size_type n=npos) const ; // Creates a new string_ref
+    BOOST_CONSTEXPR basic_string_ref substr(size_type pos=npos, size_type n=npos) const ; // Creates a new string_ref
     int compare(basic_string_ref x) const BOOST_NOEXCEPT ; // like std::string::compare
     size_type copy(charT* s, size_type n, size_type pos=0) const ; // like std::copy_n
     // The following methods were removed from proposal in N3685

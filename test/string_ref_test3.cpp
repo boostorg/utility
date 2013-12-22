@@ -69,9 +69,19 @@ void test_find ()
 
   BOOST_CHECK_EQUAL(szt(12), sv.size());
   BOOST_CHECK_EQUAL(sv.find(svabc), 0);
-  BOOST_CHECK_EQUAL(sv.find(pabc), 0);
+  BOOST_CHECK_EQUAL(sv.find(svabc, 1), 4);
+  BOOST_CHECK_EQUAL(sv.find(svabc, 5), 8);
   BOOST_CHECK(sv.find(svnot) == string_ref::npos);
+  BOOST_CHECK(sv.find(svabc, 9) == string_ref::npos);
+  BOOST_CHECK_EQUAL(sv.find(pabc), 0);
+  BOOST_CHECK_EQUAL(sv.find(pabc, 1), 4);
+  BOOST_CHECK_EQUAL(sv.find(pabc, 5), 8);
+  BOOST_CHECK(sv.find(svnot.data()) == string_ref::npos);
   BOOST_CHECK_EQUAL(sv.find('a'), 0);
+  BOOST_CHECK_EQUAL(sv.find('a', 1), 4);
+  BOOST_CHECK_EQUAL(sv.find('a', 3), 4);
+  BOOST_CHECK_EQUAL(sv.find('a', 4), 4);
+  BOOST_CHECK_EQUAL(sv.find('a', 5), 8);
   BOOST_CHECK_EQUAL(sv.find('d'), 3);
   BOOST_CHECK_EQUAL(sv.find('\0'), 7);
   BOOST_CHECK(sv.find('n') == string_ref::npos);
@@ -84,13 +94,32 @@ void test_rfind ()
   string_ref sv(pstr, sizeof(pstr)-1);
   const char * pabc = "abc";
   string_ref svabc(pabc);
+  const char * pcd = "cd";
+  string_ref svcd(pcd);
   string_ref svnot("not");
 
   BOOST_CHECK_EQUAL(szt(12), sv.size());
   BOOST_CHECK_EQUAL(szt(8), sv.rfind(svabc));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(svabc, 9));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(svabc, 8));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(svabc, 7));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(svabc, 5));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(svabc, 4));
+  BOOST_CHECK_EQUAL(szt(0), sv.rfind(svabc, 0));
+  BOOST_CHECK_EQUAL(szt(2), sv.rfind(svcd, 5));
+  BOOST_CHECK(sv.rfind(svcd, 1) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(8), sv.rfind(pabc));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(pabc, 9));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(pabc, 8));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(pabc, 7));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(pabc, 5));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind(pabc, 4));
+  BOOST_CHECK_EQUAL(szt(0), sv.rfind(pabc, 0));
   BOOST_CHECK(sv.rfind(svnot) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(8), sv.rfind('a'));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind('a', 9));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind('a', 8));
+  BOOST_CHECK_EQUAL(szt(4), sv.rfind('a', 7));
   BOOST_CHECK_EQUAL(szt(7), sv.rfind('\0'));
   BOOST_CHECK_EQUAL(szt(11), sv.rfind('d'));
   BOOST_CHECK(sv.rfind('n') == string_ref::npos);
@@ -110,10 +139,19 @@ void test_ffo ()
   string_ref svnot("not");
 
   BOOST_CHECK_EQUAL(szt(0), sv.find_first_of(svabc));
+  BOOST_CHECK_EQUAL(szt(4), sv.find_first_of(svabc, 3));
+  BOOST_CHECK_EQUAL(szt(4), sv.find_first_of(svabc, 4));
+  BOOST_CHECK_EQUAL(szt(5), sv.find_first_of(svabc, 5));
   BOOST_CHECK_EQUAL(szt(3), sv.find_first_of(svdef));
+  BOOST_CHECK_EQUAL(szt(3), sv.find_first_of(svdef, 3));
+  BOOST_CHECK_EQUAL(szt(11), sv.find_first_of(svdef, 4));
   BOOST_CHECK_EQUAL(szt(7), sv.find_first_of(svghiz));
   BOOST_CHECK(sv.find_first_of(svnot) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(0), sv.find_first_of('a'));
+  BOOST_CHECK_EQUAL(szt(4), sv.find_first_of('a', 1));
+  BOOST_CHECK_EQUAL(szt(8), sv.find_first_of('a', 7));
+  BOOST_CHECK_EQUAL(szt(8), sv.find_first_of('a', 8));
+  BOOST_CHECK(sv.find_first_of('a', 9) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(3), sv.find_first_of('d'));
   BOOST_CHECK_EQUAL(szt(7), sv.find_first_of('\0'));
   BOOST_CHECK(sv.find_first_of('n') == string_ref::npos);
@@ -135,9 +173,15 @@ void test_flo ()
   BOOST_CHECK_EQUAL(szt(10), sv.find_last_of(svabc));
   BOOST_CHECK_EQUAL(szt(11), sv.find_last_of(svdef));
   BOOST_CHECK_EQUAL(szt(7), sv.find_last_of(svghiz));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_of(svghiz, 8));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_of(svghiz, 7));
+  BOOST_CHECK(sv.find_last_of(svghiz, 6) == string_ref::npos);
   BOOST_CHECK(sv.find_last_of(svnot) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(8), sv.find_last_of('a'));
   BOOST_CHECK_EQUAL(szt(11), sv.find_last_of('d'));
+  BOOST_CHECK_EQUAL(szt(3), sv.find_last_of('d', 4));
+  BOOST_CHECK_EQUAL(szt(3), sv.find_last_of('d', 3));
+  BOOST_CHECK(sv.find_last_of('d', 2) == string_ref::npos);
   BOOST_CHECK_EQUAL(szt(7), sv.find_last_of('\0'));
   BOOST_CHECK(sv.find_last_of('n') == string_ref::npos);
 }
@@ -159,8 +203,13 @@ void test_ffno ()
 
   BOOST_CHECK_EQUAL(szt(3), sv.find_first_not_of(svabc));
   BOOST_CHECK_EQUAL(szt(7), sv.find_first_not_of(svabcd));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_first_not_of(svabcd, 6));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_first_not_of(svabcd, 7));
+  BOOST_CHECK(string_ref::npos == sv.find_first_not_of(svabcd, 8));
   BOOST_CHECK(string_ref::npos == sv.find_first_not_of(svabcdz));
   BOOST_CHECK_EQUAL(szt(1), sv.find_first_not_of('a'));
+  BOOST_CHECK_EQUAL(szt(11), sv.find_first_not_of('c', 11));
+  BOOST_CHECK(string_ref::npos == sv.find_first_not_of('d', 11));
   BOOST_CHECK_EQUAL(szt(0), sv.find_first_not_of('b'));
 }
 
@@ -182,9 +231,16 @@ void test_flno ()
   BOOST_CHECK_EQUAL(szt(11), sv.find_last_not_of(svabcz));
   BOOST_CHECK_EQUAL(szt(10), sv.find_last_not_of(svdef));
   BOOST_CHECK_EQUAL(szt(7), sv.find_last_not_of(svabcd));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_not_of(svabcd, 8));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_not_of(svabcd, 7));
+  BOOST_CHECK(string_ref::npos == sv.find_last_not_of(svabcd, 6));
   BOOST_CHECK(string_ref::npos == sv.find_last_not_of(svabcdz));
   BOOST_CHECK_EQUAL(szt(11), sv.find_last_not_of('c'));
   BOOST_CHECK_EQUAL(szt(10), sv.find_last_not_of('d'));
+  BOOST_CHECK_EQUAL(szt(4), sv.find_last_not_of('d', 4));
+  BOOST_CHECK_EQUAL(szt(2), sv.find_last_not_of('d', 3));
+  BOOST_CHECK_EQUAL(szt(0), sv.find_last_not_of('d', 0));
+  BOOST_CHECK(string_ref::npos == sv.find_last_not_of('a', 0));
   BOOST_CHECK_EQUAL(szt(3), svabcz.find_last_not_of('d'));
   BOOST_CHECK_EQUAL(szt(2), svabcz.find_last_not_of('\0'));
 }
