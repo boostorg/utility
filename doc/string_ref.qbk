@@ -95,32 +95,32 @@ Type aliases:
 
 Construction and copying:
 
-    BOOST_CONSTEXPR basic_string_ref ();    // Constructs an empty string_ref
+    BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT;    // Constructs an empty string_ref
     BOOST_CONSTEXPR basic_string_ref(const charT* str); // Constructs from a NULL-terminated string
     BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len); // Constructs from a pointer, length pair
     template<typename Allocator>
-    basic_string_ref(const std::basic_string<charT, traits, Allocator>& str); // Constructs from a std::string
-    basic_string_ref (const basic_string_ref &rhs);
-    basic_string_ref& operator=(const basic_string_ref &rhs);
+    basic_string_ref(const std::basic_string<charT, traits, Allocator>& str) BOOST_NOEXCEPT; // Constructs from a std::string
+    basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT;
+    basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT;
 
 `string_ref` does not define a move constructor nor a move-assignment operator because copying a `string_ref` is just a cheap as moving one.
 
 Basic container-like functions:
 
-    BOOST_CONSTEXPR size_type size()     const ;
-    BOOST_CONSTEXPR size_type length()   const ;
-    BOOST_CONSTEXPR size_type max_size() const ;
-    BOOST_CONSTEXPR bool empty()         const ;
+    BOOST_CONSTEXPR size_type size()     const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type length()   const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR bool empty()         const BOOST_NOEXCEPT ;
     
     // All iterators are const_iterators
-    BOOST_CONSTEXPR const_iterator  begin() const ;
-    BOOST_CONSTEXPR const_iterator cbegin() const ;
-    BOOST_CONSTEXPR const_iterator    end() const ;
-    BOOST_CONSTEXPR const_iterator   cend() const ;
-    const_reverse_iterator         rbegin() const ;
-    const_reverse_iterator        crbegin() const ;
-    const_reverse_iterator           rend() const ;
-    const_reverse_iterator          crend() const ;
+    BOOST_CONSTEXPR const_iterator  begin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator cbegin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator    end() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator   cend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator         rbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator        crbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator           rend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator          crend() const BOOST_NOEXCEPT ;
 
 Access to the individual elements (all of which are const):
 
@@ -128,34 +128,34 @@ Access to the individual elements (all of which are const):
     const charT& at(size_t pos) const ;
     BOOST_CONSTEXPR const charT& front() const ;
     BOOST_CONSTEXPR const charT& back()  const ;
-    BOOST_CONSTEXPR const charT* data()  const ;
+    BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT ;
 
 Modifying the `string_ref` (but not the underlying data):
 
-    void clear();
+    void clear() BOOST_NOEXCEPT;
     void remove_prefix(size_type n);
     void remove_suffix(size_type n);
 
 Searching:
 
-    size_type find(basic_string_ref s) const ;
-    size_type find(charT c) const ;
-    size_type rfind(basic_string_ref s) const ;
-    size_type rfind(charT c) const ;
-    size_type find_first_of(charT c) const ;
-    size_type find_last_of (charT c) const ;
+    size_type find(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type find(charT c) const BOOST_NOEXCEPT ;
+    size_type rfind(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type rfind(charT c) const BOOST_NOEXCEPT ;
+    size_type find_first_of(charT c) const BOOST_NOEXCEPT ;
+    size_type find_last_of (charT c) const BOOST_NOEXCEPT ;
         
-    size_type find_first_of(basic_string_ref s) const ;
-    size_type find_last_of(basic_string_ref s) const ;
-    size_type find_first_not_of(basic_string_ref s) const ;
-    size_type find_first_not_of(charT c) const ;
-    size_type find_last_not_of(basic_string_ref s) const ;
-    size_type find_last_not_of(charT c) const ;
+    size_type find_first_of(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type find_last_of(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(charT c) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(basic_string_ref s) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(charT c) const BOOST_NOEXCEPT ;
 
 String-like operations:
 
     BOOST_CONSTEXPR basic_string_ref substr(size_type pos, size_type n=npos) const ; // Creates a new string_ref
-    int compare(basic_string_ref x) const ; // like std::string::compare
+    int compare(basic_string_ref x) const BOOST_NOEXCEPT ; // like std::string::compare
     // The following methods were removed from proposal in N3685
     bool starts_with(charT c) const ;
     bool starts_with(basic_string_ref x) const ;
