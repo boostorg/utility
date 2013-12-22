@@ -92,6 +92,20 @@ namespace boost {
             return std::basic_string<charT, traits> ( ptr_, len_ );
             }
 
+        size_type copy(charT* s, size_type n, size_type pos=0) const {
+            if ( pos > size() )
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::copy" ) );
+            size_t rlen = size() - pos;
+            if ( n < rlen )
+                rlen = n;
+            else
+                n = rlen;
+            const_iterator first = begin() + pos;
+            for ( ; n > 0; --n, ++first, ++s )
+                *s = *first;
+            return rlen;
+        }
+
         // iterators
         BOOST_CONSTEXPR const_iterator   begin() const BOOST_NOEXCEPT { return ptr_; }
         BOOST_CONSTEXPR const_iterator  cbegin() const BOOST_NOEXCEPT { return ptr_; }

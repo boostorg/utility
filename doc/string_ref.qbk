@@ -156,6 +156,7 @@ String-like operations:
 
     BOOST_CONSTEXPR basic_string_ref substr(size_type pos, size_type n=npos) const ; // Creates a new string_ref
     int compare(basic_string_ref x) const BOOST_NOEXCEPT ; // like std::string::compare
+    size_type copy(charT* s, size_type n, size_type pos=0) const ; // like std::copy_n
     // The following methods were removed from proposal in N3685
     bool starts_with(charT c) const ;
     bool starts_with(basic_string_ref x) const ;
