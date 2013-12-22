@@ -150,6 +150,15 @@ namespace boost {
             len_ -= n;
             }
 
+        void swap(basic_string_ref& s) BOOST_NOEXCEPT {
+            const charT *ptr = ptr_;
+            std::size_t len = len_;
+            ptr_ = s.ptr_;
+            s.ptr_ = ptr;
+            len_ = s.len_;
+            s.len_ = len;
+        }
+
 
         // basic_string_ref string operations
         basic_string_ref substr(size_type pos=0, size_type n=npos) const {

@@ -245,6 +245,24 @@ void test_flno ()
   BOOST_CHECK_EQUAL(szt(2), svabcz.find_last_not_of('\0'));
 }
 
+void test_swap ()
+{
+  const char * const cp1 = "one";
+  const char * const cp2 = "not one";
+  string_ref sv1(cp1);
+  string_ref sv2(cp2);
+  BOOST_CHECK_NE(sv1.data(), sv2.data());
+  BOOST_CHECK_NE(sv1.size(), sv2.size());
+  BOOST_CHECK_EQUAL(sv1.data(), cp1);
+  BOOST_CHECK_EQUAL(sv1.size(), 3);
+  BOOST_CHECK_EQUAL(sv2.data(), cp2);
+  BOOST_CHECK_EQUAL(sv2.size(), 7);
+  sv1.swap(sv2);
+  BOOST_CHECK_EQUAL(sv2.data(), cp1);
+  BOOST_CHECK_EQUAL(sv2.size(), 3);
+  BOOST_CHECK_EQUAL(sv1.data(), cp2);
+  BOOST_CHECK_EQUAL(sv1.size(), 7);
+}
 
 BOOST_AUTO_TEST_CASE( test_main )
 {
@@ -255,4 +273,5 @@ BOOST_AUTO_TEST_CASE( test_main )
   test_ffo();
   test_flo();
   test_flno();
+  test_swap();
 }

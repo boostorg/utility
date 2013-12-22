@@ -135,6 +135,7 @@ Modifying the `string_ref` (but not the underlying data):
     void clear() BOOST_NOEXCEPT;
     void remove_prefix(size_type n);
     void remove_suffix(size_type n);
+    void swap(basic_string_ref& s) BOOST_NOEXCEPT;
 
 Searching:
 
