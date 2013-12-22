@@ -264,6 +264,55 @@ void test_swap ()
   BOOST_CHECK_EQUAL(sv1.size(), 7);
 }
 
+void test_compare ()
+{
+  typedef string_ref::size_type szt;
+  const char pe[] = "abc";
+  const char pl[] = "aac";
+  const char pg[] = "acc";
+
+  const char str[] = "abcdabc\0abcd";
+  string_ref svstr(str, sizeof(str)-1);
+  string_ref svstrz(str);
+  BOOST_CHECK_EQUAL(szt(13), sizeof(str));
+  BOOST_CHECK_EQUAL(szt(12), svstr.size());
+  BOOST_CHECK_EQUAL(szt(7), svstrz.size());
+
+  string_ref svpl(pl);
+  string_ref svpe(pe);
+  string_ref svpg(pg);
+
+  BOOST_CHECK(svstr.compare(svstr) == 0);
+
+  BOOST_CHECK(svstr.compare(svpe) > 0);
+  BOOST_CHECK(svpe.compare(svstr) < 0);
+
+  BOOST_CHECK(svstr.compare(0, svpe.size(), svpe) == 0);
+  BOOST_CHECK(svstr.compare(0, svpl.size(), svpl) > 0);
+  BOOST_CHECK(svstr.compare(0, svpg.size(), svpg) < 0);
+  BOOST_CHECK(svstr.compare(0, svpe.size(), pe) == 0);
+  BOOST_CHECK(svstr.compare(0, svpl.size(), pl) > 0);
+  BOOST_CHECK(svstr.compare(0, svpg.size(), pg) < 0);
+
+  BOOST_CHECK(svstr.substr(4).compare(svpe) > 0);
+  BOOST_CHECK(svstr.compare(4, string_ref::npos, svpe) > 0);
+
+  BOOST_CHECK(svpe.compare(svstr.substr(4)) < 0);
+  BOOST_CHECK(svpe.compare(svstr.substr(4, 3)) == 0);
+
+  BOOST_CHECK_EQUAL(svstr.data(), svstrz.data());
+  BOOST_CHECK(svstr.compare(svstrz) > 0);
+  BOOST_CHECK(svstr.compare(str) > 0);
+  BOOST_CHECK(svstrz.compare(svstr) < 0);
+
+  BOOST_CHECK(svstr.compare(0, string_ref::npos, svstrz) > 0);
+  BOOST_CHECK(svstr.compare(0, string_ref::npos, svstr) == 0);
+  BOOST_CHECK(svstr.compare(0, string_ref::npos, svstr.data()) > 0);
+  BOOST_CHECK(svstr.compare(0, string_ref::npos, svstr.data(), svstr.size()) == 0);
+  BOOST_CHECK(svstr.compare(0, string_ref::npos, svstr.data(), svstr.size()-1) > 0);
+  BOOST_CHECK(svstr.compare(0, svstr.size()-1, svstr.data(), svstr.size()) < 0);
+}
+
 BOOST_AUTO_TEST_CASE( test_main )
 {
   test_clear();
@@ -274,4 +323,5 @@ BOOST_AUTO_TEST_CASE( test_main )
   test_flo();
   test_flno();
   test_swap();
+  test_compare();
 }

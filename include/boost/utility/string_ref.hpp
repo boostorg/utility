@@ -173,6 +173,22 @@ namespace boost {
             const int cmp = traits::compare ( ptr_, x.ptr_, (std::min)(len_, x.len_));
             return cmp != 0 ? cmp : ( len_ == x.len_ ? 0 : len_ < x.len_ ? -1 : 1 );
             }
+        int compare(size_type pos1, size_type n1, basic_string_ref s) const {
+            return substr(pos1, n1).compare(s);
+            }
+        int compare(size_type pos1, size_type n1, basic_string_ref s,
+                    size_type pos2, size_type n2) const {
+            return substr(pos1, n1).compare(s.substr(pos2, n2));
+            }
+        int compare(const charT* s) const {
+            return compare(basic_string_ref(s));
+            }
+        int compare(size_type pos1, size_type n1, const charT* s) const {
+            return substr(pos1, n1).compare(basic_string_ref(s));
+            }
+        int compare(size_type pos1, size_type n1, const charT* s, size_type n2) const {
+            return substr(pos1, n1).compare(basic_string_ref(s, n2));
+            }
 
         bool starts_with(charT c) const { return !empty() && traits::eq ( c, front()); }
         bool starts_with(basic_string_ref x) const {
