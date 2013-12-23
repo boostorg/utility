@@ -58,8 +58,145 @@ void test_copy ()
   BOOST_CHECK(std::equal(buffer, ebuffer, sv.data()));
 }
 
+void test_find ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char * pabc = "abc";
+  string_ref svabc(pabc);
+  string_ref svnot("not");
+
+  BOOST_CHECK_EQUAL(szt(12), sv.size());
+  BOOST_CHECK_EQUAL(sv.find(svabc), 0);
+  BOOST_CHECK_EQUAL(sv.find(pabc), 0);
+  BOOST_CHECK(sv.find(svnot) == string_ref::npos);
+  BOOST_CHECK_EQUAL(sv.find('a'), 0);
+  BOOST_CHECK_EQUAL(sv.find('d'), 3);
+  BOOST_CHECK_EQUAL(sv.find('\0'), 7);
+  BOOST_CHECK(sv.find('n') == string_ref::npos);
+}
+
+void test_rfind ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char * pabc = "abc";
+  string_ref svabc(pabc);
+  string_ref svnot("not");
+
+  BOOST_CHECK_EQUAL(szt(12), sv.size());
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(svabc));
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind(pabc));
+  BOOST_CHECK(sv.rfind(svnot) == string_ref::npos);
+  BOOST_CHECK_EQUAL(szt(8), sv.rfind('a'));
+  BOOST_CHECK_EQUAL(szt(7), sv.rfind('\0'));
+  BOOST_CHECK_EQUAL(szt(11), sv.rfind('d'));
+  BOOST_CHECK(sv.rfind('n') == string_ref::npos);
+}
+
+void test_ffo ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char pabc[] = "abc";
+  const char pdef[] = "def";
+  const char pghi[] = "ghi";
+  string_ref svabc(pabc);
+  string_ref svdef(pdef);
+  string_ref svghiz(pghi, sizeof(pghi));
+  string_ref svnot("not");
+
+  BOOST_CHECK_EQUAL(szt(0), sv.find_first_of(svabc));
+  BOOST_CHECK_EQUAL(szt(3), sv.find_first_of(svdef));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_first_of(svghiz));
+  BOOST_CHECK(sv.find_first_of(svnot) == string_ref::npos);
+  BOOST_CHECK_EQUAL(szt(0), sv.find_first_of('a'));
+  BOOST_CHECK_EQUAL(szt(3), sv.find_first_of('d'));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_first_of('\0'));
+  BOOST_CHECK(sv.find_first_of('n') == string_ref::npos);
+}
+
+void test_flo ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char pabc[] = "abc";
+  const char pdef[] = "def";
+  const char pghi[] = "ghi";
+  string_ref svabc(pabc);
+  string_ref svdef(pdef);
+  string_ref svghiz(pghi, sizeof(pghi));
+  string_ref svnot("not");
+
+  BOOST_CHECK_EQUAL(szt(10), sv.find_last_of(svabc));
+  BOOST_CHECK_EQUAL(szt(11), sv.find_last_of(svdef));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_of(svghiz));
+  BOOST_CHECK(sv.find_last_of(svnot) == string_ref::npos);
+  BOOST_CHECK_EQUAL(szt(8), sv.find_last_of('a'));
+  BOOST_CHECK_EQUAL(szt(11), sv.find_last_of('d'));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_of('\0'));
+  BOOST_CHECK(sv.find_last_of('n') == string_ref::npos);
+}
+
+void test_ffno ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char pabc[] = "abc";
+  const char pabcd[] = "abcd";
+  const char pdef[] = "def";
+  const char pghi[] = "ghi";
+  string_ref svabc(pabc);
+  string_ref svabcd(pabcd);
+  string_ref svabcdz(pabcd, sizeof(pabcd));
+  string_ref svdef(pdef);
+  string_ref svghi(pghi);
+
+  BOOST_CHECK_EQUAL(szt(3), sv.find_first_not_of(svabc));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_first_not_of(svabcd));
+  BOOST_CHECK(string_ref::npos == sv.find_first_not_of(svabcdz));
+  BOOST_CHECK_EQUAL(szt(1), sv.find_first_not_of('a'));
+  BOOST_CHECK_EQUAL(szt(0), sv.find_first_not_of('b'));
+}
+
+void test_flno ()
+{
+  typedef string_ref::size_type szt;
+  const char pstr[] = "abcdabc\0abcd";
+  string_ref sv(pstr, sizeof(pstr)-1);
+  const char pabc[] = "abc";
+  const char pabcd[] = "abcd";
+  const char pdef[] = "def";
+  const char pghi[] = "ghi";
+  string_ref svabcz(pabc, sizeof(pabc));
+  string_ref svabcd(pabcd);
+  string_ref svabcdz(pabcd, sizeof(pabcd));
+  string_ref svdef(pdef);
+  string_ref svghi(pghi);
+
+  BOOST_CHECK_EQUAL(szt(11), sv.find_last_not_of(svabcz));
+  BOOST_CHECK_EQUAL(szt(10), sv.find_last_not_of(svdef));
+  BOOST_CHECK_EQUAL(szt(7), sv.find_last_not_of(svabcd));
+  BOOST_CHECK(string_ref::npos == sv.find_last_not_of(svabcdz));
+  BOOST_CHECK_EQUAL(szt(11), sv.find_last_not_of('c'));
+  BOOST_CHECK_EQUAL(szt(10), sv.find_last_not_of('d'));
+  BOOST_CHECK_EQUAL(szt(3), svabcz.find_last_not_of('d'));
+  BOOST_CHECK_EQUAL(szt(2), svabcz.find_last_not_of('\0'));
+}
+
+
 BOOST_AUTO_TEST_CASE( test_main )
 {
   test_clear();
   test_copy();
+  test_find();
+  test_rfind();
+  test_ffo();
+  test_flo();
+  test_flno();
 }
