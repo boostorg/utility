@@ -7,8 +7,8 @@
 
 [article String_Ref
     [quickbook 1.5]
-    [authors [Clow, Marshall]]
-    [copyright 2012 Marshall Clow]
+    [authors [Clow, Marshall] [Bigot, Peter A.]]
+    [copyright 2012 2013 Marshall Clow, Peter A. Bigot]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -171,6 +171,28 @@ String-like operations:
     bool ends_with(basic_string_ref x) const ;
 
 Note that `starts_with` and `ends_with` were removed from the proposed interface in N3685 but are currently retained in Boost.
+
+[endsect]
+
+[/===============]
+[section Conformance to Proposed Standard]
+[/===============]
+
+Boost.StringRef differs from [@http://isocpp.org/files/papers/N3762.html N3762: string_view: a non-owning reference to a string, revision 5] in the following particulars:
+
+# The proposed template name changed from `string_ref` to `string_view` at [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3609.html N3609].  At this time the new name is not supported.
+
+# Using the default constructor `string_ref()` produces an object that returns a null pointer from `data()`.  N3762 requires that `data()` never return a null pointer.
+
+# Boost's implementation adds the following non-standard member functions:
+
+  # `to_string`
+  # `starts_with` (removed in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html N3685])
+  # `ends_with` (removed in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html N3685])
+
+# [@http://isocpp.org/files/papers/N3762.html#string.view.nonmem non-member `to_string`] is not provided.
+
+# `const charT*` overloads for member functions in [@http://isocpp.org/files/papers/N3762.html#h5o-6 string.view.find] that are not documented are not provided.  The `charT` overloads are provided.
 
 [endsect]
 
