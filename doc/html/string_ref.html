@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>String_Ref</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="string_ref.html" title="String_Ref">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -22,10 +22,15 @@
 <div>
 <div><h2 class="title">
 <a name="string_ref"></a>String_Ref</h2></div>
-<div><div class="authorgroup"><div class="author"><h3 class="author">
+<div><div class="authorgroup">
+<div class="author"><h3 class="author">
 <span class="firstname">Marshall</span> <span class="surname">Clow</span>
-</h3></div></div></div>
-<div><p class="copyright">Copyright &#169; 2012 Marshall Clow</p></div>
+</h3></div>
+<div class="author"><h3 class="author">
+<span class="firstname">Peter A.</span> <span class="surname">Bigot</span>
+</h3></div>
+</div></div>
+<div><p class="copyright">Copyright &#169; 2012, 2013 Marshall Clow, Peter A. Bigot</p></div>
 <div><div class="legalnotice">
 <a name="string_ref.legal"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -37,10 +42,12 @@
 </div>
 <div class="toc">
 <p><b>Table of Contents</b></p>
-<dl class="toc">
+<dl>
 <dt><span class="section"><a href="string_ref.html#string_ref.overview">Overview</a></span></dt>
 <dt><span class="section"><a href="string_ref.html#string_ref.examples">Examples</a></span></dt>
 <dt><span class="section"><a href="string_ref.html#string_ref.reference">Reference </a></span></dt>
+<dt><span class="section"><a href="string_ref.html#string_ref.conformance_to_proposed_standard">Conformance
+    to Proposed Standard</a></span></dt>
 <dt><span class="section"><a href="string_ref.html#string_ref.history">History</a></span></dt>
 </dl>
 </div>
@@ -50,7 +57,9 @@
 </h2></div></div></div>
 <p>
       Boost.StringRef is an implementation of Jeffrey Yaskin's <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html" target="_top">N3442:
-      string_ref: a non-owning reference to a string</a>.
+      string_ref: a non-owning reference to a string</a>, updated with some changes
+      in <a href="http://isocpp.org/files/papers/N3762.html" target="_top">N3762: string_view:
+      a non-owning reference to a string, revision 5</a>.
     </p>
 <p>
       When you are parsing/processing strings from some external source, frequently
@@ -180,15 +189,26 @@
       <code class="computeroutput"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">string_ref</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
     </p>
 <p>
+      Type aliases:
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">traits</span> <span class="identifier">traits_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">charT</span> <span class="identifier">value_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">pointer</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">const_pointer</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">&amp;</span> <span class="identifier">reference</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">&amp;</span> <span class="identifier">const_reference</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">pointer</span> <span class="identifier">const_iterator</span><span class="special">;</span> <span class="comment">// impl-defined</span>
+</pre>
+<p>
       Construction and copying:
     </p>
-<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span> <span class="special">();</span>    <span class="comment">// Constructs an empty string_ref</span>
+<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span> <span class="special">()</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span>    <span class="comment">// Constructs an empty string_ref</span>
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">str</span><span class="special">);</span> <span class="comment">// Constructs from a NULL-terminated string</span>
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">str</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">len</span><span class="special">);</span> <span class="comment">// Constructs from a pointer, length pair</span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Allocator</span><span class="special">&gt;</span>
-<span class="identifier">basic_string_ref</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">str</span><span class="special">);</span> <span class="comment">// Constructs from a std::string</span>
-<span class="identifier">basic_string_ref</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">basic_string_ref</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
-<span class="identifier">basic_string_ref</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">basic_string_ref</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+<span class="identifier">basic_string_ref</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">str</span><span class="special">)</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span> <span class="comment">// Constructs from a std::string</span>
+<span class="identifier">basic_string_ref</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">basic_string_ref</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span>
+<span class="identifier">basic_string_ref</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">basic_string_ref</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span>
 </pre>
 <p>
       <code class="computeroutput"><span class="identifier">string_ref</span></code> does not define
@@ -197,20 +217,20 @@
 <p>
       Basic container-like functions:
     </p>
-<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">()</span>     <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">length</span><span class="special">()</span>   <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">()</span>         <span class="keyword">const</span> <span class="special">;</span>
+<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">()</span>     <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">length</span><span class="special">()</span>   <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">()</span>         <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
 
 <span class="comment">// All iterators are const_iterators</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>  <span class="identifier">begin</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span> <span class="identifier">cbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>    <span class="identifier">end</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>   <span class="identifier">cend</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">const_reverse_iterator</span>         <span class="identifier">rbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">const_reverse_iterator</span>        <span class="identifier">crbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">const_reverse_iterator</span>           <span class="identifier">rend</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">const_reverse_iterator</span>          <span class="identifier">crend</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>  <span class="identifier">begin</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span> <span class="identifier">cbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>    <span class="identifier">end</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">const_iterator</span>   <span class="identifier">cend</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">const_reverse_iterator</span>         <span class="identifier">rbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">const_reverse_iterator</span>        <span class="identifier">crbegin</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">const_reverse_iterator</span>           <span class="identifier">rend</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">const_reverse_iterator</span>          <span class="identifier">crend</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
 </pre>
 <p>
       Access to the individual elements (all of which are const):
@@ -219,42 +239,106 @@
 <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">&amp;</span> <span class="identifier">at</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">pos</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">&amp;</span> <span class="identifier">front</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span>
 <span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">&amp;</span> <span class="identifier">back</span><span class="special">()</span>  <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span>  <span class="keyword">const</span> <span class="special">;</span>
+<span class="identifier">BOOST_CONSTEXPR</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span>  <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
 </pre>
 <p>
       Modifying the <code class="computeroutput"><span class="identifier">string_ref</span></code> (but
       not the underlying data):
     </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">clear</span><span class="special">();</span>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">clear</span><span class="special">()</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">remove_prefix</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">);</span>
 <span class="keyword">void</span> <span class="identifier">remove_suffix</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">);</span>
+<span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">basic_string_ref</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">)</span> <span class="identifier">BOOST_NOEXCEPT</span><span class="special">;</span>
 </pre>
 <p>
       Searching:
     </p>
-<pre class="programlisting"><span class="identifier">size_type</span> <span class="identifier">find</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">rfind</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">rfind</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_first_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_last_of</span> <span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<pre class="programlisting"><span class="identifier">size_type</span> <span class="identifier">find</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">rfind</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">rfind</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_first_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_last_of</span> <span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
 
-<span class="identifier">size_type</span> <span class="identifier">find_first_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_last_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_first_not_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_first_not_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_last_not_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
-<span class="identifier">size_type</span> <span class="identifier">find_last_not_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_first_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_last_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_first_not_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_first_not_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_last_not_of</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">find_last_not_of</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span>
 </pre>
 <p>
       String-like operations:
     </p>
-<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span> <span class="identifier">substr</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span> <span class="comment">// Creates a new string_ref</span>
+<pre class="programlisting"><span class="identifier">BOOST_CONSTEXPR</span> <span class="identifier">basic_string_ref</span> <span class="identifier">substr</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="identifier">npos</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">=</span><span class="identifier">npos</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span> <span class="comment">// Creates a new string_ref</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">x</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">BOOST_NOEXCEPT</span> <span class="special">;</span> <span class="comment">// like std::string::compare</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos1</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n1</span><span class="special">,</span> <span class="identifier">basic_string_ref</span> <span class="identifier">str</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos1</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n1</span><span class="special">,</span> <span class="identifier">basic_string_ref</span> <span class="identifier">str</span><span class="special">,</span>
+            <span class="identifier">size_type</span> <span class="identifier">pos2</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n2</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos1</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">pos1</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n2</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="identifier">size_type</span> <span class="identifier">copy</span><span class="special">(</span><span class="identifier">charT</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">pos</span><span class="special">=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span> <span class="comment">// like std::copy_n</span>
+<span class="comment">// The following methods were removed from proposal in N3685</span>
 <span class="keyword">bool</span> <span class="identifier">starts_with</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
 <span class="keyword">bool</span> <span class="identifier">starts_with</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">x</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
 <span class="keyword">bool</span> <span class="identifier">ends_with</span><span class="special">(</span><span class="identifier">charT</span> <span class="identifier">c</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
 <span class="keyword">bool</span> <span class="identifier">ends_with</span><span class="special">(</span><span class="identifier">basic_string_ref</span> <span class="identifier">x</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
 </pre>
+<p>
+      Note that <code class="computeroutput"><span class="identifier">starts_with</span></code> and
+      <code class="computeroutput"><span class="identifier">ends_with</span></code> were removed from
+      the proposed interface in N3685 but are currently retained in Boost.
+    </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="string_ref.conformance_to_proposed_standard"></a><a class="link" href="string_ref.html#string_ref.conformance_to_proposed_standard" title="Conformance to Proposed Standard">Conformance
+    to Proposed Standard</a>
+</h2></div></div></div>
+<p>
+      Boost.StringRef differs from <a href="http://isocpp.org/files/papers/N3762.html" target="_top">N3762:
+      string_view: a non-owning reference to a string, revision 5</a> in the
+      following particulars:
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          The proposed template name changed from <code class="computeroutput"><span class="identifier">string_ref</span></code>
+          to <code class="computeroutput"><span class="identifier">string_view</span></code> at <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3609.html" target="_top">N3609</a>.
+          At this time the new name is not supported.
+        </li>
+<li class="listitem">
+          Using the default constructor <code class="computeroutput"><span class="identifier">string_ref</span><span class="special">()</span></code> produces an object that returns a null
+          pointer from <code class="computeroutput"><span class="identifier">data</span><span class="special">()</span></code>.
+          N3762 requires that <code class="computeroutput"><span class="identifier">data</span><span class="special">()</span></code> never return a null pointer.
+        </li>
+<li class="listitem">
+          Boost's implementation adds the following non-standard member functions:
+          <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">to_string</span></code>
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">starts_with</span></code> (removed
+                in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html" target="_top">N3685</a>)
+              </li>
+<li class="listitem">
+                <code class="computeroutput"><span class="identifier">ends_with</span></code> (removed
+                in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html" target="_top">N3685</a>)
+              </li>
+</ol></div>
+        </li>
+<li class="listitem">
+          <a href="http://isocpp.org/files/papers/N3762.html#string.view.nonmem" target="_top">non-member
+          <code class="computeroutput"><span class="identifier">to_string</span></code></a> is not
+          provided.
+        </li>
+<li class="listitem">
+          <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">charT</span><span class="special">*</span></code> overloads for member functions in <a href="http://isocpp.org/files/papers/N3762.html#h5o-6" target="_top">string.view.find</a>
+          that are not documented are not provided. The <code class="computeroutput"><span class="identifier">charT</span></code>
+          overloads are provided.
+        </li>
+</ol></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -262,16 +346,24 @@
 </h2></div></div></div>
 <h4>
 <a name="string_ref.history.h0"></a>
-      <span class="phrase"><a name="string_ref.history.boost_1_53"></a></span><a class="link" href="string_ref.html#string_ref.history.boost_1_53">boost
+      <span><a name="string_ref.history.boost_1_53"></a></span><a class="link" href="string_ref.html#string_ref.history.boost_1_53">boost
       1.53</a>
     </h4>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
           Introduced
+        </li></ul></div>
+<h4>
+<a name="string_ref.history.h1"></a>
+      <span><a name="string_ref.history.boost_1_56"></a></span><a class="link" href="string_ref.html#string_ref.history.boost_1_56">boost
+      1.56</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          Updated with changes in N3762
         </li></ul></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: November 23, 2013 at 14:12:56 GMT</small></p></td>
+<td align="left"><p><small>Last revised: December 24, 2013 at 19:00:25 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
