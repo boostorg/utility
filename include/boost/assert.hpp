@@ -81,15 +81,23 @@ namespace boost
   #ifndef BOOST_ASSERT_HPP
     #define BOOST_ASSERT_HPP
     #include <cstdlib>
-    #include <iostream>
+
+    #ifdef BOOST_NO_IOSTREAM
+      #include <cstdio>
+      #ifndef BOOST_ASSERT_MSG_FILE
+      # define BOOST_ASSERT_MSG_FILE stderr
+      #endif
+    #else
+      #include <iostream>
+      //  IDE's like Visual Studio perform better if output goes to std::cout or
+      //  some other stream, so allow user to configure output stream:
+      #ifndef BOOST_ASSERT_MSG_OSTREAM
+      # define BOOST_ASSERT_MSG_OSTREAM std::cerr
+      #endif
+    #endif
+
     #include <boost/config.hpp>
     #include <boost/current_function.hpp>
-
-    //  IDE's like Visual Studio perform better if output goes to std::cout or
-    //  some other stream, so allow user to configure output stream:
-    #ifndef BOOST_ASSERT_MSG_OSTREAM
-    # define BOOST_ASSERT_MSG_OSTREAM std::cerr
-    #endif
 
     namespace boost
     {
@@ -102,10 +110,17 @@ namespace boost
           BOOST_NOINLINE void assertion_failed_msg(CharT const * expr, char const * msg, char const * function,
             char const * file, long line)
           {
+          #ifdef BOOST_NO_IOSTREAM
+            std::fprintf(BOOST_ASSERT_MSG_FILE,
+              "***** Internal Program Error - assertion (%s) failed in %s:\n"
+              "%s(%d): %s\n",
+              expr, function, file, line, msg);
+          #else
             BOOST_ASSERT_MSG_OSTREAM
               << "***** Internal Program Error - assertion (" << expr << ") failed in "
               << function << ":\n"
               << file << '(' << line << "): " << msg << std::endl;
+          #endif
 #ifdef UNDER_CE
             // The Windows CE CRT library does not have abort() so use exit(-1) instead.
             std::exit(-1);
