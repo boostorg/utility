@@ -77,6 +77,8 @@
         may produce easier to understand output if messages go to a different 
         stream, such as <code>std::cout</code>. Users may define <b>BOOST_ASSERT_MSG_OSTREAM</b> before including <STRONG>&lt;boost/assert.hpp&gt;</STRONG> 
         to specify a different output stream.&nbsp; </P>
+        <P>If <b>BOOST_NO_IOSTREAM</b> is defined, C stdio library is used instead of C++ iostream.
+        The output is sent to a FILE* <b>BOOST_ASSERT_MSG_FILE</b>. It defaults to <code>stderr</code></P>
 		<P>If the macro <STRONG>BOOST_ENABLE_ASSERT_HANDLER</STRONG> is defined when <STRONG>&lt;boost/assert.hpp&gt;</STRONG>
 			is included, instead of sending a error message to an output 
         stream, this expression is evaluated</P>
