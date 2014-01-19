@@ -20,11 +20,16 @@ void test_clear ()
   string_ref sv0;
   string_ref svn("1234");
 
+  BOOST_CHECK(NULL != sv0.data());
+  BOOST_CHECK_EQUAL(0, sv0.size());
   BOOST_CHECK_NE(sv0.data(), svn.data());
   BOOST_CHECK_NE(sv0.size(), svn.size());
   svn.clear();
-  BOOST_CHECK_EQUAL(sv0.data(), svn.data());
+  BOOST_CHECK(NULL != svn.data());
   BOOST_CHECK_EQUAL(sv0.size(), svn.size());
+  // Mandated by implementation not specification:
+  BOOST_CHECK_NE(static_cast<const void*>(sv0.data()),
+                 static_cast<const void*>(svn.data()));
 }
 
 void test_copy ()

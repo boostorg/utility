@@ -96,7 +96,7 @@ Type aliases:
 Construction and copying:
 
     BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT;    // Constructs an empty string_ref
-    BOOST_CONSTEXPR basic_string_ref(const charT* str); // Constructs from a NULL-terminated string
+    BOOST_CONSTEXPR basic_string_ref(const charT* str); // Constructs from a null-terminated string
     BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len); // Constructs from a pointer, length pair
     template<typename Allocator>
     basic_string_ref(const std::basic_string<charT, traits, Allocator>& str) BOOST_NOEXCEPT; // Constructs from a std::string
@@ -181,8 +181,6 @@ Note that `starts_with` and `ends_with` were removed from the proposed interface
 Boost.StringRef differs from [@http://isocpp.org/files/papers/N3762.html N3762: string_view: a non-owning reference to a string, revision 5] in the following particulars:
 
 # The proposed template name changed from `string_ref` to `string_view` at [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3609.html N3609].  At this time the new name is not supported.
-
-# Using the default constructor `string_ref()` produces an object that returns a null pointer from `data()`.  N3762 requires that `data()` never return a null pointer.
 
 # Boost's implementation adds the following non-standard member functions:
 

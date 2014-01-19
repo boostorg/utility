@@ -42,6 +42,7 @@ namespace boost {
 
     template<typename charT, typename traits>
     class basic_string_ref {
+        bool inline is_cleared_ () const { return ptr_ == &nul_; }
     public:
         // types
         typedef traits traits_type;
@@ -60,14 +61,19 @@ namespace boost {
 
         // construct/copy
         BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT
-            : ptr_(NULL), len_(0) {}
+            : ptr_(&nul_), len_(0) {}
 
-        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT
-            : ptr_(rhs.ptr_), len_(rhs.len_) {}
+        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT :
+            ptr_(rhs.is_cleared_() ? &nul_ : rhs.ptr_),
+            len_(rhs.len_) { }
 
         basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT {
-            ptr_ = rhs.ptr_;
-            len_ = rhs.len_;
+            if (rhs.is_cleared_()) {
+                clear();
+            } else {
+                ptr_ = rhs.ptr_;
+                len_ = rhs.len_;
+            }
             return *this;
             }
 
@@ -136,7 +142,7 @@ namespace boost {
         BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT { return ptr_; }
 
         // modifiers
-        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = NULL; }
+        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = &nul_; }
         void remove_prefix(size_type n) {
             if ( n > len_ )
                 n = len_;
@@ -296,7 +302,10 @@ namespace boost {
             }
 
         const charT *ptr_;
-        std::size_t len_;
+        union {
+            std::size_t len_;
+            charT nul_;
+            };
         };
 
 

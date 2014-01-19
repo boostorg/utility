@@ -28,8 +28,8 @@ void interop ( const std::string &str, string_ref ref ) {
 
 void null_tests ( const char *p ) {
 //  All zero-length string-refs should be equal
-    string_ref sr1; // NULL, 0
-    string_ref sr2 ( NULL, 0 );
+    string_ref sr1; // some empty string
+    string_ref sr2; // another empty string
     string_ref sr3 ( p, 0 );
     string_ref sr4 ( p );
     sr4.clear ();
