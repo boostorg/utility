@@ -42,7 +42,7 @@ namespace boost {
 
     template<typename charT, typename traits>
     class basic_string_ref {
-        bool inline is_cleared_ () const { return ptr_ == &nul_; }
+        bool inline is_cleared_ () const { return !ptr_; }
     public:
         // types
         typedef traits traits_type;
@@ -61,19 +61,15 @@ namespace boost {
 
         // construct/copy
         BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT
-            : ptr_(&nul_), len_(0) {}
+            : ptr_(NULL), len_(0) {}
 
         BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT :
-            ptr_(rhs.is_cleared_() ? &nul_ : rhs.ptr_),
+            ptr_(rhs.ptr_),
             len_(rhs.len_) { }
 
         basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT {
-            if (rhs.is_cleared_()) {
-                clear();
-            } else {
-                ptr_ = rhs.ptr_;
-                len_ = rhs.len_;
-            }
+            ptr_ = rhs.ptr_;
+            len_ = rhs.len_;
             return *this;
             }
 
@@ -139,10 +135,10 @@ namespace boost {
 
         BOOST_CONSTEXPR const charT& front() const { return ptr_[0]; }
         BOOST_CONSTEXPR const charT& back()  const { return ptr_[len_-1]; }
-        BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT { return ptr_; }
+        BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT { return ptr_ ? ptr_ : &nul_; }
 
         // modifiers
-        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = &nul_; }
+        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = NULL; }
         void remove_prefix(size_type n) {
             if ( n > len_ )
                 n = len_;
@@ -172,7 +168,8 @@ namespace boost {
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
             if ( n == npos || pos + n > size())
                 n = size () - pos;
-            return basic_string_ref ( data() + pos, n );
+            const charT * np = ptr_ ? (ptr_ + pos) : NULL;
+            return basic_string_ref ( np, n );
             }
 
         int compare(basic_string_ref x) const BOOST_NOEXCEPT {
