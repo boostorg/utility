@@ -68,9 +68,9 @@ struct complement
         BOOST_STATIC_CONSTANT(Number, min = Number((prev::min) << CHAR_BIT));
 #else
         BOOST_STATIC_CONSTANT(Number, max =
-                            Number(Number(prev::max) << CHAR_BIT)
+                            Number(typename boost::make_unsigned<Number>::type(prev::max) << CHAR_BIT)
                             + Number(UCHAR_MAX));
-        BOOST_STATIC_CONSTANT(Number, min = Number(Number(prev::min) << CHAR_BIT));
+        BOOST_STATIC_CONSTANT(Number, min = Number(typename boost::make_unsigned<Number>::type(prev::min) << CHAR_BIT));
 #endif
    
     };
