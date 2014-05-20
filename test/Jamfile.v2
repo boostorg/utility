@@ -52,5 +52,7 @@ test-suite utility
         [ compile-fail explicit_operator_bool_compile_fail_conv_pvoid.cpp ]
         [ compile-fail explicit_operator_bool_compile_fail_delete.cpp ]
         [ compile-fail explicit_operator_bool_compile_fail_shift.cpp ]
+	[ compile ../unused_variable_test.cpp : <toolset>gcc:<cxxflags>"-Wall -Werror"
+                                                <toolset>clang:<cxxflags>"-Wall -Werror" ]
     ;
 

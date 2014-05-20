@@ -7,18 +7,43 @@
 //#include <boost/utility/unused_variable.hpp>
 #include <boost/utility.hpp>
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5>
-void test(T1 const& t1, T2 const& t2, T3 const& t3, T4 const& t4, T5 const& t5)
+void test1()
 {
-    boost::ignore_unused_variable_warning(t1);
-    boost::ignore_unused_variable_warning(t1, t2);
-    boost::ignore_unused_variable_warning(t1, t2, t3);
-    boost::ignore_unused_variable_warning(t1, t2, t3, t4);
-    boost::ignore_unused_variable_warning(t1, t2, t3, t4, t5);
+    int a;
+    boost::ignore_unused_variable_warning(a);
+}
+
+void test2()
+{
+    int a, b;
+    boost::ignore_unused_variable_warning(a, b);
+}
+
+void test3()
+{
+    int a, b, c;
+    boost::ignore_unused_variable_warning(a, b, c);
+}
+
+void test4()
+{
+    int a, b, c, d;
+    boost::ignore_unused_variable_warning(a, b, c, d);
+}
+
+void test5()
+{
+    int a, b, c, d, e;
+    boost::ignore_unused_variable_warning(a, b, c, d, e);
 }
 
 int main()
 {
-    test(0, 1.0f, 2.0, '3', "4");
+    test1();
+    test2();
+    test3();
+    test4();
+    test5();
+
     return 0;
 }
