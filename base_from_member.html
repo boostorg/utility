@@ -320,7 +320,7 @@ public:
 system::system( double x )
     : pbase0_type( 0.2 )
     , pbase1_type()
-    , pbase2_type( -16, &amp;this-&gt;pbase0_type::member )
+    , pbase2_type( -16, &amp;this-&gt;pbase0_type::member.y )
     , pbase3_type( x, static_cast&lt;int *&gt;(NULL) )
     , base1_type( pbase3_type::member, pbase1_type::member )
     , base2_type( pbase2_type::member )
