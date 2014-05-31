@@ -27,8 +27,7 @@
                         <li>
 				Macro <a href="#BOOST_BINARY">BOOST_BINARY</a></li>
 			<li>
-				Function template <a href="#function_ignore_unused_variable_warning">
-					ignore_unused_variable_warning()</a></li>
+				Function template <a href="#function_ignore_unused">ignore_unused()</a></li>
                         <li>
 				<a href="index.html">Other utilities not part of <code>utility.hpp</code></a></li>
 		</ul>
@@ -694,19 +693,19 @@ void bar()
 }
 </pre></blockquote>
 
-		<h2><a name="function_ignore_unused_variable_warning">Function template ignore_unused_variable_warning()</a></h2>
+		<h2><a name="function_ignore_unused">Function template ignore_unused()</a></h2>
 
-		<p>The function template <code>ignore_unused_variable_warning()</code>
-		may be used to silence the "unused variable" compiler warnings when
-		the unused variable can't be removed e.g. when conditional compilation
-		is used.</p>
+		<p>The function template <code>ignore_unused()</code>
+		may be used to suppress the "unused variable" or "unused local typedefs"
+		compiler warnings when the variable or typedef can't be removed or commented out
+		e.g. when some blocks of the code are conditionally activated.</p>
 
-		<p>It was originally defined in Boost.ConceptCheck. This version is using C++11 variading templates
-		when they're supported by the compiler, otherwise they're emulated with overloads.</p>
+		<p>C++11 variadic templates are used if they're supported,
+		otherwise they're emulated with overloads.</p>
 
-                <p>The ignore_unused_variable_warning() function template resides in
+                <p>The ignore_unused() function template resides in
                 <a
-                href="../../boost/utility/unused_variable.hpp">&lt;boost/utility/unused_variable.hpp&gt;</a>
+                href="../../boost/utility/ignore_unused.hpp">&lt;boost/utility/ignore_unused.hpp&gt;</a>
                 which is automatically included by
                 <a
                 href="../../boost/utility.hpp">&lt;boost/utility.hpp&gt;</a>.</p>
@@ -717,7 +716,7 @@ void bar()
 			<pre>
 int fun( int foo, int bar )
 {
-   boost::ignore_unused_variable_warning(bar);
+   boost::ignore_unused(bar);
 #ifdef ENABLE_DEBUG_OUTPUT
    if ( foo < bar )
       std::cerr << "warning! foo < bar";
