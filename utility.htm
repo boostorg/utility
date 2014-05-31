@@ -22,10 +22,14 @@
 				Class <a href="#Class_noncopyable">noncopyable</a></li>
 			<li>
 				Function template <a href="#addressof">addressof()</a></li>
-                        <li>Class template <a href="#result_of">result_of</a></li>
+                        <li>
+				Class template <a href="#result_of">result_of</a></li>
                         <li>
 				Macro <a href="#BOOST_BINARY">BOOST_BINARY</a></li>
-                        <li><a href="index.html">Other utilities not part of <code>utility.hpp</code></a></li>
+			<li>
+				Function template <a href="#function_ignore_unused">ignore_unused()</a></li>
+                        <li>
+				<a href="index.html">Other utilities not part of <code>utility.hpp</code></a></li>
 		</ul>
 		<h2>
 			Function templates <a name="checked_delete">checked_delete</a>() and 
@@ -633,6 +637,7 @@ BOOST_STATIC_ASSERT((
 
 		<h2>Class templates for the Base-from-Member Idiom</h2>
 		<p>See <a href="base_from_member.html">separate documentation</a>.</p>
+		
 		<h2><a name="BOOST_BINARY">Macro BOOST_BINARY</a></h2>
 
 		<p>The macro <code>BOOST_BINARY</code> is used for the
@@ -659,7 +664,7 @@ BOOST_STATIC_ASSERT((
                 href="../../boost/utility/binary.hpp">&lt;boost/utility/binary.hpp&gt;</a>
                 which is automatically included by
                 <a
-                href="../../boost/utility.hpp">&lt;boost/utility.hpp&gt;</a>.
+                href="../../boost/utility.hpp">&lt;boost/utility.hpp&gt;</a>.</p>
 
 		<p>Contributed by Matt Calabrese.</p><p>
 		</p><h3>Example</h3>
@@ -687,9 +692,42 @@ void bar()
   foo( BOOST_BINARY_LU( 1010 ) ); // calls the second foo
 }
 </pre></blockquote>
+
+		<h2><a name="function_ignore_unused">Function template ignore_unused()</a></h2>
+
+		<p>The function template <code>ignore_unused()</code>
+		may be used to suppress the "unused variable" or "unused local typedefs"
+		compiler warnings when the variable or typedef can't be removed or commented out
+		e.g. when some blocks of the code are conditionally activated.</p>
+
+		<p>C++11 variadic templates are used if they're supported,
+		otherwise they're emulated with overloads.</p>
+
+                <p>The ignore_unused() function template resides in
+                <a
+                href="../../boost/utility/ignore_unused.hpp">&lt;boost/utility/ignore_unused.hpp&gt;</a>
+                which is automatically included by
+                <a
+                href="../../boost/utility.hpp">&lt;boost/utility.hpp&gt;</a>.</p>
+
+		<p>Contributed by Adam Wulkiewicz.</p><p>
+		</p><h3>Example</h3>
+		<blockquote>
+			<pre>
+int fun( int foo, int bar )
+{
+   boost::ignore_unused(bar);
+#ifdef ENABLE_DEBUG_OUTPUT
+   if ( foo < bar )
+      std::cerr << "warning! foo < bar";
+#endif
+   return foo + 2;
+}
+</pre></blockquote>
+
 		<hr>
 		<p>Revised&nbsp; <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan
--->04 September, 2008<!--webbot bot="Timestamp" endspan i-checksum="39369"
+-->19 May, 2014<!--webbot bot="Timestamp" endspan i-checksum="39369"
 -->
 		</p>
 		<p>&copy; Copyright Beman Dawes 1999-2003.</p>
