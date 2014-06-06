@@ -7,8 +7,8 @@
 
 [article String_Ref
     [quickbook 1.5]
-    [authors [Clow, Marshall]]
-    [copyright 2012 Marshall Clow]
+    [authors [Clow, Marshall] [Bigot, Peter A.]]
+    [copyright 2012 2013 Marshall Clow, Peter A. Bigot]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -21,7 +21,7 @@
 [/===============]
 
 Boost.StringRef is an implementation of Jeffrey Yaskin's [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html N3442:
-string_ref: a non-owning reference to a string]. 
+string_ref: a non-owning reference to a string], updated with some changes in [@http://isocpp.org/files/papers/N3762.html N3762: string_view: a non-owning reference to a string, revision 5].
 
 When you are parsing/processing strings from some external source, frequently you want to pass a piece of text to a procedure for specialized processing. The canonical way to do this is as a `std::string`, but that has certain drawbacks:
 
@@ -83,34 +83,44 @@ The header file "string_ref.hpp" defines a template `boost::basic_string_ref`, a
 
 `#include <boost/utility/string_ref.hpp>`
 
+Type aliases:
+
+    typedef traits traits_type;
+    typedef charT value_type;
+    typedef const charT* pointer;
+    typedef const charT* const_pointer;
+    typedef const charT& reference;
+    typedef const charT& const_reference;
+    typedef pointer const_iterator; // impl-defined
+
 Construction and copying:
 
-    BOOST_CONSTEXPR basic_string_ref ();    // Constructs an empty string_ref
-    BOOST_CONSTEXPR basic_string_ref(const charT* str); // Constructs from a NULL-terminated string
+    BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT;    // Constructs an empty string_ref
+    BOOST_CONSTEXPR basic_string_ref(const charT* str); // Constructs from a null-terminated string
     BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len); // Constructs from a pointer, length pair
     template<typename Allocator>
-    basic_string_ref(const std::basic_string<charT, traits, Allocator>& str); // Constructs from a std::string
-    basic_string_ref (const basic_string_ref &rhs);
-    basic_string_ref& operator=(const basic_string_ref &rhs);
+    basic_string_ref(const std::basic_string<charT, traits, Allocator>& str) BOOST_NOEXCEPT; // Constructs from a std::string
+    basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT;
+    basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT;
 
 `string_ref` does not define a move constructor nor a move-assignment operator because copying a `string_ref` is just a cheap as moving one.
 
 Basic container-like functions:
 
-    BOOST_CONSTEXPR size_type size()     const ;
-    BOOST_CONSTEXPR size_type length()   const ;
-    BOOST_CONSTEXPR size_type max_size() const ;
-    BOOST_CONSTEXPR bool empty()         const ;
+    BOOST_CONSTEXPR size_type size()     const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type length()   const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR bool empty()         const BOOST_NOEXCEPT ;
     
     // All iterators are const_iterators
-    BOOST_CONSTEXPR const_iterator  begin() const ;
-    BOOST_CONSTEXPR const_iterator cbegin() const ;
-    BOOST_CONSTEXPR const_iterator    end() const ;
-    BOOST_CONSTEXPR const_iterator   cend() const ;
-    const_reverse_iterator         rbegin() const ;
-    const_reverse_iterator        crbegin() const ;
-    const_reverse_iterator           rend() const ;
-    const_reverse_iterator          crend() const ;
+    BOOST_CONSTEXPR const_iterator  begin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator cbegin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator    end() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator   cend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator         rbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator        crbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator           rend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator          crend() const BOOST_NOEXCEPT ;
 
 Access to the individual elements (all of which are const):
 
@@ -118,37 +128,69 @@ Access to the individual elements (all of which are const):
     const charT& at(size_t pos) const ;
     BOOST_CONSTEXPR const charT& front() const ;
     BOOST_CONSTEXPR const charT& back()  const ;
-    BOOST_CONSTEXPR const charT* data()  const ;
+    BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT ;
 
 Modifying the `string_ref` (but not the underlying data):
 
-    void clear();
+    void clear() BOOST_NOEXCEPT;
     void remove_prefix(size_type n);
     void remove_suffix(size_type n);
+    void swap(basic_string_ref& s) BOOST_NOEXCEPT;
 
 Searching:
 
-    size_type find(basic_string_ref s) const ;
-    size_type find(charT c) const ;
-    size_type rfind(basic_string_ref s) const ;
-    size_type rfind(charT c) const ;
-    size_type find_first_of(charT c) const ;
-    size_type find_last_of (charT c) const ;
+    size_type find(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type rfind(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type rfind(charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_first_of(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_of (charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
         
-    size_type find_first_of(basic_string_ref s) const ;
-    size_type find_last_of(basic_string_ref s) const ;
-    size_type find_first_not_of(basic_string_ref s) const ;
-    size_type find_first_not_of(charT c) const ;
-    size_type find_last_not_of(basic_string_ref s) const ;
-    size_type find_last_not_of(charT c) const ;
+    size_type find_first_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_first_not_of(charT c, size_type pos=0) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT ;
+    size_type find_last_not_of(charT c, size_type pos=npos) const BOOST_NOEXCEPT ;
 
 String-like operations:
 
-    BOOST_CONSTEXPR basic_string_ref substr(size_type pos, size_type n=npos) const ; // Creates a new string_ref
+    BOOST_CONSTEXPR basic_string_ref substr(size_type pos=npos, size_type n=npos) const ; // Creates a new string_ref
+    int compare(basic_string_ref x) const BOOST_NOEXCEPT ; // like std::string::compare
+    int compare(size_type pos1, size_type n1, basic_string_ref str) const ;
+    int compare(size_type pos1, size_type n1, basic_string_ref str,
+                size_type pos2, size_type n2) const ;
+    int compare(const charT* s) const ;
+    int compare(size_type pos1, size_type n1, const charT* s) const ;
+    int compare(size_type pos1, size_type n1, const charT* s, size_type n2) const ;
+    size_type copy(charT* s, size_type n, size_type pos=0) const ; // like std::copy_n
+    // The following methods were removed from proposal in N3685
     bool starts_with(charT c) const ;
     bool starts_with(basic_string_ref x) const ;
     bool ends_with(charT c) const ;
     bool ends_with(basic_string_ref x) const ;
+
+Note that `starts_with` and `ends_with` were removed from the proposed interface in N3685 but are currently retained in Boost.
+
+[endsect]
+
+[/===============]
+[section Conformance to Proposed Standard]
+[/===============]
+
+Boost.StringRef differs from [@http://isocpp.org/files/papers/N3762.html N3762: string_view: a non-owning reference to a string, revision 5] in the following particulars:
+
+# The proposed template name changed from `string_ref` to `string_view` at [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3609.html N3609].  At this time the new name is not supported.
+
+# Boost's implementation adds the following non-standard member functions:
+
+  # `to_string`
+  # `starts_with` (removed in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html N3685])
+  # `ends_with` (removed in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3685.html N3685])
+
+# [@http://isocpp.org/files/papers/N3762.html#string.view.nonmem non-member `to_string`] is not provided.
+
+# `const charT*` overloads for member functions in [@http://isocpp.org/files/papers/N3762.html#h5o-6 string.view.find] that are not documented are not provided.  The `charT` overloads are provided.
 
 [endsect]
 
@@ -158,10 +200,8 @@ String-like operations:
 
 [heading boost 1.53]
 * Introduced
-    
+
+[heading boost 1.56]
+* Updated with changes in N3762
 
 [endsect]
-
-
-
-

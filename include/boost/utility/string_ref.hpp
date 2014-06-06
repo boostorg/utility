@@ -42,10 +42,13 @@ namespace boost {
 
     template<typename charT, typename traits>
     class basic_string_ref {
+        bool inline is_cleared_ () const { return !ptr_; }
     public:
         // types
+        typedef traits traits_type;
         typedef charT value_type;
         typedef const charT* pointer;
+        typedef const charT* const_pointer;
         typedef const charT& reference;
         typedef const charT& const_reference;
         typedef pointer const_iterator; // impl-defined
@@ -57,13 +60,14 @@ namespace boost {
         static BOOST_CONSTEXPR_OR_CONST size_type npos = size_type(-1);
 
         // construct/copy
-        BOOST_CONSTEXPR basic_string_ref ()
+        BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT
             : ptr_(NULL), len_(0) {}
 
-        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs)
-            : ptr_(rhs.ptr_), len_(rhs.len_) {}
+        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT :
+            ptr_(rhs.ptr_),
+            len_(rhs.len_) { }
 
-        basic_string_ref& operator=(const basic_string_ref &rhs) {
+        basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT {
             ptr_ = rhs.ptr_;
             len_ = rhs.len_;
             return *this;
@@ -73,7 +77,7 @@ namespace boost {
             : ptr_(str), len_(traits::length(str)) {}
 
         template<typename Allocator>
-        basic_string_ref(const std::basic_string<charT, traits, Allocator>& str)
+        basic_string_ref(const std::basic_string<charT, traits, Allocator>& str) BOOST_NOEXCEPT
             : ptr_(str.data()), len_(str.length()) {}
 
         BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len)
@@ -90,21 +94,35 @@ namespace boost {
             return std::basic_string<charT, traits> ( ptr_, len_ );
             }
 
+        size_type copy(charT* s, size_type n, size_type pos=0) const {
+            if ( pos > size() )
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::copy" ) );
+            size_t rlen = size() - pos;
+            if ( n < rlen )
+                rlen = n;
+            else
+                n = rlen;
+            const_iterator first = begin() + pos;
+            for ( ; n > 0; --n, ++first, ++s )
+                *s = *first;
+            return rlen;
+        }
+
         // iterators
-        BOOST_CONSTEXPR const_iterator   begin() const { return ptr_; }
-        BOOST_CONSTEXPR const_iterator  cbegin() const { return ptr_; }
-        BOOST_CONSTEXPR const_iterator     end() const { return ptr_ + len_; }
-        BOOST_CONSTEXPR const_iterator    cend() const { return ptr_ + len_; }
-                const_reverse_iterator  rbegin() const { return const_reverse_iterator (end()); }
-                const_reverse_iterator crbegin() const { return const_reverse_iterator (end()); }
-                const_reverse_iterator    rend() const { return const_reverse_iterator (begin()); }
-                const_reverse_iterator   crend() const { return const_reverse_iterator (begin()); }
+        BOOST_CONSTEXPR const_iterator   begin() const BOOST_NOEXCEPT { return ptr_; }
+        BOOST_CONSTEXPR const_iterator  cbegin() const BOOST_NOEXCEPT { return ptr_; }
+        BOOST_CONSTEXPR const_iterator     end() const BOOST_NOEXCEPT { return ptr_ + len_; }
+        BOOST_CONSTEXPR const_iterator    cend() const BOOST_NOEXCEPT { return ptr_ + len_; }
+                const_reverse_iterator  rbegin() const BOOST_NOEXCEPT { return const_reverse_iterator (end()); }
+                const_reverse_iterator crbegin() const BOOST_NOEXCEPT { return const_reverse_iterator (end()); }
+                const_reverse_iterator    rend() const BOOST_NOEXCEPT { return const_reverse_iterator (begin()); }
+                const_reverse_iterator   crend() const BOOST_NOEXCEPT { return const_reverse_iterator (begin()); }
 
         // capacity
-        BOOST_CONSTEXPR size_type size()     const { return len_; }
-        BOOST_CONSTEXPR size_type length()   const { return len_; }
-        BOOST_CONSTEXPR size_type max_size() const { return len_; }
-        BOOST_CONSTEXPR bool empty()         const { return len_ == 0; }
+        BOOST_CONSTEXPR size_type size()     const BOOST_NOEXCEPT { return len_; }
+        BOOST_CONSTEXPR size_type length()   const BOOST_NOEXCEPT { return len_; }
+        BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT { return len_; }
+        BOOST_CONSTEXPR bool empty()         const BOOST_NOEXCEPT { return len_ == 0; }
 
         // element access
         BOOST_CONSTEXPR const charT& operator[](size_type pos) const { return ptr_[pos]; }
@@ -117,10 +135,10 @@ namespace boost {
 
         BOOST_CONSTEXPR const charT& front() const { return ptr_[0]; }
         BOOST_CONSTEXPR const charT& back()  const { return ptr_[len_-1]; }
-        BOOST_CONSTEXPR const charT* data()  const { return ptr_; }
+        BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT { return ptr_ ? ptr_ : &nul_; }
 
         // modifiers
-        void clear() { len_ = 0; }
+        void clear() BOOST_NOEXCEPT { len_ = 0; ptr_ = NULL; }
         void remove_prefix(size_type n) {
             if ( n > len_ )
                 n = len_;
@@ -134,19 +152,45 @@ namespace boost {
             len_ -= n;
             }
 
+        void swap(basic_string_ref& s) BOOST_NOEXCEPT {
+            const charT *ptr = ptr_;
+            std::size_t len = len_;
+            ptr_ = s.ptr_;
+            s.ptr_ = ptr;
+            len_ = s.len_;
+            s.len_ = len;
+        }
+
 
         // basic_string_ref string operations
-        basic_string_ref substr(size_type pos, size_type n=npos) const {
+        basic_string_ref substr(size_type pos=0, size_type n=npos) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
             if ( n == npos || pos + n > size())
                 n = size () - pos;
-            return basic_string_ref ( data() + pos, n );
+            const charT * np = ptr_ ? (ptr_ + pos) : NULL;
+            return basic_string_ref ( np, n );
             }
 
-        int compare(basic_string_ref x) const {
+        int compare(basic_string_ref x) const BOOST_NOEXCEPT {
             const int cmp = traits::compare ( ptr_, x.ptr_, (std::min)(len_, x.len_));
             return cmp != 0 ? cmp : ( len_ == x.len_ ? 0 : len_ < x.len_ ? -1 : 1 );
+            }
+        int compare(size_type pos1, size_type n1, basic_string_ref s) const {
+            return substr(pos1, n1).compare(s);
+            }
+        int compare(size_type pos1, size_type n1, basic_string_ref s,
+                    size_type pos2, size_type n2) const {
+            return substr(pos1, n1).compare(s.substr(pos2, n2));
+            }
+        int compare(const charT* s) const {
+            return compare(basic_string_ref(s));
+            }
+        int compare(size_type pos1, size_type n1, const charT* s) const {
+            return substr(pos1, n1).compare(basic_string_ref(s));
+            }
+        int compare(size_type pos1, size_type n1, const charT* s, size_type n2) const {
+            return substr(pos1, n1).compare(basic_string_ref(s, n2));
             }
 
         bool starts_with(charT c) const { return !empty() && traits::eq ( c, front()); }
@@ -159,75 +203,86 @@ namespace boost {
             return len_ >= x.len_ && traits::compare ( ptr_ + len_ - x.len_, x.ptr_, x.len_ ) == 0;
             }
 
-        size_type find(basic_string_ref s) const {
-            const_iterator iter = std::search ( this->cbegin (), this->cend (),
+        size_type find(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT {
+            if ( pos + s.size() > size() )
+                return npos;
+            const_iterator iter = std::search ( this->cbegin () + pos, this->cend (),
                                                 s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type find(charT c) const {
-            const_iterator iter = std::find_if ( this->cbegin (), this->cend (),
+        size_type find(charT c, size_type pos=0) const BOOST_NOEXCEPT {
+            if ( pos >= size() )
+                return npos;
+            const_iterator iter = std::find_if ( this->cbegin () + pos, this->cend (),
                                     detail::string_ref_traits_eq<charT, traits> ( c ));
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type rfind(basic_string_ref s) const {
-            const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
+        size_type rfind(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT {
+            if ( ( pos < npos ) && ( pos + s.size() <= size() ) )
+                pos += s.size() - 1;
+            const_reverse_iterator iter = std::search ( this->offset_crbegin_ (pos), this->crend (),
                                                 s.crbegin (), s.crend (), traits::eq );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+            return iter == this->crend () ? npos : ( std::distance( iter, this->crend() ) - s.len_ );
             }
 
-        size_type rfind(charT c) const {
-            const_reverse_iterator iter = std::find_if ( this->crbegin (), this->crend (),
+        size_type rfind(charT c, size_type pos=npos) const BOOST_NOEXCEPT {
+            const_reverse_iterator iter = std::find_if ( this->offset_crbegin_ (pos), this->crend (),
                                     detail::string_ref_traits_eq<charT, traits> ( c ));
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+            return iter == this->crend () ? npos : ( std::distance( iter, this->crend() ) - 1 );
             }
 
-        size_type find_first_of(charT c) const { return  find (c); }
-        size_type find_last_of (charT c) const { return rfind (c); }
+        size_type find_first_of(charT c, size_type pos=0) const BOOST_NOEXCEPT {
+            return find (c, pos);
+            }
+        size_type find_last_of(charT c, size_type pos=npos) const BOOST_NOEXCEPT {
+            return rfind (c, pos);
+            }
 
-        size_type find_first_of(basic_string_ref s) const {
+        size_type find_first_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT {
+            if ( pos >= size() )
+                return npos;
             const_iterator iter = std::find_first_of
-                ( this->cbegin (), this->cend (), s.cbegin (), s.cend (), traits::eq );
+                ( this->cbegin () + pos, this->cend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type find_last_of(basic_string_ref s) const {
+        size_type find_last_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT {
             const_reverse_iterator iter = std::find_first_of
-                ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter);
+                ( this->offset_crbegin_ (pos), this->crend (), s.cbegin (), s.cend (), traits::eq );
+            return iter == this->crend () ? npos : ( std::distance ( iter, this->crend () ) - 1 );
             }
 
-        size_type find_first_not_of(basic_string_ref s) const {
-            const_iterator iter = find_not_of ( this->cbegin (), this->cend (), s );
+        size_type find_first_not_of(basic_string_ref s, size_type pos=0) const BOOST_NOEXCEPT {
+            if ( pos >= size() )
+                return npos;
+            const_iterator iter = find_not_of ( this->cbegin () + pos, this->cend (), s );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type find_first_not_of(charT c) const {
-            for ( const_iterator iter = this->cbegin (); iter != this->cend (); ++iter )
+        size_type find_first_not_of(charT c, size_type pos=0) const BOOST_NOEXCEPT {
+            if ( pos >= size() )
+                return npos;
+            for ( const_iterator iter = this->cbegin () + pos; iter != this->cend (); ++iter )
                 if ( !traits::eq ( c, *iter ))
                     return std::distance ( this->cbegin (), iter );
             return npos;
             }
 
-        size_type find_last_not_of(basic_string_ref s) const {
-            const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+        size_type find_last_not_of(basic_string_ref s, size_type pos=npos) const BOOST_NOEXCEPT {
+            const_reverse_iterator iter = find_not_of ( this->offset_crbegin_ (pos), this->crend (), s );
+            return iter == this->crend () ? npos : ( std::distance ( iter, this->crend () ) - 1 );
             }
 
-        size_type find_last_not_of(charT c) const {
-            for ( const_reverse_iterator iter = this->crbegin (); iter != this->crend (); ++iter )
+        size_type find_last_not_of(charT c, size_type pos=npos) const BOOST_NOEXCEPT {
+            for ( const_reverse_iterator iter = this->offset_crbegin_ (pos); iter != this->crend (); ++iter )
                 if ( !traits::eq ( c, *iter ))
-                    return reverse_distance ( this->crbegin (), iter );
+                    return std::distance ( iter, this->crend () ) - 1;
             return npos;
             }
 
     private:
-        template <typename r_iter>
-        size_type reverse_distance ( r_iter first, r_iter last ) const {
-            return len_ - 1 - std::distance ( first, last );
-            }
-
         template <typename Iterator>
         Iterator find_not_of ( Iterator first, Iterator last, basic_string_ref s ) const {
             for ( ; first != last ; ++first )
@@ -236,10 +291,18 @@ namespace boost {
             return last;
             }
 
-
+        const_reverse_iterator offset_crbegin_ ( size_type pos ) const {
+            const_reverse_iterator first = this->crbegin();
+            if ( pos < size() )
+                first += (size() - 1 - pos);
+            return first;
+            }
 
         const charT *ptr_;
-        std::size_t len_;
+        union {
+            std::size_t len_;
+            charT nul_;
+            };
         };
 
 
