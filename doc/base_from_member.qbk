@@ -143,6 +143,16 @@ type does not need to concern itself with the integer.
     #endif
     };
 
+    template < typename MemberType, int UniqueID >
+    class base_from_member<MemberType&, UniqueID>
+    {
+    protected:
+        MemberType& member;
+
+        explicit constexpr base_from_member( MemberType& x )
+            noexcept;
+    };
+
 The class template has a first template parameter `MemberType` representing
 the type of the based-member. It has a last template parameter `UniqueID`,
 that is an `int`, to differentiate between multiple base classes that use
@@ -168,6 +178,9 @@ On earlier-standard compilers, there is a default constructor and several
 constructor member templates. These constructor templates can take as many
 arguments (currently up to ten) as possible and pass them to a constructor
 of the data member.
+
+A specialization for member references offers a single constructor taking
+a `MemberType&`, which is the only way to initialize a reference.
 
 Since C++ does not allow any way to explicitly state the template parameters
 of a templated constructor, make sure that the arguments are already close
