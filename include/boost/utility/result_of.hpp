@@ -201,6 +201,12 @@ struct tr1_result_of_impl<F, FArgs, false>
 #define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_RESULT_OF_NUM_ARGS,<boost/utility/detail/result_of_iterate.hpp>))
 #include BOOST_PP_ITERATE()
 
+#if 0
+// Allow Boost.Build to trace header dependencies, so default library build works,
+// see http://lists.boost.org/Archives/boost/2014/07/214938.php
+#include <boost/utility/detail/result_of_iterate.hpp>
+#endif
+
 #else
 #  define BOOST_NO_RESULT_OF 1
 #endif
