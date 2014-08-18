@@ -41,24 +41,6 @@
         ]
     },
     {
-        "key": "utility/enable_if",
-        "name": "Enable If",
-        "authors": [
-            "Jaakko J\u00e4rvi",
-            "Jeremiah Willcock",
-            "Andrew Lumsdaine"
-        ],
-        "description": "Selective inclusion of function template overloads.",
-        "documentation": "enable_if.html",
-        "category": [
-            "Generic"
-        ],
-        "maintainers": [
-            "Jaakko Jarvi <jarvi -at- cs.tamu.edu>",
-            "Jeremiah Willcock <jewillco -at- osl.iu.edu>"
-        ]
-    },
-    {
         "key": "utility/identity_type",
         "name": "Identity Type",
         "authors": [
