@@ -12,24 +12,24 @@
 
 */
 
-#ifndef BOOST_STRING_REF_FWD_HPP
-#define BOOST_STRING_REF_FWD_HPP
+#ifndef BOOST_STRING_VIEW_FWD_HPP
+#define BOOST_STRING_VIEW_FWD_HPP
 
 #include <boost/config.hpp>
 #include <string>
 
 namespace boost {
 
-    template<typename charT, typename traits = std::char_traits<charT> > class basic_string_ref;
-    typedef basic_string_ref<char,     std::char_traits<char> >        string_ref;
-    typedef basic_string_ref<wchar_t,  std::char_traits<wchar_t> >    wstring_ref;
+    template<typename charT, typename traits = std::char_traits<charT> > class basic_string_view;
+    typedef basic_string_view<char,     std::char_traits<char> >        string_view;
+    typedef basic_string_view<wchar_t,  std::char_traits<wchar_t> >    wstring_view;
 
 #ifndef BOOST_NO_CXX11_CHAR16_T
-    typedef basic_string_ref<char16_t, std::char_traits<char16_t> > u16string_ref;
+    typedef basic_string_view<char16_t, std::char_traits<char16_t> > u16string_view;
 #endif
 
 #ifndef BOOST_NO_CXX11_CHAR32_T
-    typedef basic_string_ref<char32_t, std::char_traits<char32_t> > u32string_ref;
+    typedef basic_string_view<char32_t, std::char_traits<char32_t> > u32string_view;
 #endif
 
 }

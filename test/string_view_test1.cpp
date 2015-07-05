@@ -11,15 +11,15 @@
 #include <algorithm>
 #include <string>
 
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-typedef boost::string_ref string_ref;
+typedef boost::string_view string_view;
 
 //  Should be equal
-void interop ( const std::string &str, string_ref ref ) {
+void interop ( const std::string &str, string_view ref ) {
 //  BOOST_CHECK ( str == ref );
     BOOST_CHECK ( str.size () == ref.size ());
     BOOST_CHECK ( std::equal ( str.begin (),  str.end (),  ref.begin ()));
@@ -28,10 +28,10 @@ void interop ( const std::string &str, string_ref ref ) {
 
 void null_tests ( const char *p ) {
 //  All zero-length string-refs should be equal
-    string_ref sr1; // NULL, 0
-    string_ref sr2 ( NULL, 0 );
-    string_ref sr3 ( p, 0 );
-    string_ref sr4 ( p );
+    string_view sr1; // NULL, 0
+    string_view sr2 ( NULL, 0 );
+    string_view sr3 ( p, 0 );
+    string_view sr4 ( p );
     sr4.clear ();
 
     BOOST_CHECK ( sr1 == sr2 );
@@ -43,7 +43,7 @@ void null_tests ( const char *p ) {
 //  make sure that substrings work just like strings
 void test_substr ( const std::string &str ) {
     const size_t sz = str.size ();
-    string_ref ref ( str );
+    string_view ref ( str );
 
 //  Substrings at the end
     for ( size_t i = 0; i <= sz; ++ i )
@@ -63,7 +63,7 @@ void test_substr ( const std::string &str ) {
 void test_remove ( const std::string &str ) {
     const size_t sz = str.size ();
     std::string work;
-    string_ref ref;
+    string_view ref;
 
     for ( size_t i = 1; i <= sz; ++i ) {
       work = str;

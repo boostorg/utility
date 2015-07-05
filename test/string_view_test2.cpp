@@ -10,17 +10,17 @@
 #include <iostream>
 #include <cstring>    // for std::strchr
 
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-typedef boost::string_ref string_ref;
+typedef boost::string_view string_view;
 
 void ends_with ( const char *arg ) {
     const size_t sz = std::strlen ( arg );
-    string_ref sr ( arg );
-    string_ref sr2 ( arg );
+    string_view sr ( arg );
+    string_view sr2 ( arg );
     const char *p = arg;
 
     while ( *p ) {
@@ -44,13 +44,13 @@ void ends_with ( const char *arg ) {
     if ( sz > 0 )
       BOOST_CHECK ( sr2.ends_with ( ch ));
     BOOST_CHECK ( !sr2.ends_with ( ++ch ));
-    BOOST_CHECK ( sr2.ends_with ( string_ref ()));
+    BOOST_CHECK ( sr2.ends_with ( string_view ()));
     }
 
 void starts_with ( const char *arg ) {
     const size_t sz = std::strlen ( arg );
-    string_ref sr  ( arg );
-    string_ref sr2 ( arg );
+    string_view sr  ( arg );
+    string_view sr2 ( arg );
     const char *p = arg + std::strlen ( arg ) - 1;
     while ( p >= arg ) {
         std::string foo ( arg, p + 1 );
@@ -68,14 +68,14 @@ void starts_with ( const char *arg ) {
   if ( sz > 0 )
     BOOST_CHECK ( sr2.starts_with ( ch ));
     BOOST_CHECK ( !sr2.starts_with ( ++ch ));
-    BOOST_CHECK ( sr2.starts_with ( string_ref ()));
+    BOOST_CHECK ( sr2.starts_with ( string_view ()));
     }
 
 void reverse ( const char *arg ) {
 //  Round trip
-    string_ref sr1 ( arg );
+    string_view sr1 ( arg );
     std::string string1 ( sr1.rbegin (), sr1.rend ());
-    string_ref sr2 ( string1 );
+    string_view sr2 ( string1 );
     std::string string2 ( sr2.rbegin (), sr2.rend ());
 
     BOOST_CHECK ( std::equal ( sr2.rbegin (), sr2.rend (), arg ));
@@ -84,22 +84,22 @@ void reverse ( const char *arg ) {
     }
 
 //	This helper function eliminates signed vs. unsigned warnings
-string_ref::size_type ptr_diff ( const char *res, const char *base ) {
+string_view::size_type ptr_diff ( const char *res, const char *base ) {
     BOOST_CHECK ( res >= base );
-    return static_cast<string_ref::size_type> ( res - base );
+    return static_cast<string_view::size_type> ( res - base );
     }
 
 void find ( const char *arg ) {
-    string_ref sr1;
-    string_ref sr2;
+    string_view sr1;
+    string_view sr2;
     const char *p;
 
 //  Look for each character in the string(searching from the start)
     p = arg;
     sr1 = arg;
     while ( *p ) {
-      string_ref::size_type pos = sr1.find(*p);
-      BOOST_CHECK ( pos != string_ref::npos && ( pos <= ptr_diff ( p, arg )));
+      string_view::size_type pos = sr1.find(*p);
+      BOOST_CHECK ( pos != string_view::npos && ( pos <= ptr_diff ( p, arg )));
       ++p;
       }
 
@@ -107,8 +107,8 @@ void find ( const char *arg ) {
     p = arg;
     sr1 = arg;
     while ( *p ) {
-      string_ref::size_type pos = sr1.rfind(*p);
-      BOOST_CHECK ( pos != string_ref::npos && pos < sr1.size () && ( pos >= ptr_diff ( p, arg )));
+      string_view::size_type pos = sr1.rfind(*p);
+      BOOST_CHECK ( pos != string_view::npos && pos < sr1.size () && ( pos >= ptr_diff ( p, arg )));
       ++p;
       }
 
@@ -116,9 +116,9 @@ void find ( const char *arg ) {
     sr1 = arg;
     p = arg;
     while ( *p && *(p+1)) {
-        string_ref sr3 ( p, 2 );
-        string_ref::size_type pos = sr1.find ( sr3 );
-        BOOST_CHECK ( pos != string_ref::npos && pos <= static_cast<string_ref::size_type>( p - arg ));
+        string_view sr3 ( p, 2 );
+        string_view::size_type pos = sr1.find ( sr3 );
+        BOOST_CHECK ( pos != string_view::npos && pos <= static_cast<string_view::size_type>( p - arg ));
         p++;
         }
 
@@ -127,9 +127,9 @@ void find ( const char *arg ) {
 //  for all possible chars, see if we find them in the right place.
 //  Note that strchr will/might do the _wrong_ thing if we search for NULL
     for ( int ch = 1; ch < 256; ++ch ) {
-        string_ref::size_type pos = sr1.find(ch);
+        string_view::size_type pos = sr1.find(ch);
         const char *strp = std::strchr ( arg, ch );
-        BOOST_CHECK (( strp == NULL ) == ( pos == string_ref::npos ));
+        BOOST_CHECK (( strp == NULL ) == ( pos == string_view::npos ));
         if ( strp != NULL )
             BOOST_CHECK ( ptr_diff ( strp, arg ) == pos );
     }
@@ -139,9 +139,9 @@ void find ( const char *arg ) {
 //  for all possible chars, see if we find them in the right place.
 //  Note that strchr will/might do the _wrong_ thing if we search for NULL
     for ( int ch = 1; ch < 256; ++ch ) {
-        string_ref::size_type pos = sr1.rfind(ch);
+        string_view::size_type pos = sr1.rfind(ch);
         const char *strp = std::strrchr ( arg, ch );
-        BOOST_CHECK (( strp == NULL ) == ( pos == string_ref::npos ));
+        BOOST_CHECK (( strp == NULL ) == ( pos == string_view::npos ));
         if ( strp != NULL )
             BOOST_CHECK ( ptr_diff ( strp, arg ) == pos );
     }
@@ -151,7 +151,7 @@ void find ( const char *arg ) {
     p = arg;
     sr1 = arg;
     while ( !sr1.empty ()) {
-        string_ref::size_type pos = sr1.find(*p);
+        string_view::size_type pos = sr1.find(*p);
         BOOST_CHECK ( pos == 0 );
         sr1.remove_prefix (1);
         ++p;
@@ -161,7 +161,7 @@ void find ( const char *arg ) {
     sr1  = arg;
     p    = arg + std::strlen ( arg ) - 1;
     while ( !sr1.empty ()) {
-        string_ref::size_type pos = sr1.rfind(*p);
+        string_view::size_type pos = sr1.rfind(*p);
         BOOST_CHECK ( pos == sr1.size () - 1 );
         sr1.remove_suffix (1);
         --p;
@@ -171,7 +171,7 @@ void find ( const char *arg ) {
     sr1  = arg;
     p    = arg;
     while ( !sr1.empty ()) {
-        string_ref::size_type pos = sr1.find_first_of(*p);
+        string_view::size_type pos = sr1.find_first_of(*p);
         BOOST_CHECK ( pos == 0 );
         sr1.remove_prefix (1);
         ++p;
@@ -182,7 +182,7 @@ void find ( const char *arg ) {
     sr1  = arg;
     p    = arg + std::strlen ( arg ) - 1;
     while ( !sr1.empty ()) {
-        string_ref::size_type pos = sr1.find_last_of(*p);
+        string_view::size_type pos = sr1.find_last_of(*p);
         BOOST_CHECK ( pos == sr1.size () - 1 );
         sr1.remove_suffix (1);
         --p;
@@ -193,17 +193,17 @@ void find ( const char *arg ) {
     sr2 = arg;
     while ( !sr1.empty() ) {
         BOOST_CHECK ( sr1.find_first_of ( sr2 )     == 0 );
-        BOOST_CHECK ( sr1.find_first_not_of ( sr2 ) == string_ref::npos );
+        BOOST_CHECK ( sr1.find_first_not_of ( sr2 ) == string_view::npos );
         sr1.remove_prefix ( 1 );
         }
 
     p = arg;
     sr1 = arg;
     while ( *p ) {
-        string_ref::size_type pos1 = sr1.find_first_of(*p);
-        string_ref::size_type pos2 = sr1.find_first_not_of(*p);
-        BOOST_CHECK ( pos1 != string_ref::npos && pos1 < sr1.size () && pos1 <= ptr_diff ( p, arg ));
-        if ( pos2 != string_ref::npos ) {
+        string_view::size_type pos1 = sr1.find_first_of(*p);
+        string_view::size_type pos2 = sr1.find_first_not_of(*p);
+        BOOST_CHECK ( pos1 != string_view::npos && pos1 < sr1.size () && pos1 <= ptr_diff ( p, arg ));
+        if ( pos2 != string_view::npos ) {
             for ( size_t i = 0 ; i < pos2; ++i )
                 BOOST_CHECK ( sr1[i] == *p );
             BOOST_CHECK ( sr1 [ pos2 ] != *p );
@@ -218,18 +218,18 @@ void find ( const char *arg ) {
     sr2 = arg;
     while ( !sr1.empty() ) {
         BOOST_CHECK ( sr1.find_last_of ( sr2 )     == ( sr1.size () - 1 ));
-        BOOST_CHECK ( sr1.find_last_not_of ( sr2 ) == string_ref::npos );
+        BOOST_CHECK ( sr1.find_last_not_of ( sr2 ) == string_view::npos );
         sr1.remove_suffix ( 1 );
         }
 
     p = arg;
     sr1 = arg;
     while ( *p ) {
-        string_ref::size_type pos1 = sr1.find_last_of(*p);
-        string_ref::size_type pos2 = sr1.find_last_not_of(*p);
-        BOOST_CHECK ( pos1 != string_ref::npos && pos1 < sr1.size () && pos1 >= ptr_diff ( p, arg ));
-        BOOST_CHECK ( pos2 == string_ref::npos || pos1 < sr1.size ());
-        if ( pos2 != string_ref::npos ) {
+        string_view::size_type pos1 = sr1.find_last_of(*p);
+        string_view::size_type pos2 = sr1.find_last_not_of(*p);
+        BOOST_CHECK ( pos1 != string_view::npos && pos1 < sr1.size () && pos1 >= ptr_diff ( p, arg ));
+        BOOST_CHECK ( pos2 == string_view::npos || pos1 < sr1.size ());
+        if ( pos2 != string_view::npos ) {
             for ( size_t i = sr1.size () -1 ; i > pos2; --i )
                 BOOST_CHECK ( sr1[i] == *p );
             BOOST_CHECK ( sr1 [ pos2 ] != *p );
@@ -243,7 +243,7 @@ void find ( const char *arg ) {
 
 
 void to_string ( const char *arg ) {
-    string_ref sr1;
+    string_view sr1;
     std::string str1;
     std::string str2;
 
@@ -260,17 +260,17 @@ void to_string ( const char *arg ) {
     }
 
 void compare ( const char *arg ) {
-    string_ref sr1;
+    string_view sr1;
     std::string str1;
     std::string str2 = str1;
 
     str1.assign ( arg );
     sr1 = arg;
-    BOOST_CHECK ( sr1  == sr1);	    // compare string_ref and string_ref
-    BOOST_CHECK ( sr1  == str1);	// compare string and string_ref
-    BOOST_CHECK ( str1 == sr1 );	// compare string_ref and string
-    BOOST_CHECK ( sr1  == arg );	// compare string_ref and pointer
-    BOOST_CHECK ( arg  == sr1 );	// compare pointer and string_ref
+    BOOST_CHECK ( sr1  == sr1);	    // compare string_view and string_view
+    BOOST_CHECK ( sr1  == str1);	// compare string and string_view
+    BOOST_CHECK ( str1 == sr1 );	// compare string_view and string
+    BOOST_CHECK ( sr1  == arg );	// compare string_view and pointer
+    BOOST_CHECK ( arg  == sr1 );	// compare pointer and string_view
 
     if ( sr1.size () > 0 ) {
         (*str1.rbegin())++;

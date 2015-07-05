@@ -12,12 +12,12 @@
 
 */
 
-#ifndef BOOST_STRING_REF_HPP
-#define BOOST_STRING_REF_HPP
+#ifndef BOOST_STRING_VIEW_HPP
+#define BOOST_STRING_VIEW_HPP
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
-#include <boost/utility/string_ref_fwd.hpp>
+#include <boost/utility/string_view_fwd.hpp>
 #include <boost/throw_exception.hpp>
 
 #include <cstddef>
@@ -32,22 +32,23 @@ namespace boost {
     namespace detail {
     //  A helper functor because sometimes we don't have lambdas
         template <typename charT, typename traits>
-        class string_ref_traits_eq {
+        class string_view_traits_eq {
         public:
-            string_ref_traits_eq ( charT ch ) : ch_(ch) {}
+            string_view_traits_eq ( charT ch ) : ch_(ch) {}
             bool operator () ( charT val ) const { return traits::eq ( ch_, val ); }
             charT ch_;
             };
         }
 
     template<typename charT, typename traits>
-    class basic_string_ref {
+    class basic_string_view {
     public:
         // types
+        typedef traits traits_type;
         typedef charT value_type;
         typedef const charT* pointer;
         typedef const charT& reference;
-        typedef const charT& const_reference;
+        typedef const charT& const_viewerence;
         typedef pointer const_iterator; // impl-defined
         typedef const_iterator iterator;
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -57,26 +58,26 @@ namespace boost {
         static BOOST_CONSTEXPR_OR_CONST size_type npos = size_type(-1);
 
         // construct/copy
-        BOOST_CONSTEXPR basic_string_ref ()
+        BOOST_CONSTEXPR basic_string_view ()
             : ptr_(NULL), len_(0) {}
 
-        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs)
+        BOOST_CONSTEXPR basic_string_view (const basic_string_view &rhs)
             : ptr_(rhs.ptr_), len_(rhs.len_) {}
 
-        basic_string_ref& operator=(const basic_string_ref &rhs) {
+        basic_string_view& operator=(const basic_string_view &rhs) {
             ptr_ = rhs.ptr_;
             len_ = rhs.len_;
             return *this;
             }
 
-        basic_string_ref(const charT* str)
+        basic_string_view(const charT* str)
             : ptr_(str), len_(traits::length(str)) {}
 
         template<typename Allocator>
-        basic_string_ref(const std::basic_string<charT, traits, Allocator>& str)
+        basic_string_view(const std::basic_string<charT, traits, Allocator>& str)
             : ptr_(str.data()), len_(str.length()) {}
 
-        BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len)
+        BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len)
             : ptr_(str), len_(len) {}
 
 #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
@@ -111,7 +112,7 @@ namespace boost {
 
         const charT& at(size_t pos) const {
             if ( pos >= len_ )
-                BOOST_THROW_EXCEPTION( std::out_of_range ( "boost::string_ref::at" ) );
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "boost::string_view::at" ) );
             return ptr_[pos];
             }
 
@@ -135,31 +136,31 @@ namespace boost {
             }
 
 
-        // basic_string_ref string operations
-        basic_string_ref substr(size_type pos, size_type n=npos) const {
+        // basic_string_view string operations
+        basic_string_view substr(size_type pos, size_type n=npos) const {
             if ( pos > size())
-                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::substr" ) );
             if ( n == npos || pos + n > size())
                 n = size () - pos;
-            return basic_string_ref ( data() + pos, n );
+            return basic_string_view ( data() + pos, n );
             }
 
-        int compare(basic_string_ref x) const {
+        int compare(basic_string_view x) const {
             const int cmp = traits::compare ( ptr_, x.ptr_, (std::min)(len_, x.len_));
             return cmp != 0 ? cmp : ( len_ == x.len_ ? 0 : len_ < x.len_ ? -1 : 1 );
             }
 
         bool starts_with(charT c) const { return !empty() && traits::eq ( c, front()); }
-        bool starts_with(basic_string_ref x) const {
+        bool starts_with(basic_string_view x) const {
             return len_ >= x.len_ && traits::compare ( ptr_, x.ptr_, x.len_ ) == 0;
             }
 
         bool ends_with(charT c) const { return !empty() && traits::eq ( c, back()); }
-        bool ends_with(basic_string_ref x) const {
+        bool ends_with(basic_string_view x) const {
             return len_ >= x.len_ && traits::compare ( ptr_ + len_ - x.len_, x.ptr_, x.len_ ) == 0;
             }
 
-        size_type find(basic_string_ref s) const {
+        size_type find(basic_string_view s) const {
             const_iterator iter = std::search ( this->cbegin (), this->cend (),
                                                 s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
@@ -167,11 +168,11 @@ namespace boost {
 
         size_type find(charT c) const {
             const_iterator iter = std::find_if ( this->cbegin (), this->cend (),
-                                    detail::string_ref_traits_eq<charT, traits> ( c ));
+                                    detail::string_view_traits_eq<charT, traits> ( c ));
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type rfind(basic_string_ref s) const {
+        size_type rfind(basic_string_view s) const {
             const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
                                                 s.crbegin (), s.crend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
@@ -179,26 +180,26 @@ namespace boost {
 
         size_type rfind(charT c) const {
             const_reverse_iterator iter = std::find_if ( this->crbegin (), this->crend (),
-                                    detail::string_ref_traits_eq<charT, traits> ( c ));
+                                    detail::string_view_traits_eq<charT, traits> ( c ));
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
 
         size_type find_first_of(charT c) const { return  find (c); }
         size_type find_last_of (charT c) const { return rfind (c); }
 
-        size_type find_first_of(basic_string_ref s) const {
+        size_type find_first_of(basic_string_view s) const {
             const_iterator iter = std::find_first_of
                 ( this->cbegin (), this->cend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
 
-        size_type find_last_of(basic_string_ref s) const {
+        size_type find_last_of(basic_string_view s) const {
             const_reverse_iterator iter = std::find_first_of
                 ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter);
             }
 
-        size_type find_first_not_of(basic_string_ref s) const {
+        size_type find_first_not_of(basic_string_view s) const {
             const_iterator iter = find_not_of ( this->cbegin (), this->cend (), s );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
@@ -210,7 +211,7 @@ namespace boost {
             return npos;
             }
 
-        size_type find_last_not_of(basic_string_ref s) const {
+        size_type find_last_not_of(basic_string_view s) const {
             const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
@@ -229,7 +230,7 @@ namespace boost {
             }
 
         template <typename Iterator>
-        Iterator find_not_of ( Iterator first, Iterator last, basic_string_ref s ) const {
+        Iterator find_not_of ( Iterator first, Iterator last, basic_string_view s ) const {
             for ( ; first != last ; ++first )
                 if ( 0 == traits::find ( s.ptr_, s.len_, *first ))
                     return first;
@@ -246,160 +247,160 @@ namespace boost {
 //  Comparison operators
 //  Equality
     template<typename charT, typename traits>
-    inline bool operator==(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator==(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         if ( x.size () != y.size ()) return false;
         return x.compare(y) == 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator==(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x == basic_string_ref<charT, traits>(y);
+    inline bool operator==(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x == basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator==(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) == y;
+    inline bool operator==(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) == y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator==(basic_string_ref<charT, traits> x, const charT * y) {
-        return x == basic_string_ref<charT, traits>(y);
+    inline bool operator==(basic_string_view<charT, traits> x, const charT * y) {
+        return x == basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator==(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) == y;
+    inline bool operator==(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) == y;
         }
 
 //  Inequality
     template<typename charT, typename traits>
-    inline bool operator!=(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator!=(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         if ( x.size () != y.size ()) return true;
         return x.compare(y) != 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator!=(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x != basic_string_ref<charT, traits>(y);
+    inline bool operator!=(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x != basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator!=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) != y;
+    inline bool operator!=(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) != y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator!=(basic_string_ref<charT, traits> x, const charT * y) {
-        return x != basic_string_ref<charT, traits>(y);
+    inline bool operator!=(basic_string_view<charT, traits> x, const charT * y) {
+        return x != basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator!=(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) != y;
+    inline bool operator!=(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) != y;
         }
 
 //  Less than
     template<typename charT, typename traits>
-    inline bool operator<(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator<(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         return x.compare(y) < 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator<(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x < basic_string_ref<charT, traits>(y);
+    inline bool operator<(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x < basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator<(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) < y;
+    inline bool operator<(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) < y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator<(basic_string_ref<charT, traits> x, const charT * y) {
-        return x < basic_string_ref<charT, traits>(y);
+    inline bool operator<(basic_string_view<charT, traits> x, const charT * y) {
+        return x < basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator<(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) < y;
+    inline bool operator<(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) < y;
         }
 
 //  Greater than
     template<typename charT, typename traits>
-    inline bool operator>(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator>(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         return x.compare(y) > 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator>(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x > basic_string_ref<charT, traits>(y);
+    inline bool operator>(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x > basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator>(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) > y;
+    inline bool operator>(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) > y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator>(basic_string_ref<charT, traits> x, const charT * y) {
-        return x > basic_string_ref<charT, traits>(y);
+    inline bool operator>(basic_string_view<charT, traits> x, const charT * y) {
+        return x > basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator>(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) > y;
+    inline bool operator>(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) > y;
         }
 
 //  Less than or equal to
     template<typename charT, typename traits>
-    inline bool operator<=(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator<=(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         return x.compare(y) <= 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator<=(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x <= basic_string_ref<charT, traits>(y);
+    inline bool operator<=(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x <= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator<=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) <= y;
+    inline bool operator<=(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) <= y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator<=(basic_string_ref<charT, traits> x, const charT * y) {
-        return x <= basic_string_ref<charT, traits>(y);
+    inline bool operator<=(basic_string_view<charT, traits> x, const charT * y) {
+        return x <= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator<=(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) <= y;
+    inline bool operator<=(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) <= y;
         }
 
 //  Greater than or equal to
     template<typename charT, typename traits>
-    inline bool operator>=(basic_string_ref<charT, traits> x, basic_string_ref<charT, traits> y) {
+    inline bool operator>=(basic_string_view<charT, traits> x, basic_string_view<charT, traits> y) {
         return x.compare(y) >= 0;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator>=(basic_string_ref<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
-        return x >= basic_string_ref<charT, traits>(y);
+    inline bool operator>=(basic_string_view<charT, traits> x, const std::basic_string<charT, traits, Allocator> & y) {
+        return x >= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline bool operator>=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) >= y;
+    inline bool operator>=(const std::basic_string<charT, traits, Allocator> & x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) >= y;
         }
 
     template<typename charT, typename traits>
-    inline bool operator>=(basic_string_ref<charT, traits> x, const charT * y) {
-        return x >= basic_string_ref<charT, traits>(y);
+    inline bool operator>=(basic_string_view<charT, traits> x, const charT * y) {
+        return x >= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline bool operator>=(const charT * x, basic_string_ref<charT, traits> y) {
-        return basic_string_ref<charT, traits>(x) >= y;
+    inline bool operator>=(const charT * x, basic_string_view<charT, traits> y) {
+        return basic_string_view<charT, traits>(x) >= y;
         }
 
     namespace detail {
@@ -416,7 +417,7 @@ namespace boost {
             }
 
         template<class charT, class traits>
-        void insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_ref<charT,traits>& str) {
+        void insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_view<charT,traits>& str) {
             const std::size_t size = str.size();
             const std::size_t alignment_size = static_cast< std::size_t >(os.width()) - size;
             const bool align_left = (os.flags() & std::basic_ostream<charT, traits>::adjustfield) == std::basic_ostream<charT, traits>::left;
@@ -437,7 +438,7 @@ namespace boost {
     // Inserter
     template<class charT, class traits>
     inline std::basic_ostream<charT, traits>&
-    operator<<(std::basic_ostream<charT, traits>& os, const basic_string_ref<charT,traits>& str) {
+    operator<<(std::basic_ostream<charT, traits>& os, const basic_string_view<charT,traits>& str) {
         if (os.good()) {
             const std::size_t size = str.size();
             const std::size_t w = static_cast< std::size_t >(os.width());
@@ -456,67 +457,67 @@ namespace boost {
     //  These are short-term implementations.
     //  In a production environment, I would rather avoid the copying.
     //
-    inline int stoi (string_ref str, size_t* idx=0, int base=10) {
+    inline int stoi (string_view str, size_t* idx=0, int base=10) {
         return std::stoi ( std::string(str), idx, base );
         }
 
-    inline long stol (string_ref str, size_t* idx=0, int base=10) {
+    inline long stol (string_view str, size_t* idx=0, int base=10) {
         return std::stol ( std::string(str), idx, base );
         }
 
-    inline unsigned long stoul (string_ref str, size_t* idx=0, int base=10) {
+    inline unsigned long stoul (string_view str, size_t* idx=0, int base=10) {
         return std::stoul ( std::string(str), idx, base );
         }
 
-    inline long long stoll (string_ref str, size_t* idx=0, int base=10) {
+    inline long long stoll (string_view str, size_t* idx=0, int base=10) {
         return std::stoll ( std::string(str), idx, base );
         }
 
-    inline unsigned long long stoull (string_ref str, size_t* idx=0, int base=10) {
+    inline unsigned long long stoull (string_view str, size_t* idx=0, int base=10) {
         return std::stoull ( std::string(str), idx, base );
         }
 
-    inline float stof (string_ref str, size_t* idx=0) {
+    inline float stof (string_view str, size_t* idx=0) {
         return std::stof ( std::string(str), idx );
         }
 
-    inline double stod (string_ref str, size_t* idx=0) {
+    inline double stod (string_view str, size_t* idx=0) {
         return std::stod ( std::string(str), idx );
         }
 
-    inline long double stold (string_ref str, size_t* idx=0)  {
+    inline long double stold (string_view str, size_t* idx=0)  {
         return std::stold ( std::string(str), idx );
         }
 
-    inline int  stoi (wstring_ref str, size_t* idx=0, int base=10) {
+    inline int  stoi (wstring_view str, size_t* idx=0, int base=10) {
         return std::stoi ( std::wstring(str), idx, base );
         }
 
-    inline long stol (wstring_ref str, size_t* idx=0, int base=10) {
+    inline long stol (wstring_view str, size_t* idx=0, int base=10) {
         return std::stol ( std::wstring(str), idx, base );
         }
 
-    inline unsigned long stoul (wstring_ref str, size_t* idx=0, int base=10) {
+    inline unsigned long stoul (wstring_view str, size_t* idx=0, int base=10) {
         return std::stoul ( std::wstring(str), idx, base );
         }
 
-    inline long long stoll (wstring_ref str, size_t* idx=0, int base=10) {
+    inline long long stoll (wstring_view str, size_t* idx=0, int base=10) {
         return std::stoll ( std::wstring(str), idx, base );
         }
 
-    inline unsigned long long stoull (wstring_ref str, size_t* idx=0, int base=10) {
+    inline unsigned long long stoull (wstring_view str, size_t* idx=0, int base=10) {
         return std::stoull ( std::wstring(str), idx, base );
         }
 
-    inline float  stof (wstring_ref str, size_t* idx=0) {
+    inline float  stof (wstring_view str, size_t* idx=0) {
         return std::stof ( std::wstring(str), idx );
         }
 
-    inline double stod (wstring_ref str, size_t* idx=0) {
+    inline double stod (wstring_view str, size_t* idx=0) {
         return std::stod ( std::wstring(str), idx );
         }
 
-    inline long double stold (wstring_ref str, size_t* idx=0) {
+    inline long double stold (wstring_view str, size_t* idx=0) {
         return std::stold ( std::wstring(str), idx );
         }
 #endif
@@ -526,10 +527,10 @@ namespace boost {
 #if 0
 namespace std {
     // Hashing
-    template<> struct hash<boost::string_ref>;
-    template<> struct hash<boost::u16string_ref>;
-    template<> struct hash<boost::u32string_ref>;
-    template<> struct hash<boost::wstring_ref>;
+    template<> struct hash<boost::string_view>;
+    template<> struct hash<boost::u16string_view>;
+    template<> struct hash<boost::u32string_view>;
+    template<> struct hash<boost::wstring_view>;
 }
 #endif
 
