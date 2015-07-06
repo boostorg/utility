@@ -24,6 +24,11 @@ namespace
 int main()
 {
   typedef boost::string_view::traits_type string_traits;
+  typedef boost::string_view::const_pointer const_pointer;
+
+  //  swap
+  //  copy
+  //  compare, five new signatures
   
   return boost::report_errors();
 }
