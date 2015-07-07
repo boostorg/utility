@@ -10,7 +10,8 @@
     Based on the StringRef implementation in LLVM (http://llvm.org) and
     N3422 by Jeffrey Yasskin
         http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html
-
+    Updated July 2015 to reflect the Library Fundamentals TS
+        http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4480.html
 */
 
 #ifndef BOOST_STRING_VIEW_HPP
@@ -191,6 +192,8 @@ namespace boost {
             return substr(pos1, n1).compare(basic_string_view(x, n2));
             }
 
+        //  Searches
+
         BOOST_CONSTEXPR bool starts_with(charT c) const {  // Boost extension
             return !empty() && traits::eq ( c, front());
             }  
@@ -206,9 +209,11 @@ namespace boost {
               x.ptr_, x.len_ ) == 0;
             }
 
-        BOOST_CONSTEXPR size_type find(basic_string_view s,
-          size_type pos = 0) const BOOST_NOEXCEPT {
-            if (pos >= size())
+        //  find
+        /*BOOST_CONSTEXPR*/ size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
+            if (s.empty() && pos == size())
+              return pos;
+            if (pos > size())
               return npos;
             const_iterator iter = std::search(this->cbegin() + pos, this->cend(),
                                                s.cbegin (), s.cend (), traits::eq );
@@ -224,7 +229,9 @@ namespace boost {
             return find(basic_string_view(s), pos);
             }
 
-        BOOST_CONSTEXPR size_type rfind(basic_string_view s) const BOOST_NOEXCEPT {
+        //  rfind
+        BOOST_CONSTEXPR size_type rfind(basic_string_view s, size_type pos = npos)
+          const BOOST_NOEXCEPT {
             const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
                                                 s.crbegin (), s.crend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
@@ -236,6 +243,7 @@ namespace boost {
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
 
+        //  find_first_of
         BOOST_CONSTEXPR size_type find_first_of(basic_string_view s) const BOOST_NOEXCEPT {
             const_iterator iter = std::find_first_of
                 ( this->cbegin (), this->cend (), s.cbegin (), s.cend (), traits::eq );
@@ -243,6 +251,7 @@ namespace boost {
             }
         BOOST_CONSTEXPR size_type find_first_of(charT c) const BOOST_NOEXCEPT { return  find (c); }
 
+        //  find_last_of
         BOOST_CONSTEXPR size_type find_last_of(basic_string_view s) const BOOST_NOEXCEPT {
             const_reverse_iterator iter = std::find_first_of
                 ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
@@ -250,6 +259,7 @@ namespace boost {
             }
         BOOST_CONSTEXPR size_type find_last_of (charT c) const BOOST_NOEXCEPT { return rfind (c); }
 
+        //  find_first_not_of
         BOOST_CONSTEXPR size_type find_first_not_of(basic_string_view s) const {
             const_iterator iter = find_not_of ( this->cbegin (), this->cend (), s );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
@@ -262,6 +272,7 @@ namespace boost {
             return npos;
             }
 
+        //  find_last_not_of
         BOOST_CONSTEXPR size_type find_last_not_of(basic_string_view s) const BOOST_NOEXCEPT {
             const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );

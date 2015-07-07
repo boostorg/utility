@@ -9,6 +9,8 @@
     Based on the StringRef implementation in LLVM (http://llvm.org) and
     N3422 by Jeffrey Yasskin
         http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html
+    Updated July 2015 to reflect the Library Fundamentals TS
+        http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4480.html
 
 */
 

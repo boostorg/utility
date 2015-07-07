@@ -21,54 +21,51 @@ namespace
 {
   void find_test()
   {
-    //  find, two modified and two new signatures
+    //  find - test two modified and two new signatures
     std::string s1("ababcab");
     boost::string_view sv1(s1);
     std::string s2("abc");
     boost::string_view sv2(s2);
+    std::string s3;
+    boost::string_view sv3(s3);
 
-    BOOST_TEST_EQ(sv1.find(sv2), 2);
-    BOOST_TEST_EQ(sv1.find(sv2, 0), 2);
-    BOOST_TEST_EQ(sv1.find(sv2, 1), 2);
-    BOOST_TEST_EQ(sv1.find(sv2, 2), 2);
-    BOOST_TEST_EQ(sv1.find(sv2, 3), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find(sv2, 4), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find(sv2, 5), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find(sv2, 6), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find(sv2, 7), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find(sv2, 8), boost::string_view::npos);
+    //  first signature
+    BOOST_TEST_EQ(sv3.find(sv3), s3.find(s3));
+    BOOST_TEST_EQ(sv2.find(sv3), s2.find(s3));
+    BOOST_TEST_EQ(sv3.find(sv2), s3.find(s2));
+    BOOST_TEST_EQ(sv1.find(sv3, 7), s1.find(s3, 7));
 
-    BOOST_TEST_EQ(sv1.find('b'), 1);
-    BOOST_TEST_EQ(sv1.find('b', 0), 1);
-    BOOST_TEST_EQ(sv1.find('b', 1), 1);
-    BOOST_TEST_EQ(sv1.find('b', 2), 3);
-    BOOST_TEST_EQ(sv1.find('b', 3), 3);
-    BOOST_TEST_EQ(sv1.find('b', 4), 6);
-    BOOST_TEST_EQ(sv1.find('b', 5), 6);
-    BOOST_TEST_EQ(sv1.find('b', 6), 6);
-    BOOST_TEST_EQ(sv1.find('b', 7), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find('b', 8), boost::string_view::npos);
+    BOOST_TEST_EQ(sv1.find(sv2), s1.find(s2));
+    for (std::string::size_type i = 0; i <= 8; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find(sv2, i), s1.find(s2, i));
+    }
+    for (std::string::size_type i = 0; i <= 8; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find(sv3, i), s1.find(s3, i));
+    }
 
-    BOOST_TEST_EQ(sv1.find("abc", 0, 2), 0);
-    BOOST_TEST_EQ(sv1.find("abc", 1, 2), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 2, 2), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 3, 2), 5);
-    BOOST_TEST_EQ(sv1.find("abc", 4, 2), 5);
-    BOOST_TEST_EQ(sv1.find("abc", 5, 2), 5);
-    BOOST_TEST_EQ(sv1.find("abc", 6, 2), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 7, 2), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 8, 2), boost::string_view::npos);
+    //  second signature
+    for (std::string::size_type i = 0; i <= 8; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find('b', i), s1.find('b', i));
+    }
 
-    BOOST_TEST_EQ(sv1.find("abc"), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 0), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 1), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 2), 2);
-    BOOST_TEST_EQ(sv1.find("abc", 3), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 4), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 5), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 6), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 7), boost::string_view::npos);
-    BOOST_TEST_EQ(sv1.find("abc", 8), boost::string_view::npos);
+    //  third signature
+    for (std::string::size_type i = 0; i <= 8; ++i)
+      for (std::string::size_type j = 0; j <= 4; ++j)
+      {
+        //std::cout << i << " " << j << std::endl;
+        BOOST_TEST_EQ(sv1.find("abc", i, j), s1.find("abc", i, j));
+      }
+
+    //  fourth signature
+    BOOST_TEST_EQ(sv1.find("abc"), s1.find("abc"));
+    for (std::string::size_type i = 0; i <= 8; ++i)
+      BOOST_TEST_EQ(sv1.find("abc", i), s1.find("abc", i));
   }
 
 }  // unnamed namespace
