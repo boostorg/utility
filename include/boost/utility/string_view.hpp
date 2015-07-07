@@ -1,5 +1,6 @@
 /*
-   Copyright (c) Marshall Clow 2012-2015.
+   © Copyright (c) Marshall Clow 2012-2015.
+   © Copyright Beman Dawes 2015
 
    Distributed under the Boost Software License, Version 1.0. (See accompanying
    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -197,22 +198,30 @@ namespace boost {
             return len_ >= x.len_ && traits::compare ( ptr_, x.ptr_, x.len_ ) == 0;
             }
 
-        BOOST_CONSTEXPR bool ends_with(charT c) const { return !empty() && traits::eq ( c, back()); }  // Boost extension
- 
+        BOOST_CONSTEXPR bool ends_with(charT c) const {
+            return !empty() && traits::eq ( c, back());  // Boost extension
+            }
         BOOST_CONSTEXPR bool ends_with(basic_string_view x) const {  // Boost extension
-            return len_ >= x.len_ && traits::compare ( ptr_ + len_ - x.len_, x.ptr_, x.len_ ) == 0;
+            return len_ >= x.len_ && traits::compare ( ptr_ + len_ - x.len_,
+              x.ptr_, x.len_ ) == 0;
             }
 
-        BOOST_CONSTEXPR size_type find(basic_string_view s) const {
-            const_iterator iter = std::search ( this->cbegin (), this->cend (),
-                                                s.cbegin (), s.cend (), traits::eq );
+        BOOST_CONSTEXPR size_type find(basic_string_view s,
+          size_type pos = 0) const BOOST_NOEXCEPT {
+            if (pos >= size())
+              return npos;
+            const_iterator iter = std::search(this->cbegin() + pos, this->cend(),
+                                               s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
-
-        BOOST_CONSTEXPR size_type find(charT c) const BOOST_NOEXCEPT {
-            const_iterator iter = std::find_if ( this->cbegin (), this->cend (),
-                                    detail::string_view_traits_eq<charT, traits> ( c ));
-            return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
+        BOOST_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT {
+          return find(basic_string_view(&c, 1), pos);
+            }
+        BOOST_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const {
+          return find(basic_string_view(s, n), pos);
+            }
+        BOOST_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const {
+            return find(basic_string_view(s), pos);
             }
 
         BOOST_CONSTEXPR size_type rfind(basic_string_view s) const BOOST_NOEXCEPT {
@@ -226,7 +235,6 @@ namespace boost {
                                     detail::string_view_traits_eq<charT, traits> ( c ));
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
-
 
         BOOST_CONSTEXPR size_type find_first_of(basic_string_view s) const BOOST_NOEXCEPT {
             const_iterator iter = std::find_first_of
