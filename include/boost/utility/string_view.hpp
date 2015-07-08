@@ -210,7 +210,7 @@ namespace boost {
             }
 
         //  find
-        /*BOOST_CONSTEXPR*/ size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
+        size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
             if (s.empty() && pos <= size())
               return pos;
             if (pos > size())
@@ -219,75 +219,75 @@ namespace boost {
                                                s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
-        BOOST_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT
+        size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT
             { return find(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const
+        size_type find(const charT* s, size_type pos, size_type n) const
             { return find(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const
+        size_type find(const charT* s, size_type pos = 0) const
             { return find(basic_string_view(s), pos); }
 
         //  rfind
-        BOOST_CONSTEXPR size_type rfind(basic_string_view s, size_type pos = npos)
+        size_type rfind(basic_string_view s, size_type pos = npos)
           const BOOST_NOEXCEPT {
             const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
                                                 s.crbegin (), s.crend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
-        BOOST_CONSTEXPR size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT
+        size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT
             { return rfind(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos, size_type n) const
+        size_type rfind(const charT* s, size_type pos, size_type n) const
             { return rfind(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos = npos) const
+        size_type rfind(const charT* s, size_type pos = npos) const
             { return rfind(basic_string_view(s), pos); }
 
         //  find_first_of
-        BOOST_CONSTEXPR size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
+        size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
             const_iterator iter = std::find_first_of
                 ( this->cbegin (), this->cend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
-        BOOST_CONSTEXPR size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
+        size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
             { return find_first_of(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos, size_type n) const
+        size_type find_first_of(const charT* s, size_type pos, size_type n) const
             { return find_first_of(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos = 0) const
+        size_type find_first_of(const charT* s, size_type pos = 0) const
             { return find_first_of(basic_string_view(s), pos); }
 
         //  find_last_of
-        BOOST_CONSTEXPR size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
+        size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
             const_reverse_iterator iter = std::find_first_of
                 ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter);
             }
-        BOOST_CONSTEXPR size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT
+        size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT
             { return find_last_of(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos, size_type n) const
+        size_type find_last_of(const charT* s, size_type pos, size_type n) const
             { return find_last_of(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos = npos) const
+        size_type find_last_of(const charT* s, size_type pos = npos) const
             { return find_last_of(basic_string_view(s), pos); }
 
         //  find_first_not_of
-        BOOST_CONSTEXPR size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
+        size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
             const_iterator iter = find_not_of ( this->cbegin (), this->cend (), s );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
-        BOOST_CONSTEXPR size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
+        size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
             { return find_first_not_of(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos, size_type n) const
+        size_type find_first_not_of(const charT* s, size_type pos, size_type n) const
             { return find_first_not_of(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos = 0) const
+        size_type find_first_not_of(const charT* s, size_type pos = 0) const
             { return find_first_not_of(basic_string_view(s), pos); }
 
         //  find_last_not_of
-        BOOST_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
+        size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
             const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
-        BOOST_CONSTEXPR size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT
+        size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT
             { return find_last_not_of(basic_string_view(&c, 1), pos); }
-        BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos, size_type n) const
+        size_type find_last_not_of(const charT* s, size_type pos, size_type n) const
             { return find_last_not_of(basic_string_view(s, n), pos); }
-        BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos = npos) const
+        size_type find_last_not_of(const charT* s, size_type pos = npos) const
             { return find_last_not_of(basic_string_view(s), pos); }
 
     private:
