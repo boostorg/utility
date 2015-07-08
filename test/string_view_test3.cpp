@@ -34,6 +34,8 @@ namespace
     BOOST_TEST_EQ(sv2.find(sv3), s2.find(s3));
     BOOST_TEST_EQ(sv3.find(sv2), s3.find(s2));
     BOOST_TEST_EQ(sv1.find(sv3, 7), s1.find(s3, 7));
+    BOOST_TEST_EQ(sv1.find(sv3, 5), s1.find(s3, 5));
+    //std::cout << s1.find(s3, 5) << std::endl;
 
     BOOST_TEST_EQ(sv1.find(sv2), s1.find(s2));
     for (std::string::size_type i = 0; i <= 8; ++i)
