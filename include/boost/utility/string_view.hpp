@@ -227,11 +227,19 @@ namespace boost {
             { return find(basic_string_view(s), pos); }
 
         //  rfind
-        size_type rfind(basic_string_view s, size_type pos = npos)
-          const BOOST_NOEXCEPT {
-            const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
-                                                s.crbegin (), s.crend (), traits::eq );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+        size_type rfind(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
+            if (len_ < s.len_)
+              return npos;
+            if (pos > len_ - s.len_) 
+              pos = len_ - s.len_;
+            if (s.len_ == 0u)     // an empty string is always found
+              return pos;
+            for (const charT* cur = ptr_ + pos;; --cur) {
+                if (traits::compare(cur, s.ptr_, s.len_) == 0)
+                  return cur - ptr_;
+                if (cur == ptr_)
+                  return npos;
+                };
             }
         size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT
             { return rfind(basic_string_view(&c, 1), pos); }
