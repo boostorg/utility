@@ -211,10 +211,10 @@ namespace boost {
 
         //  find
         size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
-            if (s.empty() && pos <= size())
-              return pos;
             if (pos > size())
               return npos;
+            if (s.empty())
+              return pos;
             const_iterator iter = std::search(this->cbegin() + pos, this->cend(),
                                                s.cbegin (), s.cend (), traits::eq );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
@@ -250,8 +250,10 @@ namespace boost {
 
         //  find_first_of
         size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
+            if (pos >= len_ || s.len_ == 0)
+              return npos;
             const_iterator iter = std::find_first_of
-                ( this->cbegin (), this->cend (), s.cbegin (), s.cend (), traits::eq );
+                (this->cbegin () + pos, this->cend (), s.cbegin (), s.cend (), traits::eq);
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
         size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT

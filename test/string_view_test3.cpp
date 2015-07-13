@@ -21,6 +21,8 @@ namespace
 {
   void find_test()
   {
+    std::cout << "find test..." << std::endl;
+
     //  find - test two modified and two new signatures
     std::string s1("ababcab");
     boost::string_view sv1(s1);
@@ -30,33 +32,35 @@ namespace
     boost::string_view sv3(s3);
 
     //  first signature
-    BOOST_TEST_EQ(sv3.find(sv3), s3.find(s3));
-    BOOST_TEST_EQ(sv2.find(sv3), s2.find(s3));
-    BOOST_TEST_EQ(sv3.find(sv2), s3.find(s2));
-    BOOST_TEST_EQ(sv1.find(sv3, 7), s1.find(s3, 7));
-    BOOST_TEST_EQ(sv1.find(sv3, 5), s1.find(s3, 5));
+    BOOST_TEST_EQ(sv3.find(sv3), s3.find(s3));            // both strings empty
+    BOOST_TEST_EQ(sv1.find(sv3), s1.find(s3));            // search string empty
+    BOOST_TEST_EQ(sv3.find(sv2), s3.find(s2));            // searched string empty
+    BOOST_TEST_EQ(sv1.find(sv3, sizeof(s1) + 2), s1.find(s3, sizeof(s1) + 2));
+    BOOST_TEST_EQ(sv1.find(sv3, sizeof(s1) + 1), s1.find(s3, sizeof(s1) + 1));
+    BOOST_TEST_EQ(sv1.find(sv3, sizeof(s1)), s1.find(s3, sizeof(s1)));
+    BOOST_TEST_EQ(sv1.find(sv3, sizeof(s1)-  1), s1.find(s3, sizeof(s1)-  1));
 
     BOOST_TEST_EQ(sv1.find(sv2), s1.find(s2));
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= sizeof(s1) + 1; ++i)
     {
       //std::cout << i << std::endl;
       BOOST_TEST_EQ(sv1.find(sv2, i), s1.find(s2, i));
     }
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= sizeof(s1) + 1; ++i)
     {
       //std::cout << i << std::endl;
       BOOST_TEST_EQ(sv1.find(sv3, i), s1.find(s3, i));
     }
 
     //  second signature
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= sizeof(s1) + 1; ++i)
     {
       //std::cout << i << std::endl;
       BOOST_TEST_EQ(sv1.find('b', i), s1.find('b', i));
     }
 
     //  third signature
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= sizeof(s1) + 1; ++i)
       for (std::string::size_type j = 0; j <= 4; ++j)
       {
         //std::cout << i << " " << j << std::endl;
@@ -65,12 +69,14 @@ namespace
 
     //  fourth signature
     BOOST_TEST_EQ(sv1.find("abc"), s1.find("abc"));
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= sizeof(s1) + 1; ++i)
       BOOST_TEST_EQ(sv1.find("abc", i), s1.find("abc", i));
   }
 
   void rfind_test()
   {
+    std::cout << "rfind test..." << std::endl;
+
     //  rfind - test two modified and two new signatures
     std::string s1("ababcab");
     boost::string_view sv1(s1);
@@ -80,11 +86,13 @@ namespace
     boost::string_view sv3(s3);
 
      //  first signature
-    BOOST_TEST_EQ(sv3.rfind(sv3), s3.rfind(s3));
-    BOOST_TEST_EQ(sv2.rfind(sv3), s2.rfind(s3));
-    BOOST_TEST_EQ(sv3.rfind(sv2), s3.rfind(s2));
-    BOOST_TEST_EQ(sv1.rfind(sv3, 7), s1.rfind(s3, 7));
-    BOOST_TEST_EQ(sv1.rfind(sv3, 5), s1.rfind(s3, 5));
+    BOOST_TEST_EQ(sv3.rfind(sv3), s3.rfind(s3));          // both strings empty
+    BOOST_TEST_EQ(sv1.rfind(sv3), s1.rfind(s3));          // search string empty
+    BOOST_TEST_EQ(sv3.rfind(sv2), s3.rfind(s2));          // searched string empty
+    BOOST_TEST_EQ(sv1.find(sv3, s1.size() + 2), s1.find(s3, s1.size() + 2));
+    BOOST_TEST_EQ(sv1.find(sv3, s1.size() + 1), s1.find(s3, s1.size() + 1));
+    BOOST_TEST_EQ(sv1.rfind(sv3, s1.size()), s1.rfind(s3, s1.size()));
+    BOOST_TEST_EQ(sv1.rfind(sv3, s1.size()-  1), s1.rfind(s3, s1.size()-  1));
 
     BOOST_TEST_EQ(sv1.rfind(sv2), s1.rfind(s2));
     for (std::string::size_type i = s1.size(); i <= s1.size(); --i)
@@ -92,21 +100,21 @@ namespace
       // std::cout << i << ": " << sv1.rfind(sv2, i) << " " << s1.rfind(s2, i) << std::endl;
       BOOST_TEST_EQ(sv1.rfind(sv2, i), s1.rfind(s2, i));
     }
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
       //std::cout << i << std::endl;
       BOOST_TEST_EQ(sv1.rfind(sv3, i), s1.rfind(s3, i));
     }
 
     //  second signature
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
       //std::cout << i << std::endl;
       BOOST_TEST_EQ(sv1.rfind('b', i), s1.rfind('b', i));
     }
 
     //  third signature
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
       for (std::string::size_type j = 0; j <= 4; ++j)
       {
         //std::cout << i << " " << j << std::endl;
@@ -115,8 +123,70 @@ namespace
 
     //  fourth signature
     BOOST_TEST_EQ(sv1.rfind("abc"), s1.rfind("abc"));
-    for (std::string::size_type i = 0; i <= 8; ++i)
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
       BOOST_TEST_EQ(sv1.rfind("abc", i), s1.rfind("abc", i));
+  }
+
+  void find_first_of_test()
+  {
+    std::cout << "find_first_of test..." << std::endl;
+
+    //  find_first_of - test two modified and two new signatures
+    std::string s1("Hello World!");
+    boost::string_view sv1(s1);
+    std::string s2("o");
+    boost::string_view sv2(s2);
+    const char* s2c = "Good Bye";
+    boost::string_view sv2c(s2c);
+    std::string s3;
+    boost::string_view sv3(s3);
+
+    //  smoke test
+    BOOST_TEST_EQ(sv1.find_first_of(sv2), s1.find_first_of(s2));
+    BOOST_TEST_EQ(sv1.find_first_of(sv2, 5), s1.find_first_of(s2, 5));
+    BOOST_TEST_EQ(sv1.find_first_of(s2c), s1.find_first_of(s2c));
+    BOOST_TEST_EQ(sv1.find_first_of(s2c, 0, 4), s1.find_first_of(s2c, 0, 4));
+
+    //  first signature
+    BOOST_TEST_EQ(sv3.find_first_of(sv3), s3.find_first_of(s3));  // both strings empty
+    BOOST_TEST_EQ(sv1.find_first_of(sv3), s1.find_first_of(s3));  // search string empty
+    BOOST_TEST_EQ(sv3.find_first_of(sv2), s3.find_first_of(s2));  // searched string empty
+    BOOST_TEST_EQ(sv1.find_first_of(sv3, s1.size() + 2), s1.find_first_of(s3, s1.size() + 2));
+    BOOST_TEST_EQ(sv1.find_first_of(sv3, s1.size() + 1), s1.find_first_of(s3, s1.size() + 1));
+    BOOST_TEST_EQ(sv1.find_first_of(sv3, s1.size()), s1.find_first_of(s3, s1.size()));
+    BOOST_TEST_EQ(sv1.find_first_of(sv3, s1.size() -  1), s1.find_first_of(s3, s1.size() -  1));
+
+    BOOST_TEST_EQ(sv1.find_first_of(sv2), s1.find_first_of(s2));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find_first_of(sv2, i), s1.find_first_of(s2, i));
+    }
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find_first_of(sv3, i), s1.find_first_of(s3, i));
+    }
+
+    //  second signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << std::endl;
+      BOOST_TEST_EQ(sv1.find_first_of('o', i), s1.find_first_of('o', i));
+    }
+
+    //  third signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+      for (std::string::size_type j = 0; j <= std::strlen(s2c) + 1; ++j)
+      {
+        //std::cout << i << " " << j << std::endl;
+        BOOST_TEST_EQ(sv1.find_first_of(s2c, i, j), s1.find_first_of(s2c, i, j));
+      }
+
+    //  fourth signature
+    BOOST_TEST_EQ(sv1.find_first_of(s2c), s1.find_first_of(s2c));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+      BOOST_TEST_EQ(sv1.find_first_of(s2c, i), s1.find_first_of(s2c, i));
   }
 
 }  // unnamed namespace
@@ -132,6 +202,7 @@ int cpp_main(int argc, char* argv[])
 
   find_test();
   rfind_test();
-  
+  find_first_of_test();
+
   return boost::report_errors();
 }
