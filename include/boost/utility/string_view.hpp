@@ -278,7 +278,11 @@ namespace boost {
 
         //  find_first_not_of
         size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
-            const_iterator iter = find_not_of ( this->cbegin (), this->cend (), s );
+            if (pos >= len_)
+              return npos;
+            if (s.len_ == 0)
+              return pos;
+            const_iterator iter = find_not_of ( this->cbegin () + pos, this->cend (), s );
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
         size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
