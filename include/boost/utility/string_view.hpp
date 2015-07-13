@@ -265,8 +265,14 @@ namespace boost {
 
         //  find_last_of
         size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
+            if (s.len_ == 0u)
+              return npos;
+            if (pos >= len_)
+              pos = 0;
+            else
+              pos = len_ - (pos+1);
             const_reverse_iterator iter = std::find_first_of
-                ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
+                ( this->crbegin () + pos, this->crend (), s.cbegin (), s.cend (), traits::eq );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter);
             }
         size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT
@@ -294,7 +300,12 @@ namespace boost {
 
         //  find_last_not_of
         size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
-            const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
+            if (pos >= len_)
+              pos = len_ - 1;;
+            if (s.len_ == 0u)
+              return pos;
+            pos = len_ - (pos+1);
+            const_reverse_iterator iter = find_not_of ( this->crbegin () + pos, this->crend (), s );
             return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
             }
         size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT

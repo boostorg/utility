@@ -192,6 +192,71 @@ namespace
     }
   }
 
+  void find_last_of_test()
+  {
+    std::cout << "find_last_of test..." << std::endl;
+
+    //  find_last_of - test two modified and two new signatures
+    std::string s1("Hello World!");
+    boost::string_view sv1(s1);
+    std::string s2("o");
+    boost::string_view sv2(s2);
+    const char* s2c = "Good Bye";
+    boost::string_view sv2c(s2c);
+    std::string s3;
+    boost::string_view sv3(s3);
+
+    //  smoke test
+    BOOST_TEST_EQ(sv1.find_last_of(sv2), s1.find_last_of(s2));
+    BOOST_TEST_EQ(sv1.find_last_of(sv2, 5), s1.find_last_of(s2, 5));
+    BOOST_TEST_EQ(sv1.find_last_of(s2c), s1.find_last_of(s2c));
+    BOOST_TEST_EQ(sv1.find_last_of(s2c, 0, 4), s1.find_last_of(s2c, 0, 4));
+
+    //  first signature
+    BOOST_TEST_EQ(sv3.find_last_of(sv3), s3.find_last_of(s3));  // both strings empty
+    BOOST_TEST_EQ(sv1.find_last_of(sv3), s1.find_last_of(s3));  // search string empty
+    BOOST_TEST_EQ(sv3.find_last_of(sv2), s3.find_last_of(s2));  // searched string empty
+    BOOST_TEST_EQ(sv1.find_last_of(sv3, s1.size() + 2), s1.find_last_of(s3, s1.size() + 2));
+    BOOST_TEST_EQ(sv1.find_last_of(sv3, s1.size() + 1), s1.find_last_of(s3, s1.size() + 1));
+    BOOST_TEST_EQ(sv1.find_last_of(sv3, s1.size()), s1.find_last_of(s3, s1.size()));
+    BOOST_TEST_EQ(sv1.find_last_of(sv3, s1.size() -  1), s1.find_last_of(s3, s1.size() -  1));
+
+    BOOST_TEST_EQ(sv1.find_last_of(sv2), s1.find_last_of(s2));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_of(sv2, i) << " " << s1.find_last_of(s2, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_of(sv2, i), s1.find_last_of(s2, i));
+    }
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_of(sv3, i) << " " << s1.find_last_of(s3, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_of(sv3, i), s1.find_last_of(s3, i));
+    }
+
+    //  second signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_of('o', i) << " " << s1.find_last_of('o', i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_of('o', i), s1.find_last_of('o', i));
+    }
+
+    //  third signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+      for (std::string::size_type j = 0; j <= std::strlen(s2c) + 1; ++j)
+      {
+        //std::cout << i << "," << j << ": " << sv1.find_last_of(s2c, i, j) << " " << s1.find_last_of(s2c, i, j) << std::endl;
+        BOOST_TEST_EQ(sv1.find_last_of(s2c, i, j), s1.find_last_of(s2c, i, j));
+      }
+
+    //  fourth signature
+    BOOST_TEST_EQ(sv1.find_last_of(s2c), s1.find_last_of(s2c));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_of(s2c, i) << " " << s1.find_last_of(s2c, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_of(s2c, i), s1.find_last_of(s2c, i));  
+    }
+  }
+
   void find_first_not_of_test()
   {
     std::cout << "find_first_not_of test..." << std::endl;
@@ -224,19 +289,19 @@ namespace
     BOOST_TEST_EQ(sv1.find_first_not_of(sv2), s1.find_first_not_of(s2));
     for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
-      std::cout << i << ": " << sv1.find_first_not_of(sv2, i) << " " << s1.find_first_not_of(s2, i) << std::endl;
+      //std::cout << i << ": " << sv1.find_first_not_of(sv2, i) << " " << s1.find_first_not_of(s2, i) << std::endl;
       BOOST_TEST_EQ(sv1.find_first_not_of(sv2, i), s1.find_first_not_of(s2, i));
     }
     for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
-      std::cout << i << ": " << sv1.find_first_not_of(sv3, i) << " " << s1.find_first_not_of(s3, i) << std::endl;
+      //std::cout << i << ": " << sv1.find_first_not_of(sv3, i) << " " << s1.find_first_not_of(s3, i) << std::endl;
       BOOST_TEST_EQ(sv1.find_first_not_of(sv3, i), s1.find_first_not_of(s3, i));
     }
 
     //  second signature
     for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
-      std::cout << i << ": " << sv1.find_first_not_of('o', i) << " " << s1.find_first_not_of('o', i) << std::endl;
+      //std::cout << i << ": " << sv1.find_first_not_of('o', i) << " " << s1.find_first_not_of('o', i) << std::endl;
       BOOST_TEST_EQ(sv1.find_first_not_of('o', i), s1.find_first_not_of('o', i));
     }
 
@@ -244,7 +309,7 @@ namespace
     for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
       for (std::string::size_type j = 0; j <= std::strlen(s2c) + 1; ++j)
       {
-        std::cout << i << "," << j << ": " << sv1.find_first_not_of(s2c, i, j) << " " << s1.find_first_not_of(s2c, i, j) << std::endl;
+        //std::cout << i << "," << j << ": " << sv1.find_first_not_of(s2c, i, j) << " " << s1.find_first_not_of(s2c, i, j) << std::endl;
         BOOST_TEST_EQ(sv1.find_first_not_of(s2c, i, j), s1.find_first_not_of(s2c, i, j));
       }
 
@@ -252,8 +317,73 @@ namespace
     BOOST_TEST_EQ(sv1.find_first_not_of(s2c), s1.find_first_not_of(s2c));
     for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
     {
-      std::cout << i << ": " << sv1.find_first_not_of(s2c, i) << " " << s1.find_first_not_of(s2c, i) << std::endl;
+      //std::cout << i << ": " << sv1.find_first_not_of(s2c, i) << " " << s1.find_first_not_of(s2c, i) << std::endl;
       BOOST_TEST_EQ(sv1.find_first_not_of(s2c, i), s1.find_first_not_of(s2c, i));  
+    }
+  }
+
+  void find_last_not_of_test()
+  {
+    std::cout << "find_last_not_of test..." << std::endl;
+
+    //  find_last_not_of - test two modified and two new signatures
+    std::string s1("Hello World!");
+    boost::string_view sv1(s1);
+    std::string s2("o");
+    boost::string_view sv2(s2);
+    const char* s2c = "Good Bye";
+    boost::string_view sv2c(s2c);
+    std::string s3;
+    boost::string_view sv3(s3);
+
+    //  smoke test
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv2), s1.find_last_not_of(s2));
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv2, 5), s1.find_last_not_of(s2, 5));
+    BOOST_TEST_EQ(sv1.find_last_not_of(s2c), s1.find_last_not_of(s2c));
+    BOOST_TEST_EQ(sv1.find_last_not_of(s2c, 0, 4), s1.find_last_not_of(s2c, 0, 4));
+
+    //  first signature
+    BOOST_TEST_EQ(sv3.find_last_not_of(sv3), s3.find_last_not_of(s3));  // both strings empty
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv3), s1.find_last_not_of(s3));  // search string empty
+    BOOST_TEST_EQ(sv3.find_last_not_of(sv2), s3.find_last_not_of(s2));  // searched string empty
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv3, s1.size() + 2), s1.find_last_not_of(s3, s1.size() + 2));
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv3, s1.size() + 1), s1.find_last_not_of(s3, s1.size() + 1));
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv3, s1.size()), s1.find_last_not_of(s3, s1.size()));
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv3, s1.size() -  1), s1.find_last_not_of(s3, s1.size() -  1));
+
+    BOOST_TEST_EQ(sv1.find_last_not_of(sv2), s1.find_last_not_of(s2));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_not_of(sv2, i) << " " << s1.find_last_not_of(s2, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_not_of(sv2, i), s1.find_last_not_of(s2, i));
+    }
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_not_of(sv3, i) << " " << s1.find_last_not_of(s3, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_not_of(sv3, i), s1.find_last_not_of(s3, i));
+    }
+
+    //  second signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_not_of('o', i) << " " << s1.find_last_not_of('o', i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_not_of('o', i), s1.find_last_not_of('o', i));
+    }
+
+    //  third signature
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+      for (std::string::size_type j = 0; j <= std::strlen(s2c) + 1; ++j)
+      {
+        //std::cout << i << "," << j << ": " << sv1.find_last_not_of(s2c, i, j) << " " << s1.find_last_not_of(s2c, i, j) << std::endl;
+        BOOST_TEST_EQ(sv1.find_last_not_of(s2c, i, j), s1.find_last_not_of(s2c, i, j));
+      }
+
+    //  fourth signature
+    BOOST_TEST_EQ(sv1.find_last_not_of(s2c), s1.find_last_not_of(s2c));
+    for (std::string::size_type i = 0; i <= s1.size() + 1; ++i)
+    {
+      //std::cout << i << ": " << sv1.find_last_not_of(s2c, i) << " " << s1.find_last_not_of(s2c, i) << std::endl;
+      BOOST_TEST_EQ(sv1.find_last_not_of(s2c, i), s1.find_last_not_of(s2c, i));  
     }
   }
 
@@ -271,7 +401,9 @@ int cpp_main(int argc, char* argv[])
   find_test();
   rfind_test();
   find_first_of_test();
+  find_last_of_test();
   find_first_not_of_test();
+  find_last_not_of_test();
 
   return boost::report_errors();
 }
