@@ -7,6 +7,10 @@
    For more information, see http://www.boost.org
 */
 
+#ifndef _SCL_SECURE_NO_WARNINGS
+# define _SCL_SECURE_NO_WARNINGS
+#endif
+
 #include <boost/utility/string_view.hpp>
 
 #include <iostream>
@@ -19,6 +23,75 @@
 
 namespace
 {
+  void swap_test()
+  {
+    std::cout << "swap test..." << std::endl;
+
+    std::string s1("abcdefg");
+    boost::string_view sv1(s1);
+    std::string s2("xyz");
+    boost::string_view sv2(s2);
+    std::string s3;
+    boost::string_view sv3(s3);
+
+    boost::string_view sv1_org(sv1);
+    boost::string_view sv2_org(sv2);
+    boost::string_view sv3_org(sv3);
+
+    sv1.swap(sv2);
+    BOOST_TEST_EQ(sv1.data(), sv2_org.data());
+    BOOST_TEST_EQ(sv2.data(), sv1_org.data());
+    BOOST_TEST_EQ(sv1.size(), sv2_org.size());
+    BOOST_TEST_EQ(sv2.size(), sv1_org.size());
+    sv1.swap(sv2);
+    BOOST_TEST_EQ(sv1.data(), sv1_org.data());
+    BOOST_TEST_EQ(sv2.data(), sv2_org.data());
+    BOOST_TEST_EQ(sv1.size(), sv1_org.size());
+    BOOST_TEST_EQ(sv2.size(), sv2_org.size());
+
+    sv3.swap(sv1);
+    BOOST_TEST_EQ(sv3.data(), sv1_org.data());
+    BOOST_TEST_EQ(sv1.data(), sv3_org.data());
+    BOOST_TEST_EQ(sv3.size(), sv1_org.size());
+    BOOST_TEST_EQ(sv1.size(), sv3_org.size());
+    sv3.swap(sv1);
+    BOOST_TEST_EQ(sv1.data(), sv1_org.data());
+    BOOST_TEST_EQ(sv3.data(), sv3_org.data());
+    BOOST_TEST_EQ(sv1.size(), sv1_org.size());
+    BOOST_TEST_EQ(sv3.size(), sv3_org.size());
+  }
+
+  void copy_test()
+  {
+    std::cout << "copy test..." << std::endl;
+
+    std::string s1("abcdefg");
+    boost::string_view sv1(s1);
+    const std::size_t sz = 128u;
+    char a[sz];
+
+    std::fill(a, a + sz, 'x');
+    sv1.copy(a, sv1.size());
+    BOOST_TEST(std::memcmp(sv1.data(), &a, sv1.size()) == 0);
+    const char* p;
+    for (p = a + sv1.size();
+      p != a + sz && *p == 'x'; ++p) {}
+    BOOST_TEST(p == a + sz);
+
+    std::fill(a, a + sz, 'x');
+    sv1.copy(a, sv1.size()-2, 2);
+    BOOST_TEST(std::memcmp(sv1.data()+2, &a, sv1.size()-2) == 0);
+    for (p = a + sv1.size() - 2;
+      p != a + sz && *p == 'x'; ++p) {}
+    BOOST_TEST(p == a + sz);
+  }
+
+  void compare_test()
+  {
+    std::cout << "compare test..." << std::endl;
+
+  }
+
   void find_test()
   {
     std::cout << "find test..." << std::endl;
@@ -394,10 +467,9 @@ int cpp_main(int argc, char* argv[])
   typedef boost::string_view::traits_type string_traits;
   typedef boost::string_view::const_pointer const_pointer;
 
-  //  swap
-  //  copy
-  //  compare, five new signatures
-
+  swap_test();
+  copy_test();
+  compare_test();
   find_test();
   rfind_test();
   find_first_of_test();

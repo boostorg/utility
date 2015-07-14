@@ -158,7 +158,9 @@ namespace boost {
         size_type copy( charT* s, size_type n, size_type pos = 0 ) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::copy" ) );
-            return std::copy_n(begin() + pos, (std::min)(n, len_ - pos), s);
+            size_type rlen = (std::min)(n, len_ - pos);
+            std::copy_n(begin() + pos, rlen, s);
+            return rlen;
             }
 
         BOOST_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const {
