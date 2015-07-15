@@ -160,7 +160,9 @@ namespace boost {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::copy" ) );
             size_type rlen = (std::min)(n, len_ - pos);
-            std::copy_n(begin() + pos, rlen, s);
+            // use std::copy(begin() + pos, begin() + pos + rlen, s) rather than
+            // std::copy_n(begin() + pos, rlen, s) to support pre-C++11 standard libraries
+            std::copy(begin() + pos, begin() + pos + rlen, s);
             return rlen;
             }
 
