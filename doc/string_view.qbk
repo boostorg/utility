@@ -1,5 +1,6 @@
 [/
  / Copyright (c) 2012 Marshall Clow
+ / Copyright (c) 2015 Beman Dawes
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -7,12 +8,11 @@
 
 [article String_View
     [quickbook 1.5]
-    [authors [Clow, Marshall]]
-    [copyright 2012 Marshall Clow]
+    [authors [Clow, Marshall] [Dawes, Beman]]
+    [copyright 2012 Marshall Clow, 2015 Beman Dawes]
     [license
         Distributed under the Boost Software License, Version 1.0.
-        (See accompanying file LICENSE_1_0.txt or copy at
-        [@http://www.boost.org/LICENSE_1_0.txt])
+        [@http://www.boost.org/LICENSE_1_0.txt] 
     ]
 ]
 
@@ -20,9 +20,10 @@
 [section Overview]
 [/===============]
 
-Boost.StringView is an implementation of Jeffrey Yaskin's [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html N3442:
-string_view: a non-owning reference to a string]. 
-
+Boost.StringView is an implementation of `string_view` as specified in [@
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4480.html#string.view N4480:
+ISO/IEC DTS 19568, Technical Specification - C++ Extensions for Library Fundamentals].
+    
 When you are parsing/processing strings from some external source, frequently you want to pass a piece of text to a procedure for specialized processing. The canonical way to do this is as a `std::string`, but that has certain drawbacks:
 
 1) If you are processing a buffer of text (say a HTTP response or the contents of a file), then you have to create the string from the text you want to pass, which involves memory allocation and copying of data.
@@ -40,6 +41,18 @@ A `string_view` is implemented as a small struct that contains a pointer to the 
 Besides generic container functionality, `string_view` provides a subset of the interface of `std::string`. This makes it easy to replace parameters of type `const std::string &` with `boost::string_view`. Like `std::string`, `string_view` has a static member variable named `npos` to denote the result of failed searches, and to mean "the end".
 
 Because a `string_view` does not own the data that it "points to", it introduces lifetime issues into code that uses it. The programmer must ensure that the data that a `string_view` refers to exists as long as the `string_view` does.
+
+Note: The header actually contains a class template, `basic_string_view` and four typedefs:
+
+    template<class charT, class traits = char_traits<charT>>
+        class basic_string_view;
+   
+    typedef basic_string_view<char>     string_view;
+    typedef basic_string_view<char16_t> u16string_view;
+    typedef basic_string_view<char32_t> u32string_view;
+    typedef basic_string_view<wchar_t>  wstring_view;
+
+So you can have views of strings of any of the four built-in character types as well as strings of user-defined character-like type strings. For the sake of simple exposition, we concentrate on `string_view` (i.e. `char` strings) in this documentation.
 
 [endsect]
 
@@ -79,76 +92,123 @@ No memory allocations. No copying of character data. No changes to the code othe
 [section:reference Reference ]
 [/=================]
 
-The header file "string_view.hpp" defines a template `boost::basic_string_view`, and four specializations - for `char` / `wchar_t` / `char16_t` / `char32_t` .
+The header file "string_view.hpp" defines a class template `boost::basic_string_view`, and four specializations - for `char` / `wchar_t` / `char16_t` / `char32_t` .
 
 `#include <boost/utility/string_view.hpp>`
 
+Types:
+
+    typedef traits traits_type;
+    typedef charT value_type;
+    typedef charT* pointer;
+    typedef const charT* const_pointer;
+    typedef charT& reference;
+    typedef const charT& const_reference;
+    typedef const_pointer const_iterator;  // implementation defined
+    typedef const_iterator iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef const_reverse_iterator reverse_iterator;
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
+    static BOOST_CONSTEXPR_OR_CONST size_type npos = size_type(-1);
+
 Construction and copying:
 
-    BOOST_CONSTEXPR basic_string_view ();    // Constructs an empty string_view
-    BOOST_CONSTEXPR basic_string_view(const charT* str); // Constructs from a NULL-terminated string
-    BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len); // Constructs from a pointer, length pair
+    BOOST_CONSTEXPR basic_string_view () BOOST_NOEXCEPT;    // Constructs empty string_view
+    BOOST_CONSTEXPR basic_string_view (const basic_string_view &rhs) BOOST_NOEXCEPT;
+    basic_string_view& operator=(const basic_string_view &rhs) BOOST_NOEXCEPT;
     template<typename Allocator>
-    basic_string_view(const std::basic_string<charT, traits, Allocator>& str); // Constructs from a std::string
-    basic_string_view (const basic_string_view &rhs);
-    basic_string_view& operator=(const basic_string_view &rhs);
+      basic_string_view(const std::basic_string<charT, traits, Allocator>& str) BOOST_NOEXCEPT; // Ctor from std::string
+    BOOST_CONSTEXPR basic_string_view(const charT* str); // Ctor from NULL-terminated string
+    BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len); // Ctor from pointer, length pair
 
-`string_view` does not define a move constructor nor a move-assignment operator because copying a `string_view` is just a cheap as moving one.
+`string_view` does not define a move constructor or a move-assignment operator because copying a `string_view` is just as cheap as moving one would be.
 
 Basic container-like functions:
 
-    BOOST_CONSTEXPR size_type size()     const ;
-    BOOST_CONSTEXPR size_type length()   const ;
-    BOOST_CONSTEXPR size_type max_size() const ;
-    BOOST_CONSTEXPR bool empty()         const ;
+    BOOST_CONSTEXPR size_type size()     const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type length()   const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR bool empty()         const BOOST_NOEXCEPT ;
     
     // All iterators are const_iterators
-    BOOST_CONSTEXPR const_iterator  begin() const ;
-    BOOST_CONSTEXPR const_iterator cbegin() const ;
-    BOOST_CONSTEXPR const_iterator    end() const ;
-    BOOST_CONSTEXPR const_iterator   cend() const ;
-    const_reverse_iterator         rbegin() const ;
-    const_reverse_iterator        crbegin() const ;
-    const_reverse_iterator           rend() const ;
-    const_reverse_iterator          crend() const ;
+    BOOST_CONSTEXPR const_iterator  begin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator cbegin() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator    end() const BOOST_NOEXCEPT ;
+    BOOST_CONSTEXPR const_iterator   cend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator         rbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator        crbegin() const BOOST_NOEXCEPT ;
+    const_reverse_iterator           rend() const BOOST_NOEXCEPT ;
+    const_reverse_iterator          crend() const BOOST_NOEXCEPT ;
 
 Access to the individual elements (all of which are const):
 
     BOOST_CONSTEXPR const charT& operator[](size_type pos) const ;
-    const charT& at(size_t pos) const ;
+    BOOST_CONSTEXPR const charT& at(size_t pos) const ;
     BOOST_CONSTEXPR const charT& front() const ;
     BOOST_CONSTEXPR const charT& back()  const ;
-    BOOST_CONSTEXPR const charT* data()  const ;
+    BOOST_CONSTEXPR const charT* data()  const BOOST_NOEXCEPT ;
 
 Modifying the `string_view` (but not the underlying data):
 
-    void clear();
-    void remove_prefix(size_type n);
-    void remove_suffix(size_type n);
-
+    BOOST_CONSTEXPR void clear();  // boost extension
+    BOOST_CONSTEXPR void remove_prefix(size_type n);
+    BOOST_CONSTEXPR void remove_suffix(size_type n);
+    BOOST_CONSTEXPR void swap(basic_string_view& s) BOOST_NOEXCEPT;
+    
 Searching:
 
-    size_type find(basic_string_view s) const ;
-    size_type find(charT c) const ;
-    size_type rfind(basic_string_view s) const ;
-    size_type rfind(charT c) const ;
-    size_type find_first_of(charT c) const ;
-    size_type find_last_of (charT c) const ;
-        
-    size_type find_first_of(basic_string_view s) const ;
-    size_type find_last_of(basic_string_view s) const ;
-    size_type find_first_not_of(basic_string_view s) const ;
-    size_type find_first_not_of(charT c) const ;
-    size_type find_last_not_of(basic_string_view s) const ;
-    size_type find_last_not_of(charT c) const ;
+    BOOST_CONSTEXPR size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const;
+    
+    BOOST_CONSTEXPR size_type rfind(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos = npos) const;
+    
+    BOOST_CONSTEXPR size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos = 0) const;
+    
+    BOOST_CONSTEXPR size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos = npos) const;
+    
+    BOOST_CONSTEXPR size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos = 0) const;
+    
+    BOOST_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos = npos) const;
+  
+    BOOST_CONSTEXPR bool starts_with(charT c) const ;                 // boost extension
+    BOOST_CONSTEXPR bool starts_with(basic_string_view x) const ;     // boost extension
+    BOOST_CONSTEXPR bool ends_with(charT c) const ;                   // boost extension
+    BOOST_CONSTEXPR bool ends_with(basic_string_view x) const ;       // boost extension
 
 String-like operations:
 
-    BOOST_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const ; // Creates a new string_view
-    bool starts_with(charT c) const ;
-    bool starts_with(basic_string_view x) const ;
-    bool ends_with(charT c) const ;
-    bool ends_with(basic_string_view x) const ;
+    template<class Allocator>  // Only present if compiler supports C++11 explicit conversion
+      explicit operator basic_string<charT, traits, Allocator>() const;
+    
+    template<class Allocator = allocator<charT> >  // Default only for C++11 compilers
+      basic_string<charT, traits, Allocator>
+        to_string(const Allocator& a = Allocator()) const;
+
+    size_type copy(charT* s, size_type n, size_type pos = 0) const;
+  
+    BOOST_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const ; // Creates new string_view
+    
+Comparison:
+
+    To be supplied    
 
 [endsect]
 
@@ -157,8 +217,13 @@ String-like operations:
 [/===============]
 
 [heading boost 1.53]
-* Introduced
-    
+* Introduced, based on Jeffrey Yaskin's [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3442.html N3442:
+string_ref: a non-owning reference to a string]
+
+[heading boost 1.60]
+*  Updated to reflect [@
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4480.html#string.view N4480:
+ISO/IEC DTS 19568, Technical Specification - C++ Extensions for Library Fundamentals]   
 
 [endsect]
 

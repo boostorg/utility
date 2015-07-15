@@ -73,13 +73,13 @@ namespace boost {
         return *this;
         }
 
+      template<typename Allocator>
+        basic_string_view(const std::basic_string<charT, traits,
+          Allocator>& str) BOOST_NOEXCEPT
+        : ptr_(str.data()), len_(str.length()) {}
+
       BOOST_CONSTEXPR basic_string_view(const charT* str)
         : ptr_(str), len_(traits::length(str)) {}
-
-      template<typename Allocator>
-      basic_string_view(const std::basic_string<charT, traits,
-        Allocator>& str) BOOST_NOEXCEPT
-        : ptr_(str.data()), len_(str.length()) {}
 
       BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len)
         : ptr_(str), len_(len) {}
@@ -114,7 +114,7 @@ namespace boost {
         BOOST_CONSTEXPR const_pointer data()  const BOOST_NOEXCEPT { return ptr_; }
 
         // modifiers
-        void clear() { len_ = 0; }          // Boost extension
+        void clear() BOOST_NOEXCEPT { len_ = 0; }          // Boost extension
 
         BOOST_CONSTEXPR void remove_prefix(size_type n) {
             if ( n > len_ )
