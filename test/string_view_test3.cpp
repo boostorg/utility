@@ -464,8 +464,9 @@ namespace
 
 int cpp_main(int argc, char* argv[])
 {
-  typedef boost::string_view::traits_type string_traits;
-  typedef boost::string_view::const_pointer const_pointer;
+  //  verify traits_type and const_pointer typedefs compile OK
+  BOOST_TEST(boost::string_view::traits_type::eq('x', 'x'));
+  BOOST_TEST_EQ(sizeof(boost::string_view::const_pointer), sizeof(&argc));
 
   swap_test();
   copy_test();

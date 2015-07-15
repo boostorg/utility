@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+#include <cstring>
 #include <iosfwd>
 
 namespace boost {
@@ -129,7 +130,7 @@ namespace boost {
             len_ -= n;
             }
 
-        BOOST_CONSTEXPR void swap(basic_string_view& s) BOOST_NOEXCEPT {
+        /*BOOST_CONSTEXPR*/ void swap(basic_string_view& s) BOOST_NOEXCEPT {
             std::swap(ptr_, s.ptr_);
             std::swap(len_, s.len_);
             }
