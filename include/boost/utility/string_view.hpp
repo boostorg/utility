@@ -117,20 +117,20 @@ namespace boost {
         // modifiers
         void clear() BOOST_NOEXCEPT { len_ = 0; }          // Boost extension
 
-        BOOST_CONSTEXPR void remove_prefix(size_type n) {
+        void remove_prefix(size_type n) {
             if ( n > len_ )
                 n = len_;
             ptr_ += n;
             len_ -= n;
             }
 
-        BOOST_CONSTEXPR void remove_suffix(size_type n) {
+        void remove_suffix(size_type n) {
             if ( n > len_ )
                 n = len_;
             len_ -= n;
             }
 
-        /*BOOST_CONSTEXPR*/ void swap(basic_string_view& s) BOOST_NOEXCEPT {
+        void swap(basic_string_view& s) BOOST_NOEXCEPT {
             std::swap(ptr_, s.ptr_);
             std::swap(len_, s.len_);
             }
@@ -166,7 +166,7 @@ namespace boost {
             return rlen;
             }
 
-        BOOST_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const {
+        basic_string_view substr(size_type pos, size_type n=npos) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::substr" ) );
             if ( n == npos || pos + n > size())
@@ -174,25 +174,25 @@ namespace boost {
             return basic_string_view ( data() + pos, n );
             }
 
-        BOOST_CONSTEXPR int compare(basic_string_view x) const BOOST_NOEXCEPT {
+        int compare(basic_string_view x) const BOOST_NOEXCEPT {
             const int cmp = traits::compare ( ptr_, x.ptr_, (std::min)(len_, x.len_));
             return cmp != 0 ? cmp : ( len_ == x.len_ ? 0 : len_ < x.len_ ? -1 : 1 );
             }
-        BOOST_CONSTEXPR int compare(size_type pos1, size_type n1, basic_string_view x)
+        int compare(size_type pos1, size_type n1, basic_string_view x)
           const BOOST_NOEXCEPT {
             return substr(pos1, n1).compare(x);
             }
-        BOOST_CONSTEXPR int compare(size_type pos1, size_type n1,
+        int compare(size_type pos1, size_type n1,
           basic_string_view x, size_type pos2, size_type n2) const {
             return substr(pos1, n1).compare(x.substr(pos2, n2));
             }
-        BOOST_CONSTEXPR int compare(const charT* x) const {
+        int compare(const charT* x) const {
             return compare(basic_string_view(x));
             }
-        BOOST_CONSTEXPR int compare(size_type pos1, size_type n1, const charT* x) const {
+        int compare(size_type pos1, size_type n1, const charT* x) const {
             return substr(pos1, n1).compare(basic_string_view(x));
             }
-        BOOST_CONSTEXPR int compare(size_type pos1, size_type n1,
+        int compare(size_type pos1, size_type n1,
           const charT* x, size_type n2) const {
             return substr(pos1, n1).compare(basic_string_view(x, n2));
             }
@@ -344,7 +344,7 @@ namespace boost {
 //  Comparison operators
 //  Equality
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator==(basic_string_view<charT, traits> x,
+    inline bool operator==(basic_string_view<charT, traits> x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT {
         if ( x.size () != y.size ()) return false;
         return x.compare(y) == 0;
@@ -352,7 +352,7 @@ namespace boost {
 
 //  Inequality
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator!=(basic_string_view<charT, traits> x,
+    inline bool operator!=(basic_string_view<charT, traits> x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         if ( x.size () != y.size ()) return true;
         return x.compare(y) != 0;
@@ -360,7 +360,7 @@ namespace boost {
 
 //  Less than
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator<(basic_string_view<charT, traits> x,
+    inline bool operator<(basic_string_view<charT, traits> x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return x.compare(y) < 0;
         }
@@ -374,63 +374,63 @@ namespace boost {
 
 //  Less than or equal to
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator<=(basic_string_view<charT, traits> x,
+    inline bool operator<=(basic_string_view<charT, traits> x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return x.compare(y) <= 0;
         }
 
 //  Greater than or equal to
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator>=(basic_string_view<charT, traits> x,
+    inline bool operator>=(basic_string_view<charT, traits> x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return x.compare(y) >= 0;
         }
 
 // "sufficient additional overloads of comparison functions"
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator==(basic_string_view<charT, traits> x,
+    inline bool operator==(basic_string_view<charT, traits> x,
       const std::basic_string<charT, traits, Allocator> & y) BOOST_NOEXCEPT { 
         return x == basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator==(const std::basic_string<charT, traits, Allocator> & x,
+    inline bool operator==(const std::basic_string<charT, traits, Allocator> & x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) == y;
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator==(basic_string_view<charT, traits> x,
+    inline bool operator==(basic_string_view<charT, traits> x,
       const charT * y) BOOST_NOEXCEPT { 
         return x == basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator==(const charT * x,
+    inline bool operator==(const charT * x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) == y;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator!=(basic_string_view<charT, traits> x,
+    inline bool operator!=(basic_string_view<charT, traits> x,
       const std::basic_string<charT, traits, Allocator> & y) BOOST_NOEXCEPT { 
         return x != basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator!=(const std::basic_string<charT, traits, Allocator> & x,
+    inline bool operator!=(const std::basic_string<charT, traits, Allocator> & x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) != y;
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator!=(basic_string_view<charT, traits> x,
+    inline bool operator!=(basic_string_view<charT, traits> x,
       const charT * y) BOOST_NOEXCEPT { 
         return x != basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator!=(const charT * x,
+    inline bool operator!=(const charT * x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) != y;
         }
@@ -460,73 +460,73 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator>(basic_string_view<charT, traits> x,
+    inline bool operator>(basic_string_view<charT, traits> x,
       const std::basic_string<charT, traits, Allocator> & y) BOOST_NOEXCEPT { 
         return x > basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator>(const std::basic_string<charT, traits, Allocator> & x,
+    inline bool operator>(const std::basic_string<charT, traits, Allocator> & x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) > y;
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator>(basic_string_view<charT, traits> x,
+    inline bool operator>(basic_string_view<charT, traits> x,
       const charT * y) BOOST_NOEXCEPT { 
         return x > basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator>(const charT * x,
+    inline bool operator>(const charT * x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) > y;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator<=(basic_string_view<charT, traits> x,
+    inline bool operator<=(basic_string_view<charT, traits> x,
       const std::basic_string<charT, traits, Allocator> & y) BOOST_NOEXCEPT { 
         return x <= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator<=(const std::basic_string<charT, traits, Allocator> & x,
+    inline bool operator<=(const std::basic_string<charT, traits, Allocator> & x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) <= y;
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator<=(basic_string_view<charT, traits> x,
+    inline bool operator<=(basic_string_view<charT, traits> x,
       const charT * y) BOOST_NOEXCEPT { 
         return x <= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator<=(const charT * x,
+    inline bool operator<=(const charT * x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) <= y;
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator>=(basic_string_view<charT, traits> x,
+    inline bool operator>=(basic_string_view<charT, traits> x,
       const std::basic_string<charT, traits, Allocator> & y) BOOST_NOEXCEPT { 
         return x >= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits, typename Allocator>
-    inline BOOST_CONSTEXPR bool operator>=(const std::basic_string<charT, traits, Allocator> & x,
+    inline bool operator>=(const std::basic_string<charT, traits, Allocator> & x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) >= y;
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator>=(basic_string_view<charT, traits> x,
+    inline bool operator>=(basic_string_view<charT, traits> x,
       const charT * y) BOOST_NOEXCEPT { 
         return x >= basic_string_view<charT, traits>(y);
         }
 
     template<typename charT, typename traits>
-    inline BOOST_CONSTEXPR bool operator>=(const charT * x,
+    inline bool operator>=(const charT * x,
       basic_string_view<charT, traits> y) BOOST_NOEXCEPT { 
         return basic_string_view<charT, traits>(x) >= y;
         }

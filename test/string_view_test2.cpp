@@ -7,6 +7,10 @@
     For more information, see http://www.boost.org
 */
 
+#ifndef _SCL_SECURE_NO_WARNINGS
+# define _SCL_SECURE_NO_WARNINGS
+#endif
+
 #include <iostream>
 #include <cstring>    // for std::strchr
 
