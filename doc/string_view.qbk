@@ -151,42 +151,42 @@ Access to the individual elements (all of which are const):
 
 Modifying the `string_view` (but not the underlying data):
 
-    BOOST_CONSTEXPR void clear();  // boost extension
-    BOOST_CONSTEXPR void remove_prefix(size_type n);
-    BOOST_CONSTEXPR void remove_suffix(size_type n);
-    BOOST_CONSTEXPR void swap(basic_string_view& s) BOOST_NOEXCEPT;
+    void clear();  // boost extension
+    BOOST_CXX14_CONSTEXPR void remove_prefix(size_type n);
+    BOOST_CXX14_CONSTEXPR void remove_suffix(size_type n);
+    BOOST_CXX14_CONSTEXPR void swap(basic_string_view& s) BOOST_NOEXCEPT;
     
 Searching:
 
-    BOOST_CONSTEXPR size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const;
+    BOOST_CXX14_CONSTEXPR size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const;
     
-    BOOST_CONSTEXPR size_type rfind(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type rfind(const charT* s, size_type pos = npos) const;
+    BOOST_CXX14_CONSTEXPR size_type rfind(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type rfind(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type rfind(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type rfind(const charT* s, size_type pos = npos) const;
     
-    BOOST_CONSTEXPR size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type find_first_of(const charT* s, size_type pos = 0) const;
+    BOOST_CXX14_CONSTEXPR size_type find_first_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_first_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type find_first_of(const charT* s, size_type pos = 0) const;
     
-    BOOST_CONSTEXPR size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type find_last_of(const charT* s, size_type pos = npos) const;
+    BOOST_CXX14_CONSTEXPR size_type find_last_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_last_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_last_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type find_last_of(const charT* s, size_type pos = npos) const;
     
-    BOOST_CONSTEXPR size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos = 0) const;
+    BOOST_CXX14_CONSTEXPR size_type find_first_not_of(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_first_not_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type find_first_not_of(const charT* s, size_type pos = 0) const;
     
-    BOOST_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
-    BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos, size_type n) const;
-    BOOST_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos = npos) const;
+    BOOST_CXX14_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_last_not_of(charT c, size_type pos = npos) const BOOST_NOEXCEPT;
+    BOOST_CXX14_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos, size_type n) const;
+    BOOST_CXX14_CONSTEXPR size_type find_last_not_of(const charT* s, size_type pos = npos) const;
   
     BOOST_CONSTEXPR bool starts_with(charT c) const ;                 // boost extension
     BOOST_CONSTEXPR bool starts_with(basic_string_view x) const ;     // boost extension
@@ -198,17 +198,28 @@ String-like operations:
     template<class Allocator>  // Only present if compiler supports C++11 explicit conversion
       explicit operator basic_string<charT, traits, Allocator>() const;
     
-    template<class Allocator = allocator<charT> >  // Default only for C++11 compilers
-      basic_string<charT, traits, Allocator>
+    template<class Allocator = allocator<charT> >  // Default only present if compiler supports
+      basic_string<charT, traits, Allocator>       //   C++11 default template parameters
         to_string(const Allocator& a = Allocator()) const;
 
     size_type copy(charT* s, size_type n, size_type pos = 0) const;
   
-    BOOST_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const ; // Creates new string_view
+    BOOST_CXX14_CONSTEXPR basic_string_view substr(size_type pos,
+      size_type n=npos) const ; // Create new string_view
     
 Comparison:
 
-    To be supplied    
+    To be supplied
+
+[endsect]
+
+[/===============]
+[section Compiler Support]
+[/===============]
+
+This Boost implementation only requires a C++03 compliant compiler.
+
+The actual Library Fundamentals specification assumes a C++14 compliant compiler, so a few features are only present if actually supported by the compiler. Boost macros such as BOOST_CONSTEXPR, BOOST_CXX14_CONSTEXPR, and BOOST_NOEXCEPT supply certain features if supported by the compiler. 
 
 [endsect]
 
