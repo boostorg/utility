@@ -90,35 +90,55 @@ string_ref::size_type ptr_diff ( const char *res, const char *base ) {
     }
 
 void find ( const char *arg ) {
+    std::string stdstr1;
     string_ref sr1;
     string_ref sr2;
     const char *p;
 
-//  Look for each character in the string(searching from the start)
+//  Look for each character in the string(searching from the start) and compare outcome to that of std::string
     p = arg;
     sr1 = arg;
+    stdstr1 = arg;
     while ( *p ) {
       string_ref::size_type pos = sr1.find(*p);
       BOOST_CHECK ( pos != string_ref::npos && ( pos <= ptr_diff ( p, arg )));
+      BOOST_CHECK_EQUAL ( pos , stdstr1.find(*p) );
       ++p;
       }
 
-//  Look for each character in the string (searching from the end)
+//  Look for each character in the string (searching from the end) and compare outcome to that of std::string
     p = arg;
     sr1 = arg;
+    stdstr1 = arg;
     while ( *p ) {
       string_ref::size_type pos = sr1.rfind(*p);
       BOOST_CHECK ( pos != string_ref::npos && pos < sr1.size () && ( pos >= ptr_diff ( p, arg )));
+      BOOST_CHECK_EQUAL ( pos , stdstr1.rfind(*p) );
       ++p;
       }
 
-//	Look for pairs on characters (searching from the start)
+//	Look for pairs on characters (searching from the start) and compare outcome to that of std::string
     sr1 = arg;
+    stdstr1 = arg;
     p = arg;
     while ( *p && *(p+1)) {
         string_ref sr3 ( p, 2 );
         string_ref::size_type pos = sr1.find ( sr3 );
         BOOST_CHECK ( pos != string_ref::npos && pos <= static_cast<string_ref::size_type>( p - arg ));
+	BOOST_CHECK_EQUAL ( pos , stdstr1.find(sr3.to_string()) );
+        p++;
+        }
+
+//	Look for pairs on characters (searching from the end) and compare outcomes to that of std::string
+//      This test detects Bug #9518
+    sr1 = arg;
+    stdstr1 = arg;
+    p = arg;
+    while ( *p && *(p+1)) {
+        string_ref sr3 ( p, 2 );
+        string_ref::size_type pos = sr1.rfind ( sr3 );
+        BOOST_CHECK ( pos != string_ref::npos && pos >= static_cast<string_ref::size_type>( p - arg ));
+        BOOST_CHECK_EQUAL ( pos , stdstr1.rfind(sr3.to_string()) );
         p++;
         }
 
