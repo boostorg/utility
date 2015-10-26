@@ -40,6 +40,11 @@ namespace boost {
             };
         }
 
+    namespace container {
+        template <class CharT, class Traits, class Allocator>
+        class basic_string;
+        }
+
     template<typename charT, typename traits>
     class basic_string_ref {
     public:
@@ -76,6 +81,10 @@ namespace boost {
         basic_string_ref(const std::basic_string<charT, traits, Allocator>& str)
             : ptr_(str.data()), len_(str.length()) {}
 
+        template<typename Allocator>
+        basic_string_ref(const container::basic_string<charT, traits, Allocator>& str)
+            : ptr_(str.data()), len_(str.length()) {}
+
         BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len)
             : ptr_(str), len_(len) {}
 
@@ -83,6 +92,11 @@ namespace boost {
         template<typename Allocator>
         explicit operator std::basic_string<charT, traits, Allocator>() const {
             return std::basic_string<charT, traits, Allocator> ( begin(), end());
+            }
+
+        template<typename Allocator>
+        explicit operator container::basic_string<charT, traits, Allocator>() const {
+            return container::basic_string<charT, traits, Allocator> ( ptr_, len_ );
             }
 #endif
 
@@ -257,7 +271,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator==(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x == basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator==(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) == y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator==(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) == y;
         }
 
@@ -284,7 +308,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator!=(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x != basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator!=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) != y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator!=(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) != y;
         }
 
@@ -310,7 +344,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator<(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x < basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator<(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) < y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator<(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) < y;
         }
 
@@ -336,7 +380,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator>(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x > basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator>(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) > y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator>(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) > y;
         }
 
@@ -362,7 +416,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator<=(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x <= basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator<=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) <= y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator<=(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) <= y;
         }
 
@@ -388,7 +452,17 @@ namespace boost {
         }
 
     template<typename charT, typename traits, typename Allocator>
+    inline bool operator>=(basic_string_ref<charT, traits> x, const container::basic_string<charT, traits, Allocator> & y) {
+        return x >= basic_string_ref<charT, traits>(y);
+        }
+
+    template<typename charT, typename traits, typename Allocator>
     inline bool operator>=(const std::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
+        return basic_string_ref<charT, traits>(x) >= y;
+        }
+
+    template<typename charT, typename traits, typename Allocator>
+    inline bool operator>=(const container::basic_string<charT, traits, Allocator> & x, basic_string_ref<charT, traits> y) {
         return basic_string_ref<charT, traits>(x) >= y;
         }
 
