@@ -18,7 +18,7 @@
 #define BOOST_STRING_VIEW_FWD_HPP
 
 #include <boost/config.hpp>
-#include <string>
+#include <string>  // for std::char_traits
 
 namespace boost {
 
