@@ -73,7 +73,7 @@
 // issue at the cost of some simplicity.
 //
 // One of the complications is an existence of special auxiliary class template
-// 'is_chained_base<>' (see 'detail' namespace below), which is used
+// 'is_chained_base<>' (see 'operators_detail' namespace below), which is used
 // to determine whether its template parameter is a library's operator template
 // or not. You have to specialize 'is_chained_base<>' for each new
 // operator template you add to the library.
@@ -113,19 +113,19 @@ namespace boost
 {
 namespace operators_impl
 {
-namespace detail
+namespace operators_detail
 {
 
 template <typename T> class empty_base {};
 
-} // namespace detail
+} // namespace operators_detail
 
 //  Basic operator classes (contributed by Dave Abrahams) ------------------//
 
 //  Note that friend functions defined in a class are implicitly inline.
 //  See the C++ std, 11.4 [class.friend] paragraph 5
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct less_than_comparable2 : B
 {
      friend bool operator<=(const T& x, const U& y) { return !static_cast<bool>(x > y); }
@@ -136,7 +136,7 @@ struct less_than_comparable2 : B
      friend bool operator>=(const U& x, const T& y) { return !static_cast<bool>(y > x); }
 };
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct less_than_comparable1 : B
 {
      friend bool operator>(const T& x, const T& y)  { return y < x; }
@@ -144,7 +144,7 @@ struct less_than_comparable1 : B
      friend bool operator>=(const T& x, const T& y) { return !static_cast<bool>(x < y); }
 };
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct equality_comparable2 : B
 {
      friend bool operator==(const U& y, const T& x) { return x == y; }
@@ -152,7 +152,7 @@ struct equality_comparable2 : B
      friend bool operator!=(const T& y, const U& x) { return !static_cast<bool>(y == x); }
 };
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct equality_comparable1 : B
 {
      friend bool operator!=(const T& x, const T& y) { return !static_cast<bool>(x == y); }
@@ -170,43 +170,43 @@ struct equality_comparable1 : B
 // If the compiler has no NRVO, this is the best symmetric
 // implementation available.
 
-#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )         \
-template <class T, class U, class B = detail::empty_base<T> > \
-struct NAME##2 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const U& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
-  friend T operator OP( const U& lhs, const T& rhs )          \
-    { T nrv( rhs ); nrv OP##= lhs; return nrv; }              \
-};                                                            \
-                                                              \
-template <class T, class B = detail::empty_base<T> >          \
-struct NAME##1 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const T& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
+#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                   \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+  friend T operator OP( const U& lhs, const T& rhs )                    \
+    { T nrv( rhs ); nrv OP##= lhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
-#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )     \
-template <class T, class U, class B = detail::empty_base<T> > \
-struct NAME##2 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const U& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
-};                                                            \
-                                                              \
-template <class T, class U, class B = detail::empty_base<T> > \
-struct BOOST_OPERATOR2_LEFT(NAME) : B                         \
-{                                                             \
-  friend T operator OP( const U& lhs, const T& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
-};                                                            \
-                                                              \
-template <class T, class B = detail::empty_base<T> >          \
-struct NAME##1 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const T& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
+#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct BOOST_OPERATOR2_LEFT(NAME) : B                                   \
+{                                                                       \
+  friend T operator OP( const U& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
 #else // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
@@ -217,34 +217,34 @@ struct NAME##1 : B                                            \
 // optimization opportunities to the compiler :)
 
 #define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                   \
-template <class T, class U, class B = detail::empty_base<T> >           \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
 struct NAME##2 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
   friend T operator OP( const U& lhs, T rhs ) { return rhs OP##= lhs; } \
 };                                                                      \
                                                                         \
-template <class T, class B = detail::empty_base<T> >                    \
+template <class T, class B = operators_detail::empty_base<T> >          \
 struct NAME##1 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
 };
 
 #define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )               \
-template <class T, class U, class B = detail::empty_base<T> >           \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
 struct NAME##2 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
 };                                                                      \
                                                                         \
-template <class T, class U, class B = detail::empty_base<T> >           \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
 struct BOOST_OPERATOR2_LEFT(NAME) : B                                   \
 {                                                                       \
   friend T operator OP( const U& lhs, const T& rhs )                    \
     { return T( lhs ) OP##= rhs; }                                      \
 };                                                                      \
                                                                         \
-template <class T, class B = detail::empty_base<T> >                    \
+template <class T, class B = operators_detail::empty_base<T> >          \
 struct NAME##1 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
@@ -267,7 +267,7 @@ BOOST_BINARY_OPERATOR_COMMUTATIVE( orable, | )
 
 //  incrementable and decrementable contributed by Jeremy Siek
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct incrementable : B
 {
   friend T operator++(T& x, int)
@@ -280,7 +280,7 @@ private: // The use of this typedef works around a Borland bug
   typedef T incrementable_type;
 };
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct decrementable : B
 {
   friend T operator--(T& x, int)
@@ -295,7 +295,7 @@ private: // The use of this typedef works around a Borland bug
 
 //  Iterator operator classes (contributed by Jeremy Siek) ------------------//
 
-template <class T, class P, class B = detail::empty_base<T> >
+template <class T, class P, class B = operators_detail::empty_base<T> >
 struct dereferenceable : B
 {
   P operator->() const
@@ -304,7 +304,7 @@ struct dereferenceable : B
   }
 };
 
-template <class T, class I, class R, class B = detail::empty_base<T> >
+template <class T, class I, class R, class B = operators_detail::empty_base<T> >
 struct indexable : B
 {
   R operator[](I n) const
@@ -318,31 +318,31 @@ struct indexable : B
 
 #if defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
 
-#define BOOST_BINARY_OPERATOR( NAME, OP )                     \
-template <class T, class U, class B = detail::empty_base<T> > \
-struct NAME##2 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const U& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
-};                                                            \
-                                                              \
-template <class T, class B = detail::empty_base<T> >          \
-struct NAME##1 : B                                            \
-{                                                             \
-  friend T operator OP( const T& lhs, const T& rhs )          \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }              \
+#define BOOST_BINARY_OPERATOR( NAME, OP )                               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
 #else // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
 
 #define BOOST_BINARY_OPERATOR( NAME, OP )                               \
-template <class T, class U, class B = detail::empty_base<T> >           \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
 struct NAME##2 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
 };                                                                      \
                                                                         \
-template <class T, class B = detail::empty_base<T> >                    \
+template <class T, class B = operators_detail::empty_base<T> >          \
 struct NAME##1 : B                                                      \
 {                                                                       \
   friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
@@ -355,7 +355,7 @@ BOOST_BINARY_OPERATOR( right_shiftable, >> )
 
 #undef BOOST_BINARY_OPERATOR
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct equivalent2 : B
 {
   friend bool operator==(const T& x, const U& y)
@@ -364,7 +364,7 @@ struct equivalent2 : B
   }
 };
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct equivalent1 : B
 {
   friend bool operator==(const T&x, const T&y)
@@ -373,7 +373,7 @@ struct equivalent1 : B
   }
 };
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct partially_ordered2 : B
 {
   friend bool operator<=(const T& x, const U& y)
@@ -390,7 +390,7 @@ struct partially_ordered2 : B
     { return static_cast<bool>(y < x) || static_cast<bool>(y == x); }
 };
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct partially_ordered1 : B
 {
   friend bool operator>(const T& x, const T& y)
@@ -403,161 +403,161 @@ struct partially_ordered1 : B
 
 //  Combined operator classes (contributed by Daryle Walker) ----------------//
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct totally_ordered2
     : less_than_comparable2<T, U
     , equality_comparable2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct totally_ordered1
     : less_than_comparable1<T
     , equality_comparable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct additive2
     : addable2<T, U
     , subtractable2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct additive1
     : addable1<T
     , subtractable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct multiplicative2
     : multipliable2<T, U
     , dividable2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct multiplicative1
     : multipliable1<T
     , dividable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct integer_multiplicative2
     : multiplicative2<T, U
     , modable2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct integer_multiplicative1
     : multiplicative1<T
     , modable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct arithmetic2
     : additive2<T, U
     , multiplicative2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct arithmetic1
     : additive1<T
     , multiplicative1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct integer_arithmetic2
     : additive2<T, U
     , integer_multiplicative2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct integer_arithmetic1
     : additive1<T
     , integer_multiplicative1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct bitwise2
     : xorable2<T, U
     , andable2<T, U
     , orable2<T, U, B
       > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct bitwise1
     : xorable1<T
     , andable1<T
     , orable1<T, B
       > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct unit_steppable
     : incrementable<T
     , decrementable<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct shiftable2
     : left_shiftable2<T, U
     , right_shiftable2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct shiftable1
     : left_shiftable1<T
     , right_shiftable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct ring_operators2
     : additive2<T, U
     , subtractable2_left<T, U
     , multipliable2<T, U, B
       > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct ring_operators1
     : additive1<T
     , multipliable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct ordered_ring_operators2
     : ring_operators2<T, U
     , totally_ordered2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct ordered_ring_operators1
     : ring_operators1<T
     , totally_ordered1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct field_operators2
     : ring_operators2<T, U
     , dividable2<T, U
     , dividable2_left<T, U, B
       > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct field_operators1
     : ring_operators1<T
     , dividable1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct ordered_field_operators2
     : field_operators2<T, U
     , totally_ordered2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct ordered_field_operators1
     : field_operators1<T
     , totally_ordered1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct euclidian_ring_operators2
     : ring_operators2<T, U
     , dividable2<T, U
@@ -566,26 +566,26 @@ struct euclidian_ring_operators2
     , modable2_left<T, U, B
       > > > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct euclidian_ring_operators1
     : ring_operators1<T
     , dividable1<T
     , modable1<T, B
       > > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct ordered_euclidian_ring_operators2
     : totally_ordered2<T, U
     , euclidian_ring_operators2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct ordered_euclidian_ring_operators1
     : totally_ordered1<T
     , euclidian_ring_operators1<T, B
       > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct euclidean_ring_operators2
     : ring_operators2<T, U
     , dividable2<T, U
@@ -594,43 +594,43 @@ struct euclidean_ring_operators2
     , modable2_left<T, U, B
       > > > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct euclidean_ring_operators1
     : ring_operators1<T
     , dividable1<T
     , modable1<T, B
       > > > {};
 
-template <class T, class U, class B = detail::empty_base<T> >
+template <class T, class U, class B = operators_detail::empty_base<T> >
 struct ordered_euclidean_ring_operators2
     : totally_ordered2<T, U
     , euclidean_ring_operators2<T, U, B
       > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct ordered_euclidean_ring_operators1
     : totally_ordered1<T
     , euclidean_ring_operators1<T, B
       > > {};
 
-template <class T, class P, class B = detail::empty_base<T> >
+template <class T, class P, class B = operators_detail::empty_base<T> >
 struct input_iteratable
     : equality_comparable1<T
     , incrementable<T
     , dereferenceable<T, P, B
       > > > {};
 
-template <class T, class B = detail::empty_base<T> >
+template <class T, class B = operators_detail::empty_base<T> >
 struct output_iteratable
     : incrementable<T, B
       > {};
 
-template <class T, class P, class B = detail::empty_base<T> >
+template <class T, class P, class B = operators_detail::empty_base<T> >
 struct forward_iteratable
     : input_iteratable<T, P, B
       > {};
 
-template <class T, class P, class B = detail::empty_base<T> >
+template <class T, class P, class B = operators_detail::empty_base<T> >
 struct bidirectional_iteratable
     : forward_iteratable<T, P
     , decrementable<T, B
@@ -640,7 +640,7 @@ struct bidirectional_iteratable
 //  which is an indirect base class of bidirectional_iterable,
 //  random_access_iteratable must not be derived from totally_ordered1
 //  but from less_than_comparable1 only. (Helmut Zeisel, 02-Dec-2001)
-template <class T, class P, class D, class R, class B = detail::empty_base<T> >
+template <class T, class P, class D, class R, class B = operators_detail::empty_base<T> >
 struct random_access_iteratable
     : bidirectional_iteratable<T, P
     , less_than_comparable1<T
@@ -655,7 +655,7 @@ struct random_access_iteratable
 // the xxxx, xxxx1, and xxxx2 templates.
 //
 
-namespace detail
+namespace operators_detail
 {
 
 // A type parameter is used instead of a plain bool because Borland's compiler
@@ -663,7 +663,7 @@ namespace detail
 struct true_t {};
 struct false_t {};
 
-} // namespace detail
+} // namespace operators_detail
 
 // is_chained_base<> - a traits class used to distinguish whether an operator
 // template argument is being used for base class chaining, or is specifying a
@@ -673,7 +673,7 @@ struct false_t {};
 // class chaining. We specialize for the operator templates defined in this
 // library.
 template<class T> struct is_chained_base {
-  typedef detail::false_t value;
+  typedef operators_detail::false_t value;
 };
 
 // Provide a specialization of 'is_chained_base<>'
@@ -681,7 +681,7 @@ template<class T> struct is_chained_base {
 # define BOOST_OPERATOR_TEMPLATE4(template_name4)           \
   template<class T, class U, class V, class W, class B>     \
   struct is_chained_base< template_name4<T, U, V, W, B> > { \
-    typedef detail::true_t value;                           \
+    typedef operators_detail::true_t value;                 \
   };
 
 // Provide a specialization of 'is_chained_base<>'
@@ -689,7 +689,7 @@ template<class T> struct is_chained_base {
 # define BOOST_OPERATOR_TEMPLATE3(template_name3)        \
   template<class T, class U, class V, class B>           \
   struct is_chained_base< template_name3<T, U, V, B> > { \
-    typedef detail::true_t value;                        \
+    typedef operators_detail::true_t value;              \
   };
 
 // Provide a specialization of 'is_chained_base<>'
@@ -697,7 +697,7 @@ template<class T> struct is_chained_base {
 # define BOOST_OPERATOR_TEMPLATE2(template_name2)     \
   template<class T, class U, class B>                 \
   struct is_chained_base< template_name2<T, U, B> > { \
-    typedef detail::true_t value;                     \
+    typedef operators_detail::true_t value;           \
   };
 
 // Provide a specialization of 'is_chained_base<>'
@@ -705,7 +705,7 @@ template<class T> struct is_chained_base {
 # define BOOST_OPERATOR_TEMPLATE1(template_name1)  \
   template<class T, class B>                       \
   struct is_chained_base< template_name1<T, B> > { \
-    typedef detail::true_t value;                  \
+    typedef operators_detail::true_t value;        \
   };
 
 // BOOST_OPERATOR_TEMPLATE(template_name) defines template_name<> such that it
@@ -722,32 +722,32 @@ template<class T> struct is_chained_base {
 // implementation in terms of either '<template_name>1' or '<template_name>2'.
 //
 
-# define BOOST_OPERATOR_TEMPLATE(template_name)                   \
-template <class T                                                 \
-         ,class U = T                                             \
-         ,class B = detail::empty_base<T>                         \
-         ,class O = typename is_chained_base<U>::value            \
-         >                                                        \
-struct template_name;                                             \
-                                                                  \
-template<class T, class U, class B>                               \
-struct template_name<T, U, B, detail::false_t>                    \
-  : template_name##2<T, U, B> {};                                 \
-                                                                  \
-template<class T, class U>                                        \
-struct template_name<T, U, detail::empty_base<T>, detail::true_t> \
-  : template_name##1<T, U> {};                                    \
-                                                                  \
-template <class T, class B>                                       \
-struct template_name<T, T, B, detail::false_t>                    \
-  : template_name##1<T, B> {};                                    \
-                                                                  \
-template<class T, class U, class B, class O>                      \
-struct is_chained_base< template_name<T, U, B, O> > {             \
-  typedef detail::true_t value;                                   \
-};                                                                \
-                                                                  \
-BOOST_OPERATOR_TEMPLATE2(template_name##2)                        \
+# define BOOST_OPERATOR_TEMPLATE(template_name)                                       \
+template <class T                                                                     \
+         ,class U = T                                                                 \
+         ,class B = operators_detail::empty_base<T>                                   \
+         ,class O = typename is_chained_base<U>::value                                \
+         >                                                                            \
+struct template_name;                                                                 \
+                                                                                      \
+template<class T, class U, class B>                                                   \
+struct template_name<T, U, B, operators_detail::false_t>                              \
+  : template_name##2<T, U, B> {};                                                     \
+                                                                                      \
+template<class T, class U>                                                            \
+struct template_name<T, U, operators_detail::empty_base<T>, operators_detail::true_t> \
+  : template_name##1<T, U> {};                                                        \
+                                                                                      \
+template <class T, class B>                                                           \
+struct template_name<T, T, B, operators_detail::false_t>                              \
+  : template_name##1<T, B> {};                                                        \
+                                                                                      \
+template<class T, class U, class B, class O>                                          \
+struct is_chained_base< template_name<T, U, B, O> > {                                 \
+  typedef operators_detail::true_t value;                                             \
+};                                                                                    \
+                                                                                      \
+BOOST_OPERATOR_TEMPLATE2(template_name##2)                                            \
 BOOST_OPERATOR_TEMPLATE1(template_name##1)
 
 BOOST_OPERATOR_TEMPLATE(less_than_comparable)
