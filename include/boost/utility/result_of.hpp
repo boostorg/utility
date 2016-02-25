@@ -217,13 +217,17 @@ struct tr1_result_of_impl<F, FArgs, false>
 
 } // end namespace detail
 
+#ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
+
+#  define BOOST_RESULT_OF_USE_VARIADICS
+#  include <boost/utility/detail/result_of_iterate.hpp>
+
+#else // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+
 #define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_RESULT_OF_NUM_ARGS,<boost/utility/detail/result_of_iterate.hpp>))
 #include BOOST_PP_ITERATE()
 
-#if 0
-// inform dependency trackers, as they can't see through macro includes
-#include <boost/utility/detail/result_of_iterate.hpp>
-#endif
+#endif // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
 #else
 #  define BOOST_NO_RESULT_OF 1
