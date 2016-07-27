@@ -65,14 +65,25 @@ namespace boost {
       BOOST_CONSTEXPR basic_string_view() BOOST_NOEXCEPT
         : ptr_(NULL), len_(0) {}
 
+      // by defaulting these functions, basic_string_ref becomes
+      //  trivially copy/move constructible.
       BOOST_CONSTEXPR basic_string_view(const basic_string_view &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+        = default;
+#else
         : ptr_(rhs.ptr_), len_(rhs.len_) {}
+#endif
 
-      basic_string_view& operator=(const basic_string_view &rhs) BOOST_NOEXCEPT {
+      basic_string_view& operator=(const basic_string_view &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+            = default;
+#else
+        {
         ptr_ = rhs.ptr_;
         len_ = rhs.len_;
         return *this;
         }
+#endif
 
       template<typename Allocator>
         basic_string_view(const std::basic_string<charT, traits,

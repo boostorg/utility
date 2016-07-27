@@ -57,26 +57,37 @@ namespace boost {
         static BOOST_CONSTEXPR_OR_CONST size_type npos = size_type(-1);
 
         // construct/copy
-        BOOST_CONSTEXPR basic_string_ref ()
+        BOOST_CONSTEXPR basic_string_ref () BOOST_NOEXCEPT
             : ptr_(NULL), len_(0) {}
 
-        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs)
+        // by defaulting these functions, basic_string_ref becomes
+        //  trivially copy/move constructible.
+        BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+            = default;
+#else
             : ptr_(rhs.ptr_), len_(rhs.len_) {}
+#endif
 
-        basic_string_ref& operator=(const basic_string_ref &rhs) {
+        basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+            = default;
+#else
+            {
             ptr_ = rhs.ptr_;
             len_ = rhs.len_;
             return *this;
             }
+#endif
 
-        basic_string_ref(const charT* str)
+        basic_string_ref(const charT* str) BOOST_NOEXCEPT
             : ptr_(str), len_(traits::length(str)) {}
 
         template<typename Allocator>
         basic_string_ref(const std::basic_string<charT, traits, Allocator>& str)
             : ptr_(str.data()), len_(str.length()) {}
 
-        BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len)
+        BOOST_CONSTEXPR basic_string_ref(const charT* str, size_type len) BOOST_NOEXCEPT
             : ptr_(str), len_(len) {}
 
 #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
