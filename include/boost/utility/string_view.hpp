@@ -255,7 +255,7 @@ namespace boost {
               pos = len_ - s.len_;
             if (s.len_ == 0u)     // an empty string is always found
               return pos;
-            for (const charT* cur = ptr_ + pos;; --cur) {
+            for (const charT* cur = ptr_ + pos; ; --cur) {
                 if (traits::compare(cur, s.ptr_, s.len_) == 0)
                   return cur - ptr_;
                 if (cur == ptr_)
@@ -322,7 +322,7 @@ namespace boost {
         //  find_last_not_of
         BOOST_CXX14_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
             if (pos >= len_)
-              pos = len_ - 1;;
+              pos = len_ - 1;
             if (s.len_ == 0u)
               return pos;
             pos = len_ - (pos+1);
