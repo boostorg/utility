@@ -185,13 +185,13 @@ namespace boost {
         size_type rfind(basic_string_ref s) const {
             const_reverse_iterator iter = std::search ( this->crbegin (), this->crend (),
                                                 s.crbegin (), s.crend (), traits::eq );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+            return iter == this->crend () ? npos : (std::distance(iter, this->crend()) - s.size());
             }
 
         size_type rfind(charT c) const {
             const_reverse_iterator iter = std::find_if ( this->crbegin (), this->crend (),
                                     detail::string_ref_traits_eq<charT, traits> ( c ));
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+            return iter == this->crend () ? npos : (this->size() - 1 - std::distance(this->crbegin(), iter));
             }
 
         size_type find_first_of(charT c) const { return  find (c); }
@@ -206,7 +206,7 @@ namespace boost {
         size_type find_last_of(basic_string_ref s) const {
             const_reverse_iterator iter = std::find_first_of
                 ( this->crbegin (), this->crend (), s.cbegin (), s.cend (), traits::eq );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter);
+            return iter == this->crend () ? npos : (this->size() - 1 - std::distance(this->crbegin(), iter));
             }
 
         size_type find_first_not_of(basic_string_ref s) const {
@@ -223,21 +223,17 @@ namespace boost {
 
         size_type find_last_not_of(basic_string_ref s) const {
             const_reverse_iterator iter = find_not_of ( this->crbegin (), this->crend (), s );
-            return iter == this->crend () ? npos : reverse_distance ( this->crbegin (), iter );
+            return iter == this->crend () ? npos : (this->size() - 1 - std::distance(this->crbegin(), iter));
             }
 
         size_type find_last_not_of(charT c) const {
             for ( const_reverse_iterator iter = this->crbegin (); iter != this->crend (); ++iter )
                 if ( !traits::eq ( c, *iter ))
-                    return reverse_distance ( this->crbegin (), iter );
+                    return this->size() - 1 - std::distance(this->crbegin(), iter);
             return npos;
             }
 
     private:
-        template <typename r_iter>
-        size_type reverse_distance ( r_iter first, r_iter last ) const {
-            return len_ - 1 - std::distance ( first, last );
-            }
 
         template <typename Iterator>
         Iterator find_not_of ( Iterator first, Iterator last, basic_string_ref s ) const {
