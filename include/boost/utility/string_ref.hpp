@@ -416,7 +416,7 @@ namespace boost {
     namespace detail {
 
         template<class charT, class traits>
-        inline void insert_fill_chars(std::basic_ostream<charT, traits>& os, std::size_t n) {
+        inline void sr_insert_fill_chars(std::basic_ostream<charT, traits>& os, std::size_t n) {
             enum { chunk_size = 8 };
             charT fill_chars[chunk_size];
             std::fill_n(fill_chars, static_cast< std::size_t >(chunk_size), os.fill());
@@ -427,19 +427,19 @@ namespace boost {
             }
 
         template<class charT, class traits>
-        void insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_ref<charT,traits>& str) {
+        void sr_insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_ref<charT,traits>& str) {
             const std::size_t size = str.size();
             const std::size_t alignment_size = static_cast< std::size_t >(os.width()) - size;
             const bool align_left = (os.flags() & std::basic_ostream<charT, traits>::adjustfield) == std::basic_ostream<charT, traits>::left;
             if (!align_left) {
-                detail::insert_fill_chars(os, alignment_size);
+                detail::sr_insert_fill_chars(os, alignment_size);
                 if (os.good())
                     os.write(str.data(), size);
                 }
             else {
                 os.write(str.data(), size);
                 if (os.good())
-                    detail::insert_fill_chars(os, alignment_size);
+                    detail::sr_insert_fill_chars(os, alignment_size);
                 }
             }
 
@@ -455,7 +455,7 @@ namespace boost {
             if (w <= size)
                 os.write(str.data(), size);
             else
-                detail::insert_aligned(os, str);
+                detail::sr_insert_aligned(os, str);
             os.width(0);
             }
         return os;
