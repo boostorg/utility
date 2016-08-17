@@ -65,14 +65,25 @@ namespace boost {
       BOOST_CONSTEXPR basic_string_view() BOOST_NOEXCEPT
         : ptr_(NULL), len_(0) {}
 
+      // by defaulting these functions, basic_string_ref becomes
+      //  trivially copy/move constructible.
       BOOST_CONSTEXPR basic_string_view(const basic_string_view &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+        = default;
+#else
         : ptr_(rhs.ptr_), len_(rhs.len_) {}
+#endif
 
-      basic_string_view& operator=(const basic_string_view &rhs) BOOST_NOEXCEPT {
+      basic_string_view& operator=(const basic_string_view &rhs) BOOST_NOEXCEPT
+#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+            = default;
+#else
+        {
         ptr_ = rhs.ptr_;
         len_ = rhs.len_;
         return *this;
         }
+#endif
 
       template<typename Allocator>
         basic_string_view(const std::basic_string<charT, traits,
@@ -244,7 +255,7 @@ namespace boost {
               pos = len_ - s.len_;
             if (s.len_ == 0u)     // an empty string is always found
               return pos;
-            for (const charT* cur = ptr_ + pos;; --cur) {
+            for (const charT* cur = ptr_ + pos; ; --cur) {
                 if (traits::compare(cur, s.ptr_, s.len_) == 0)
                   return cur - ptr_;
                 if (cur == ptr_)
@@ -311,7 +322,7 @@ namespace boost {
         //  find_last_not_of
         BOOST_CXX14_CONSTEXPR size_type find_last_not_of(basic_string_view s, size_type pos = npos) const BOOST_NOEXCEPT {
             if (pos >= len_)
-              pos = len_ - 1;;
+              pos = len_ - 1;
             if (s.len_ == 0u)
               return pos;
             pos = len_ - (pos+1);
@@ -538,7 +549,7 @@ namespace boost {
     namespace detail {
 
         template<class charT, class traits>
-        inline void insert_fill_chars(std::basic_ostream<charT, traits>& os, std::size_t n) {
+        inline void sv_insert_fill_chars(std::basic_ostream<charT, traits>& os, std::size_t n) {
             enum { chunk_size = 8 };
             charT fill_chars[chunk_size];
             std::fill_n(fill_chars, static_cast< std::size_t >(chunk_size), os.fill());
@@ -549,19 +560,19 @@ namespace boost {
             }
 
         template<class charT, class traits>
-        void insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_view<charT,traits>& str) {
+        void sv_insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_view<charT,traits>& str) {
             const std::size_t size = str.size();
             const std::size_t alignment_size = static_cast< std::size_t >(os.width()) - size;
             const bool align_left = (os.flags() & std::basic_ostream<charT, traits>::adjustfield) == std::basic_ostream<charT, traits>::left;
             if (!align_left) {
-                detail::insert_fill_chars(os, alignment_size);
+                detail::sv_insert_fill_chars(os, alignment_size);
                 if (os.good())
                     os.write(str.data(), size);
                 }
             else {
                 os.write(str.data(), size);
                 if (os.good())
-                    detail::insert_fill_chars(os, alignment_size);
+                    detail::sv_insert_fill_chars(os, alignment_size);
                 }
             }
 
@@ -578,7 +589,7 @@ namespace boost {
             if (w <= size)
                 os.write(str.data(), size);
             else
-                detail::insert_aligned(os, str);
+                detail::sv_insert_aligned(os, str);
             os.width(0);
             }
         return os;
