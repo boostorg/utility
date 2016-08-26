@@ -9,6 +9,9 @@
 
 #include <iostream>
 #include <cstring>    // for std::strchr
+#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#include <cstdlib>    // for std::malloc and std::free
+#endif
 
 #include <boost/utility/string_view.hpp>
 
@@ -241,6 +244,29 @@ void find ( const char *arg ) {
 
     }
 
+#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+template <typename T>
+class alloc_holder{
+public:
+    typedef T value_type;
+    explicit alloc_holder(){}
+    T *allocate(std::size_t n){
+        return reinterpret_cast<T *>(std::malloc(sizeof(T) * n));
+    }
+    void deallocate(T *p, std::size_t n){
+        std::free(p);
+    }
+};
+
+template <typename T, typename U>
+bool operator==(const alloc_holder<T> &, const alloc_holder<U> &){
+    return true;
+}
+template <typename T, typename U>
+bool operator!=(const alloc_holder<T> &, const alloc_holder<U> &){
+    return false;
+}
+#endif
 
 void to_string ( const char *arg ) {
     string_view sr1;
@@ -256,6 +282,8 @@ void to_string ( const char *arg ) {
 #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
     std::string str3 = static_cast<std::string> ( sr1 );
     BOOST_CHECK ( str1 == str3 );
+
+    std::basic_string<char, std::char_traits<char>, alloc_holder<char>> alloc_str = sr1.to_string(alloc_holder<char>());
 #endif
     }
 
