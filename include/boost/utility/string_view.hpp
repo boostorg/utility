@@ -157,7 +157,7 @@ namespace boost {
 
 #ifndef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
         template<typename Allocator = std::allocator<charT> >
-        std::basic_string<charT, traits> to_string(const Allocator& a = Allocator()) const {
+        std::basic_string<charT, traits, Allocator> to_string(const Allocator& a = Allocator()) const {
             return std::basic_string<charT, traits, Allocator>(begin(), end(), a);
             }
 #else
