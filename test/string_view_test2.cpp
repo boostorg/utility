@@ -7,10 +7,14 @@
     For more information, see http://www.boost.org
 */
 
+#include <new>        // for placement new
 #include <iostream>
-#include <cstring>    // for std::strchr
+#include <cstddef>    // for NULL, std::size_t, std::ptrdiff_t
+#include <cstring>    // for std::strchr and std::strcmp
+#include <cstdlib>    // for std::malloc and std::free
 
 #include <boost/utility/string_view.hpp>
+#include <boost/config.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -83,7 +87,7 @@ void reverse ( const char *arg ) {
     BOOST_CHECK ( std::equal ( sr1.begin (), sr1.end (), string2.begin ()));
     }
 
-//	This helper function eliminates signed vs. unsigned warnings
+//  This helper function eliminates signed vs. unsigned warnings
 string_view::size_type ptr_diff ( const char *res, const char *base ) {
     BOOST_CHECK ( res >= base );
     return static_cast<string_view::size_type> ( res - base );
@@ -112,7 +116,7 @@ void find ( const char *arg ) {
       ++p;
       }
 
-//	Look for pairs on characters (searching from the start)
+//  Look for pairs on characters (searching from the start)
     sr1 = arg;
     p = arg;
     while ( *p && *(p+1)) {
@@ -241,6 +245,86 @@ void find ( const char *arg ) {
 
     }
 
+template <typename T>
+class custom_allocator {
+public:
+    typedef T value_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef void* void_pointer;
+    typedef const void* const_void_pointer;
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
+    typedef T& reference;
+    typedef const T& const_reference;
+
+    template<class U>
+    struct rebind {
+        typedef custom_allocator<U> other;
+        };
+
+    custom_allocator() BOOST_NOEXCEPT {}
+    template <typename U>
+    custom_allocator(custom_allocator<U> const&) BOOST_NOEXCEPT {}
+
+    pointer allocate(size_type n) const {
+        return static_cast<pointer>(std::malloc(sizeof(value_type) * n));
+        }
+    void deallocate(pointer p, size_type) const BOOST_NOEXCEPT {
+        std::free(p);
+        }
+
+    pointer address(reference value) const BOOST_NOEXCEPT {
+        return &value;
+        }
+
+    const_pointer address(const_reference value) const BOOST_NOEXCEPT {
+        return &value;
+        }
+
+    BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT {
+        return (~(size_type)0u) / sizeof(value_type);
+        }
+
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+    template <class U, class... Args>
+    void construct(U* ptr, Args&&... args) const {
+        ::new((void*)ptr) U(static_cast<Args&&>(args)...);
+        }
+#else
+    template <class U, class V>
+    void construct(U* ptr, V&& value) const {
+        ::new((void*)ptr) U(static_cast<V&&>(value));
+        }
+#endif
+#else
+    template <class U, class V>
+    void construct(U* ptr, const V& value) const {
+        ::new((void*)ptr) U(value);
+        }
+#endif
+
+    template <class U>
+    void construct(U* ptr) const {
+        ::new((void*)ptr) U();
+        }
+
+    template <class U>
+    void destroy(U* ptr) const {
+        (void)ptr;
+        ptr->~U();
+        }
+    };
+
+template <typename T, typename U>
+BOOST_CONSTEXPR bool operator==(const custom_allocator<T> &, const custom_allocator<U> &) BOOST_NOEXCEPT {
+    return true;
+    }
+template <typename T, typename U>
+BOOST_CONSTEXPR bool operator!=(const custom_allocator<T> &, const custom_allocator<U> &) BOOST_NOEXCEPT {
+    return false;
+    }
 
 void to_string ( const char *arg ) {
     string_view sr1;
@@ -249,13 +333,16 @@ void to_string ( const char *arg ) {
 
     str1.assign ( arg );
     sr1 = arg;
-//	str2 = sr1.to_string<std::allocator<char> > ();
+//  str2 = sr1.to_string<std::allocator<char> > ();
     str2 = sr1.to_string ();
     BOOST_CHECK ( str1 == str2 );
 
+    std::basic_string<char, std::char_traits<char>, custom_allocator<char> > str3 = sr1.to_string(custom_allocator<char>());
+    BOOST_CHECK ( std::strcmp(str1.c_str(), str3.c_str()) == 0 );
+
 #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-    std::string str3 = static_cast<std::string> ( sr1 );
-    BOOST_CHECK ( str1 == str3 );
+    std::string str4 = static_cast<std::string> ( sr1 );
+    BOOST_CHECK ( str1 == str4 );
 #endif
     }
 
@@ -266,11 +353,11 @@ void compare ( const char *arg ) {
 
     str1.assign ( arg );
     sr1 = arg;
-    BOOST_CHECK ( sr1  == sr1);	    // compare string_view and string_view
-    BOOST_CHECK ( sr1  == str1);	// compare string and string_view
-    BOOST_CHECK ( str1 == sr1 );	// compare string_view and string
-    BOOST_CHECK ( sr1  == arg );	// compare string_view and pointer
-    BOOST_CHECK ( arg  == sr1 );	// compare pointer and string_view
+    BOOST_CHECK ( sr1  == sr1);    // compare string_view and string_view
+    BOOST_CHECK ( sr1  == str1);   // compare string and string_view
+    BOOST_CHECK ( str1 == sr1 );   // compare string_view and string
+    BOOST_CHECK ( sr1  == arg );   // compare string_view and pointer
+    BOOST_CHECK ( arg  == sr1 );   // compare pointer and string_view
 
     if ( sr1.size () > 0 ) {
         (*str1.rbegin())++;
