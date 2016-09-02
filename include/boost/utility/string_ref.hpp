@@ -27,6 +27,11 @@
 #include <string>
 #include <iosfwd>
 
+#if defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS) || (defined(BOOST_GCC) && ((BOOST_GCC+0) / 100) <= 406)
+// GCC 4.6 cannot handle a defaulted function with noexcept specifier
+#define BOOST_STRING_REF_NO_CXX11_DEFAULTED_NOEXCEPT_FUNCTIONS
+#endif
+
 namespace boost {
 
     namespace detail {
@@ -63,14 +68,14 @@ namespace boost {
         // by defaulting these functions, basic_string_ref becomes
         //  trivially copy/move constructible.
         BOOST_CONSTEXPR basic_string_ref (const basic_string_ref &rhs) BOOST_NOEXCEPT
-#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+#ifndef BOOST_STRING_REF_NO_CXX11_DEFAULTED_NOEXCEPT_FUNCTIONS
             = default;
 #else
             : ptr_(rhs.ptr_), len_(rhs.len_) {}
 #endif
 
         basic_string_ref& operator=(const basic_string_ref &rhs) BOOST_NOEXCEPT
-#ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+#ifndef BOOST_STRING_REF_NO_CXX11_DEFAULTED_NOEXCEPT_FUNCTIONS
             = default;
 #else
             {
