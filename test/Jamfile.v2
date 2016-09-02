@@ -11,7 +11,7 @@ import testing ;
 alias unit_test_framework
     : # sources
         /boost//unit_test_framework
-    ;        
+    ;
 
 # Please keep the tests ordered by filename
 test-suite utility
@@ -20,7 +20,7 @@ test-suite utility
         [ run ../base_from_member_ref_test.cpp ]
         [ run ../binary_test.cpp ]
         [ run ../call_traits_test.cpp : -u ]
-        [ run ../compressed_pair_test.cpp ../../test/build//boost_test_exec_monitor/<link>static : -u ]
+        [ run ../compressed_pair_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ]
         [ run ../iterators_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ]
         [ run next_prior_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ]
         [ run ../numeric_traits_test.cpp ]
