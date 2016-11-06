@@ -46,7 +46,6 @@ template < typename T >
 
 // A custom comparison type is needed
 struct object_id_compare
-    : std::binary_function<object_id, object_id, bool>
 {
     bool  operator ()( object_id const &a, object_id const &b ) const;
 
