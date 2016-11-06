@@ -18,7 +18,7 @@
 
 #include <boost/utility/base_from_member.hpp>  // for boost::base_from_member
 
-#include <functional>  // for std::binary_function, std::less
+#include <functional>  // for std::less
 #include <iostream>    // for std::cout (std::ostream, std::endl indirectly)
 #include <set>         // for std::set
 #include <typeinfo>    // for std::type_info
