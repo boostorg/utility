@@ -18,7 +18,7 @@
 
 #include <boost/utility/base_from_member.hpp>  // for boost::base_from_member
 
-#include <functional>  // for std::binary_function, std::less
+#include <functional>  // for std::less
 #include <iostream>    // for std::cout (std::ostream, std::endl indirectly)
 #include <set>         // for std::set
 #include <typeinfo>    // for std::type_info
@@ -46,7 +46,6 @@ template < typename T >
 
 // A custom comparison type is needed
 struct object_id_compare
-    : std::binary_function<object_id, object_id, bool>
 {
     bool  operator ()( object_id const &a, object_id const &b ) const;
 
