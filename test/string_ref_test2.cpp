@@ -83,7 +83,7 @@ void reverse ( const char *arg ) {
     BOOST_CHECK ( std::equal ( sr1.begin (), sr1.end (), string2.begin ()));
     }
 
-//	This helper function eliminates signed vs. unsigned warnings
+// This helper function eliminates signed vs. unsigned warnings
 string_ref::size_type ptr_diff ( const char *res, const char *base ) {
     BOOST_CHECK ( res >= base );
     return static_cast<string_ref::size_type> ( res - base );
@@ -112,7 +112,7 @@ void find ( const char *arg ) {
       ++p;
       }
 
-//	Look for pairs on characters (searching from the start)
+// Look for pairs on characters (searching from the start)
     sr1 = arg;
     p = arg;
     while ( *p && *(p+1)) {
@@ -249,7 +249,7 @@ void to_string ( const char *arg ) {
 
     str1.assign ( arg );
     sr1 = arg;
-//	str2 = sr1.to_string<std::allocator<char> > ();
+// str2 = sr1.to_string<std::allocator<char> > ();
     str2 = sr1.to_string ();
     BOOST_CHECK ( str1 == str2 );
 
@@ -266,11 +266,11 @@ void compare ( const char *arg ) {
 
     str1.assign ( arg );
     sr1 = arg;
-    BOOST_CHECK ( sr1  == sr1);	    // compare string_ref and string_ref
-    BOOST_CHECK ( sr1  == str1);	// compare string and string_ref
-    BOOST_CHECK ( str1 == sr1 );	// compare string_ref and string
-    BOOST_CHECK ( sr1  == arg );	// compare string_ref and pointer
-    BOOST_CHECK ( arg  == sr1 );	// compare pointer and string_ref
+    BOOST_CHECK ( sr1  == sr1);     // compare string_ref and string_ref
+    BOOST_CHECK ( sr1  == str1);    // compare string and string_ref
+    BOOST_CHECK ( str1 == sr1 );    // compare string_ref and string
+    BOOST_CHECK ( sr1  == arg );    // compare string_ref and pointer
+    BOOST_CHECK ( arg  == sr1 );    // compare pointer and string_ref
 
     if ( sr1.size () > 0 ) {
         (*str1.rbegin())++;

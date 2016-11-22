@@ -132,7 +132,7 @@ int main()
   const unsigned num_failures =
     FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<derived_struct>()) +
     FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<virtual_destructor_holder[2]>()) +
-	FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<private_int_array_pair>());
+    FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<private_int_array_pair>());
 
 #ifdef BOOST_DETAIL_VALUE_INIT_WORKAROUND_SUGGESTED
   // One or more failures are expected.
