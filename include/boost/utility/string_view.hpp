@@ -121,13 +121,7 @@ namespace boost {
         BOOST_CONSTEXPR const_reference operator[](size_type pos) const BOOST_NOEXCEPT { return ptr_[pos]; }
 
         BOOST_CONSTEXPR const_reference at(size_t pos) const {
-#ifndef _MSC_VER
-            return pos >= len_ ? BOOST_THROW_EXCEPTION(std::out_of_range("boost::string_view::at")) : ptr_[pos];
-#else
-            if (pos >= len_)
-                BOOST_THROW_EXCEPTION(std::out_of_range("boost::string_view::at"));
-            return ptr_[pos];
-#endif
+            return pos >= len_ ? BOOST_THROW_EXCEPTION(std::out_of_range("boost::string_view::at")), ptr_[0] : ptr_[pos];
             }
 
         BOOST_CONSTEXPR const_reference front() const                { return ptr_[0]; }
