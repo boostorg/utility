@@ -101,6 +101,14 @@ namespace boost {
       BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len)
         : ptr_(str), len_(len) {}
 
+      template<std::size_t N>
+      BOOST_CONSTEXPR basic_string_view(const charT (&str)[N])
+        : ptr_(str), len_(N-1) {}
+
+      template<std::size_t N>
+      BOOST_CONSTEXPR basic_string_view(const charT (&str)[N], bool full)
+        : ptr_(str), len(full ? N : N-1) {}
+
         // iterators
         BOOST_CONSTEXPR const_iterator   begin() const BOOST_NOEXCEPT { return ptr_; }
         BOOST_CONSTEXPR const_iterator  cbegin() const BOOST_NOEXCEPT { return ptr_; }
