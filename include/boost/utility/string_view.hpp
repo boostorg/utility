@@ -95,6 +95,13 @@ namespace boost {
           Allocator>& str) BOOST_NOEXCEPT
         : ptr_(str.data()), len_(str.length()) {}
 
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)
+        // Constructing a string_view from a temporary string is a bad idea
+        template<typename Allocator>
+        basic_string_view(std::basic_string<charT, traits, Allocator>&& str)
+            = delete;
+#endif
+
       BOOST_CONSTEXPR basic_string_view(const charT* str)
         : ptr_(str), len_(traits::length(str)) {}
 
