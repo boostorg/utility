@@ -162,9 +162,7 @@ namespace boost {
         basic_string_ref substr(size_type pos, size_type n=npos) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
-            if ( n == npos || pos + n > size())
-                n = size () - pos;
-            return basic_string_ref ( data() + pos, n );
+            return basic_string_ref(data() + pos, (std::min)(size() - pos, n));
             }
 
         int compare(basic_string_ref x) const {

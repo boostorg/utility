@@ -183,18 +183,14 @@ namespace boost {
             if (pos > size())
                 BOOST_THROW_EXCEPTION(std::out_of_range("string_view::copy" ));
             size_type rlen = (std::min)(n, len_ - pos);
-            // use std::copy(begin() + pos, begin() + pos + rlen, s) rather than
-            // std::copy_n(begin() + pos, rlen, s) to support pre-C++11 standard libraries
-            std::copy(begin() + pos, begin() + pos + rlen, s);
+    		traits_type::copy(s, data() + pos, rlen);
             return rlen;
             }
 
         BOOST_CXX14_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::substr" ) );
-            if (n == npos || pos + n > size())
-                n = size () - pos;
-            return basic_string_view(data() + pos, n);
+            return basic_string_view(data() + pos, (std::min)(size() - pos, n));
             }
 
         BOOST_CXX14_CONSTEXPR int compare(basic_string_view x) const BOOST_NOEXCEPT {
