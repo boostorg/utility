@@ -32,6 +32,7 @@ test-suite utility
         [ run string_ref_test2.cpp unit_test_framework ]
         [ run string_ref_test_io.cpp unit_test_framework ]
 #        [ compile-fail string_view_from_rvalue.cpp ]
+        [ compile string_view_constexpr_test1.cpp ]
         [ run string_view_test1.cpp unit_test_framework ]
         [ run string_view_test2.cpp unit_test_framework ]
         [ run string_view_test_io.cpp unit_test_framework ]
