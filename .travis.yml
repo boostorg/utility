@@ -283,26 +283,6 @@ matrix:
             - llvm-toolchain-precise-3.8
 
     - os: linux
-      env: TOOLSET=clang COMPILER=clang++-3.8 CXXSTD=c++14
-      addons:
-        apt:
-          packages:
-            - clang-3.8
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-
-    - os: linux
-      env: TOOLSET=clang COMPILER=clang++-3.8 CXXSTD=c++1z
-      addons:
-        apt:
-          packages:
-            - clang-3.8
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-
-    - os: linux
       env: TOOLSET=clang COMPILER=clang++-3.9 CXXSTD=c++03
       addons:
         apt:
@@ -328,6 +308,7 @@ matrix:
         apt:
           packages:
             - clang-3.9
+            - libstdc++-5-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.9
@@ -338,6 +319,7 @@ matrix:
         apt:
           packages:
             - clang-3.9
+            - libstdc++-5-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.9
@@ -368,6 +350,7 @@ matrix:
         apt:
           packages:
             - clang-4.0
+            - libstdc++-6-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-4.0
@@ -378,6 +361,7 @@ matrix:
         apt:
           packages:
             - clang-4.0
+            - libstdc++-6-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-4.0
