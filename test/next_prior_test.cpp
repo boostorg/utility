@@ -86,6 +86,13 @@ int test_main(int, char*[])
     BOOST_REQUIRE(minus_n_unsigned_test(x.begin(), x.end(), x.size()));
     BOOST_REQUIRE(minus_n_unsigned_test(y.begin(), y.end(), y.size()));
 
+    BOOST_REQUIRE(plus_one_test(x.rbegin(), x.rend(), y.begin()));
+    BOOST_REQUIRE(plus_n_test(x.rbegin(), x.rend(), y.begin()));
+    BOOST_REQUIRE(minus_one_test(x.rbegin(), x.rend(), y.end()));
+    BOOST_REQUIRE(minus_n_test(x.rbegin(), x.rend(), y.end()));
+    BOOST_REQUIRE(minus_n_unsigned_test(x.rbegin(), x.rend(), x.size()));
+    BOOST_REQUIRE(minus_n_unsigned_test(x.rbegin(), x.rend(), y.size()));
+
     // Tests with integers
     BOOST_REQUIRE(boost::next(5) == 6);
     BOOST_REQUIRE(boost::next(5, 7) == 12);
