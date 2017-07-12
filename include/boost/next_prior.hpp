@@ -17,6 +17,7 @@
 
 #include <iterator>
 #include <boost/config.hpp>
+#include <boost/core/enable_if.hpp>
 #include <boost/type_traits/has_plus.hpp>
 #include <boost/type_traits/has_plus_assign.hpp>
 #include <boost/type_traits/has_minus.hpp>
@@ -42,24 +43,20 @@ namespace next_prior_detail {
 // Still, this is a good heuristic in practice, and we can't do anything better anyway.
 // Since C++17 we can test for iterator_traits<T>::iterator_category presence instead as it is
 // required to be only present for iterators.
-template< typename T >
+template< typename T, typename Void = void >
 struct is_iterator
 {
-private:
-    typedef char yes_type;
-    typedef char (&no_type)[2];
-
-    template< typename U >
-    static yes_type check_iterator_category(typename U::iterator_category*);
-    template< typename U >
-    static no_type check_iterator_category(...);
-
-public:
-    static BOOST_CONSTEXPR_OR_CONST bool value = sizeof(is_iterator< T >::BOOST_NESTED_TEMPLATE check_iterator_category< T >(0)) == sizeof(yes_type);
+    static BOOST_CONSTEXPR_OR_CONST bool value = false;
 };
 
 template< typename T >
-struct is_iterator< T* >
+struct is_iterator< T, typename enable_if_has_type< typename T::iterator_category >::type >
+{
+    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+};
+
+template< typename T >
+struct is_iterator< T*, void >
 {
     static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
