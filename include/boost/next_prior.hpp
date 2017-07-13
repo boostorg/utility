@@ -22,6 +22,8 @@
 #include <boost/type_traits/has_plus_assign.hpp>
 #include <boost/type_traits/has_minus.hpp>
 #include <boost/type_traits/has_minus_assign.hpp>
+#include <boost/iterator/advance.hpp>
+#include <boost/iterator/reverse_iterator.hpp>
 
 namespace boost {
 
@@ -101,7 +103,7 @@ struct next_advance_impl< T, Distance, true >
 {
     static T call(T x, Distance n)
     {
-        std::advance(x, n);
+        boost::iterators::advance(x, n);
         return x;
     }
 };
@@ -147,8 +149,8 @@ struct prior_advance_impl< T, Distance, true >
     static T call(T x, Distance n)
     {
         // Avoid negating n to sidestep possible integer overflow
-        std::reverse_iterator< T > rx(x);
-        std::advance(rx, n);
+        boost::iterators::reverse_iterator< T > rx(x);
+        boost::iterators::advance(rx, n);
         return rx.base();
     }
 };
