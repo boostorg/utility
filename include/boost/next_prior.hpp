@@ -52,7 +52,16 @@ struct is_iterator
 };
 
 template< typename T >
-struct is_iterator< T, typename enable_if_has_type< typename T::iterator_category >::type >
+struct is_iterator<
+    T,
+    typename enable_if_has_type<
+#if !defined(BOOST_NO_CXX17_ITERATOR_TRAITS)
+        typename std::iterator_traits< T >::iterator_category
+#else
+        typename T::iterator_category
+#endif
+    >::type
+>
 {
     static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
