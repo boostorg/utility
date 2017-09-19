@@ -24,8 +24,6 @@ run compressed_pair_test.cpp ../../test/build//boost_test_exec_monitor/<link>sta
 
 run iterators_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ;
 
-run numeric_traits_test.cpp ;
-
 run operators_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ;
 
 compile result_of_test.cpp ;
