@@ -75,6 +75,24 @@ namespace
     return true;
   }
 
+  struct int_pair_struct
+  {
+    int first;
+    int second;
+  };
+
+  typedef int int_pair_struct::*ptr_to_member_type;
+
+  struct ptr_to_member_struct
+  {
+    ptr_to_member_type data;
+  };
+
+  bool is_value_initialized(const ptr_to_member_struct& arg)
+  {
+    return arg.data == 0;
+  }
+
   template <typename T>
   bool is_value_initialized(const T(& arg)[2])
   {
@@ -132,7 +150,8 @@ int main()
   const unsigned num_failures =
     FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<derived_struct>()) +
     FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<virtual_destructor_holder[2]>()) +
-    FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<private_int_array_pair>());
+    FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<private_int_array_pair>()) +
+    FAILED_TO_VALUE_INITIALIZE(boost::value_initialized<ptr_to_member_struct>());
 
 #ifdef BOOST_DETAIL_VALUE_INIT_WORKAROUND_SUGGESTED
   // One or more failures are expected.
