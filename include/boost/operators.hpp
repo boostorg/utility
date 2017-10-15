@@ -1,7 +1,7 @@
 //  Boost operators.hpp header file  ----------------------------------------//
 
 //  (C) Copyright David Abrahams, Jeremy Siek, Daryle Walker 1999-2001.
-//  (C) Copyright Daniel Frey 2002-2016.
+//  (C) Copyright Daniel Frey 2002-2017.
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,8 @@
 //  See http://www.boost.org/libs/utility/operators.htm for documentation.
 
 //  Revision History
+//  15 Oct 17 Adapted to C++17, replace std::iterator<> with manual
+//            implementation.
 //  22 Feb 16 Added ADL protection, preserve old work-arounds in
 //            operators_v1.hpp and clean up this file. (Daniel Frey)
 //  16 Dec 10 Limit warning suppression for 4284 to older versions of VC++
@@ -824,6 +826,21 @@ template <class T> struct operators<T, T>
 //  Iterator helper classes (contributed by Jeremy Siek) -------------------//
 //  (Input and output iterator helpers contributed by Daryle Walker) -------//
 //  (Changed to use combined operator classes by Daryle Walker) ------------//
+//  (Adapted to C++17 by Daniel Frey) --------------------------------------//
+template <class Category,
+          class T,
+          class Distance = std::ptrdiff_t,
+          class Pointer = T*,
+          class Reference = T&>
+struct iterator_helper
+{
+  typedef Category iterator_category;
+  typedef T value_type;
+  typedef Distance difference_type;
+  typedef Pointer pointer;
+  typedef Reference reference;
+};
+
 template <class T,
           class V,
           class D = std::ptrdiff_t,
@@ -831,13 +848,13 @@ template <class T,
           class R = V const &>
 struct input_iterator_helper
   : input_iteratable<T, P
-  , std::iterator<std::input_iterator_tag, V, D, P, R
+  , iterator_helper<std::input_iterator_tag, V, D, P, R
     > > {};
 
 template<class T>
 struct output_iterator_helper
   : output_iteratable<T
-  , std::iterator<std::output_iterator_tag, void, void, void, void
+  , iterator_helper<std::output_iterator_tag, void, void, void, void
   > >
 {
   T& operator*()  { return static_cast<T&>(*this); }
@@ -851,7 +868,7 @@ template <class T,
           class R = V&>
 struct forward_iterator_helper
   : forward_iteratable<T, P
-  , std::iterator<std::forward_iterator_tag, V, D, P, R
+  , iterator_helper<std::forward_iterator_tag, V, D, P, R
     > > {};
 
 template <class T,
@@ -861,7 +878,7 @@ template <class T,
           class R = V&>
 struct bidirectional_iterator_helper
   : bidirectional_iteratable<T, P
-  , std::iterator<std::bidirectional_iterator_tag, V, D, P, R
+  , iterator_helper<std::bidirectional_iterator_tag, V, D, P, R
     > > {};
 
 template <class T,
@@ -871,7 +888,7 @@ template <class T,
           class R = V&>
 struct random_access_iterator_helper
   : random_access_iteratable<T, P, D, R
-  , std::iterator<std::random_access_iterator_tag, V, D, P, R
+  , iterator_helper<std::random_access_iterator_tag, V, D, P, R
     > >
 {
   friend D requires_difference_operator(const T& x, const T& y) {
