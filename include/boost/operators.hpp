@@ -9,6 +9,7 @@
 //  See http://www.boost.org/libs/utility/operators.htm for documentation.
 
 //  Revision History
+//  23 Nov 17 Protect dereferenceable<> from overloaded operator&.
 //  15 Oct 17 Adapted to C++17, replace std::iterator<> with manual
 //            implementation.
 //  22 Feb 16 Added ADL protection, preserve old work-arounds in
@@ -98,6 +99,7 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/core/addressof.hpp>
 
 #if defined(__sgi) && !defined(__GNUC__)
 #   pragma set woff 1234
@@ -302,7 +304,7 @@ struct dereferenceable : B
 {
   P operator->() const
   {
-    return &*static_cast<const T&>(*this);
+    return ::boost::addressof(*static_cast<const T&>(*this));
   }
 };
 
