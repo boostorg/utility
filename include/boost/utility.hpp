@@ -16,6 +16,5 @@
 #include <boost/utility/identity_type.hpp>
 #include <boost/core/checked_delete.hpp>
 #include <boost/core/noncopyable.hpp>
-#include <boost/next_prior.hpp>
 
 #endif  // BOOST_UTILITY_HPP
