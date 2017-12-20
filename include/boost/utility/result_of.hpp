@@ -19,18 +19,16 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/declval.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/declval.hpp>
+#include <boost/type_traits/conditional.hpp>
+#include <boost/type_traits/type_identity.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/core/enable_if.hpp>
 
 #ifndef BOOST_RESULT_OF_NUM_ARGS
 #  define BOOST_RESULT_OF_NUM_ARGS 16
@@ -180,10 +178,10 @@ struct tr1_result_of_impl<F, FArgs, true>
 };
 
 template<typename FArgs>
-struct is_function_with_no_args : mpl::false_ {};
+struct is_function_with_no_args : false_type {};
 
 template<typename F>
-struct is_function_with_no_args<F(void)> : mpl::true_ {};
+struct is_function_with_no_args<F(void)> : true_type {};
 
 template<typename F, typename FArgs>
 struct result_of_nested_result : F::template result<FArgs>
@@ -191,7 +189,7 @@ struct result_of_nested_result : F::template result<FArgs>
 
 template<typename F, typename FArgs>
 struct tr1_result_of_impl<F, FArgs, false>
-  : mpl::if_<is_function_with_no_args<FArgs>,
+  : conditional<is_function_with_no_args<FArgs>::value,
              result_of_void_impl<F>,
              result_of_nested_result<F, FArgs> >::type
 {};
