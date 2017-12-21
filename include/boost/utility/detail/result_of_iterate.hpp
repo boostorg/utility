@@ -30,11 +30,11 @@ struct tr1_result_of<F(BOOST_RESULT_OF_ARGS)>
         , boost::detail::tr1_result_of_impl<
             typename remove_cv<F>::type,
             typename remove_cv<F>::type(BOOST_RESULT_OF_ARGS),
-            (boost::detail::has_result_type<F>::value)>
+            (boost::detail::result_of_has_result_type<F>::value)>
         , boost::detail::tr1_result_of_impl<
             F,
             F(BOOST_RESULT_OF_ARGS),
-            (boost::detail::has_result_type<F>::value)> >::type { };
+            (boost::detail::result_of_has_result_type<F>::value)> >::type { };
 #endif
 
 #ifdef BOOST_RESULT_OF_USE_DECLTYPE
@@ -46,7 +46,7 @@ struct result_of<F(BOOST_RESULT_OF_ARGS)>
 #ifdef BOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK
 template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_ITERATION(),typename T)>
 struct result_of<F(BOOST_RESULT_OF_ARGS)>
-    : conditional<detail::has_result_type<F>::value || detail::has_result<F>::value,
+    : conditional<detail::result_of_has_result_type<F>::value || detail::result_of_has_result<F>::value,
                tr1_result_of<F(BOOST_RESULT_OF_ARGS)>,
                detail::cpp0x_result_of<F(BOOST_RESULT_OF_ARGS)> >::type { };
 #endif // BOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK
