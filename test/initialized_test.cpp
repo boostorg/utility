@@ -9,7 +9,7 @@
 // 2 May 2010 (Created) Niels Dekker
 
 #include <boost/utility/value_init.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/core/lightweight_test.hpp>
 
 #include <string>
 

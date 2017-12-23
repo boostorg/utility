@@ -8,11 +8,6 @@
 # bring in rules for testing
 import testing ;
 
-alias unit_test_framework
-    : # sources
-        /boost//unit_test_framework
-    ;
-
 run base_from_member_test.cpp ;
 run base_from_member_ref_test.cpp ;
 
@@ -20,25 +15,25 @@ run binary_test.cpp ;
 
 run call_traits_test.cpp : -u ;
 
-run compressed_pair_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ;
+run compressed_pair_test.cpp ;
 
-run iterators_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ;
+run iterators_test.cpp ;
 
-run operators_test.cpp ../../test/build//boost_test_exec_monitor/<link>static ;
+run operators_test.cpp ;
 
 compile result_of_test.cpp ;
 
 run shared_iterator_test.cpp ;
 
 # compile-fail string_ref_from_rvalue.cpp ;
-run string_ref_test1.cpp unit_test_framework ;
-run string_ref_test2.cpp unit_test_framework ;
-run string_ref_test_io.cpp unit_test_framework ;
+run string_ref_test1.cpp ;
+run string_ref_test2.cpp ;
+run string_ref_test_io.cpp ;
 # compile-fail string_view_from_rvalue.cpp ;
 compile string_view_constexpr_test1.cpp ;
-run string_view_test1.cpp unit_test_framework ;
-run string_view_test2.cpp unit_test_framework ;
-run string_view_test_io.cpp unit_test_framework ;
+run string_view_test1.cpp ;
+run string_view_test2.cpp ;
+run string_view_test_io.cpp ;
 
 run value_init_test.cpp ;
 run value_init_workaround_test.cpp ;
