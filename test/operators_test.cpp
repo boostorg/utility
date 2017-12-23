@@ -26,7 +26,7 @@
 #include <boost/config.hpp>                      // for BOOST_MSVC
 #include <boost/cstdlib.hpp>                     // for boost::exit_success
 #include <boost/operators.hpp>                   // for the tested items
-#include <boost/random/linear_congruential.hpp>  // for boost::minstd_rand
+#include <boost/utility/detail/minstd_rand.hpp>  // for boost::detail::minstd_rand
 #include <boost/test/test_tools.hpp>             // for main
 
 #include <iostream>  // for std::cout (std::endl indirectly)
@@ -532,7 +532,7 @@ namespace
     template <class Big, class Small>
     struct tester
     {
-        void operator()(boost::minstd_rand& randomizer) const
+        void operator()(boost::detail::minstd_rand& randomizer) const
         {
             Big    b1 = Big( randomizer() );
             Big    b2 = Big( randomizer() );
@@ -546,7 +546,7 @@ namespace
     template <class Big, class Small>
     struct tester_left
     {
-        void operator()(boost::minstd_rand& randomizer) const
+        void operator()(boost::detail::minstd_rand& randomizer) const
         {
             Big    b1 = Big( randomizer() );
             Small  s = Small( randomizer() );
@@ -620,7 +620,7 @@ test_main( int , char * [] )
     
     for (int n = 0; n < 1000; ++n)  // was 10,000 but took too long (Beman)
     {
-        boost::minstd_rand r;
+        boost::detail::minstd_rand r;
         tester<long, int>()(r);
         tester<long, signed char>()(r);
         tester<long, long>()(r);
