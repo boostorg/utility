@@ -21,7 +21,7 @@
 #pragma hdrstop
 #endif
 
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/core/lightweight_test.hpp>
 
 //
 // Sample POD type
@@ -289,7 +289,7 @@ bool test ( T const& y, T const& z )
   return boost::detail::test_errors() == errors_before_test ;
 }
 
-int main(int, char **)
+int main()
 {
   BOOST_TEST ( test( 0,1234 ) ) ;
   BOOST_TEST ( test( 0.0,12.34 ) ) ;

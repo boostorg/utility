@@ -10,7 +10,7 @@
 
 #include <boost/utility/base_from_member.hpp>
 
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/core/lightweight_test.hpp>
 
 struct foo : boost::base_from_member<int&>
 {

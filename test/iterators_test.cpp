@@ -12,11 +12,9 @@
 //            library (Daryle Walker)
 //  12 Dec 99 Initial version with iterator operators (Jeremy Siek)
 
-#define  BOOST_INCLUDE_MAIN
-#include <boost/test/test_tools.hpp>  // for main
+#include <boost/core/lightweight_test.hpp>
 
 #include <boost/config.hpp>     // for BOOST_STATIC_CONSTANT
-#include <boost/cstdlib.hpp>    // for boost::exit_success
 #include <boost/operators.hpp>  // for boost::random_access_iterator_helper
 
 #include <cstddef>    // for std::ptrdiff_t, std::size_t
@@ -126,7 +124,7 @@ typename test_opr<T, R, P>::iter_type const
 
 // Main testing function
 int
-test_main( int , char * [] )
+main()
 {
     using std::string;
 
@@ -136,7 +134,7 @@ test_main( int , char * [] )
     test1_type::master_test( "non-const string" );
     test2_type::master_test( "const string" );
 
-    return boost::exit_success;
+    return boost::report_errors();
 }
 
 // Tests for all of the operators added by random_access_iterator_helper
@@ -174,7 +172,7 @@ test_opr<T, R, P>::post_increment_test
         oss << *i++ << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "apple orange pear peach grape plum ");
+    BOOST_TEST( oss.str() == "apple orange pear peach grape plum ");
 }
 
 // Test post-decrement
@@ -193,7 +191,7 @@ test_opr<T, R, P>::post_decrement_test
         oss << *i << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "plum grape peach pear orange apple ");
+    BOOST_TEST( oss.str() == "plum grape peach pear orange apple ");
 }
 
 // Test indirect structure referral
@@ -211,7 +209,7 @@ test_opr<T, R, P>::indirect_referral_test
         oss << i->size() << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "5 6 4 5 5 4 ");
+    BOOST_TEST( oss.str() == "5 6 4 5 5 4 ");
 }
 
 // Test offset addition
@@ -230,7 +228,7 @@ test_opr<T, R, P>::offset_addition_test
         oss << *i << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "apple pear grape ");
+    BOOST_TEST( oss.str() == "apple pear grape ");
 }
 
 // Test offset addition, in reverse order
@@ -249,7 +247,7 @@ test_opr<T, R, P>::reverse_offset_addition_test
         oss << *i << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "apple pear grape ");
+    BOOST_TEST( oss.str() == "apple pear grape ");
 }
 
 // Test offset subtraction
@@ -272,7 +270,7 @@ test_opr<T, R, P>::offset_subtraction_test
         }
     }
 
-    BOOST_CHECK( oss.str() == "grape pear apple ");
+    BOOST_TEST( oss.str() == "grape pear apple ");
 }
 
 // Test comparisons
@@ -296,10 +294,10 @@ test_opr<T, R, P>::comparison_test
         {
             ptrdiff_t const  j_offset = j - fruit_begin;
 
-            BOOST_CHECK( (i != j) == (i_offset != j_offset) );
-            BOOST_CHECK( (i > j) == (i_offset > j_offset) );
-            BOOST_CHECK( (i <= j) == (i_offset <= j_offset) );
-            BOOST_CHECK( (i >= j) == (i_offset >= j_offset) );
+            BOOST_TEST( (i != j) == (i_offset != j_offset) );
+            BOOST_TEST( (i > j) == (i_offset > j_offset) );
+            BOOST_TEST( (i <= j) == (i_offset <= j_offset) );
+            BOOST_TEST( (i >= j) == (i_offset >= j_offset) );
         }
     }
     cout << std::endl;
@@ -320,5 +318,5 @@ test_opr<T, R, P>::indexing_test
         oss << fruit_begin[ k ] << ' ';
     }
 
-    BOOST_CHECK( oss.str() == "apple orange pear peach grape plum ");
+    BOOST_TEST( oss.str() == "apple orange pear peach grape plum ");
 }

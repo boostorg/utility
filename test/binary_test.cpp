@@ -6,7 +6,7 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/test/minimal.hpp>
+#include <boost/core/lightweight_test.hpp>
 #include <boost/utility/binary.hpp>
 #include <algorithm>
 #include <cstddef>
@@ -614,34 +614,34 @@ typedef char (&unsigned_long_int_id_type)[unsigned_long_int_id];
 unsigned_int_id_type      binary_type_checker( unsigned int );
 unsigned_long_int_id_type binary_type_checker( unsigned long int );
 
-int test_main( int, char *[] )
+int main()
 {
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_1_bit ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_2_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_3_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_4_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_5_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_6_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_7_bits ) );
-  BOOST_CHECK( is_ascending_from_0_array( unsigned_ints_8_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_1_bit ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_2_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_3_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_4_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_5_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_6_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_7_bits ) );
+  BOOST_TEST( is_ascending_from_0_array( unsigned_ints_8_bits ) );
 
-  BOOST_CHECK( std::equal( &random_unsigned_ints_hex[0]
+  BOOST_TEST( std::equal( &random_unsigned_ints_hex[0]
                          , random_unsigned_ints_hex + num_random_test_values
                          , &random_unsigned_ints_binary[0]
                          )
              );
 
-  BOOST_CHECK(    sizeof( binary_type_checker( BOOST_BINARY_U( 110100 1010 ) ) )
+  BOOST_TEST(    sizeof( binary_type_checker( BOOST_BINARY_U( 110100 1010 ) ) )
                == unsigned_int_id
              );
 
-  BOOST_CHECK(    sizeof( binary_type_checker( BOOST_BINARY_UL( 11110 ) ) )
+  BOOST_TEST(    sizeof( binary_type_checker( BOOST_BINARY_UL( 11110 ) ) )
                == unsigned_long_int_id
              );
 
-  BOOST_CHECK(    sizeof( binary_type_checker( BOOST_BINARY_LU( 10 0001 ) ) )
+  BOOST_TEST(    sizeof( binary_type_checker( BOOST_BINARY_LU( 10 0001 ) ) )
                == unsigned_long_int_id
              );
 
-  return 0;
+  return boost::report_errors();
 }

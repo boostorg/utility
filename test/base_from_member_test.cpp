@@ -10,10 +10,9 @@
 //  14 Jun 2003  Adjusted code for Boost.Test changes (Daryle Walker)
 //  29 Aug 2001  Initial Version (Daryle Walker)
 
-#include <boost/test/minimal.hpp>  // for BOOST_CHECK, main
+#include <boost/core/lightweight_test.hpp>
 
 #include <boost/config.hpp>       // for BOOST_NO_MEMBER_TEMPLATES
-#include <boost/cstdlib.hpp>      // for boost::exit_success
 #include <boost/noncopyable.hpp>  // for boost::noncopyable
 
 #include <boost/utility/base_from_member.hpp>  // for boost::base_from_member
@@ -172,13 +171,13 @@ object_registrar  obj_reg;
 
 // Main functionality
 int
-test_main( int , char * [] )
+main()
 {
-    BOOST_CHECK( obj_reg.db_.empty() );
-    BOOST_CHECK( obj_reg.defrauders_in_.empty() );
-    BOOST_CHECK( obj_reg.defrauders_out_.empty() );
-    BOOST_CHECK( obj_reg.overeager_.empty() );
-    BOOST_CHECK( obj_reg.overkilled_.empty() );
+    BOOST_TEST( obj_reg.db_.empty() );
+    BOOST_TEST( obj_reg.defrauders_in_.empty() );
+    BOOST_TEST( obj_reg.defrauders_out_.empty() );
+    BOOST_TEST( obj_reg.overeager_.empty() );
+    BOOST_TEST( obj_reg.overkilled_.empty() );
 
     // Make a separate block to examine pre- and post-effects
     {
@@ -186,20 +185,20 @@ test_main( int , char * [] )
         using std::endl;
 
         bad_class  bc;
-        BOOST_CHECK( obj_reg.db_.size() == 3 );
-        BOOST_CHECK( obj_reg.defrauders_in_.size() == 1 );
+        BOOST_TEST( obj_reg.db_.size() == 3 );
+        BOOST_TEST( obj_reg.defrauders_in_.size() == 1 );
 
         good_class_1  gc1;
-        BOOST_CHECK( obj_reg.db_.size() == 6 );
-        BOOST_CHECK( obj_reg.defrauders_in_.size() == 1 );
+        BOOST_TEST( obj_reg.db_.size() == 6 );
+        BOOST_TEST( obj_reg.defrauders_in_.size() == 1 );
 
         good_class_2  gc2;
-        BOOST_CHECK( obj_reg.db_.size() == 11 );
-        BOOST_CHECK( obj_reg.defrauders_in_.size() == 1 );
+        BOOST_TEST( obj_reg.db_.size() == 11 );
+        BOOST_TEST( obj_reg.defrauders_in_.size() == 1 );
 
-        BOOST_CHECK( obj_reg.defrauders_out_.empty() );
-        BOOST_CHECK( obj_reg.overeager_.empty() );
-        BOOST_CHECK( obj_reg.overkilled_.empty() );
+        BOOST_TEST( obj_reg.defrauders_out_.empty() );
+        BOOST_TEST( obj_reg.overeager_.empty() );
+        BOOST_TEST( obj_reg.overkilled_.empty() );
 
         // Getting the addresses of the objects ensure
         // that they're used, and not optimized away.
@@ -208,13 +207,13 @@ test_main( int , char * [] )
         cout << "Object 'gc2' is at " << &gc2 << '.' << endl;
     }
 
-    BOOST_CHECK( obj_reg.db_.empty() );
-    BOOST_CHECK( obj_reg.defrauders_in_.size() == 1 );
-    BOOST_CHECK( obj_reg.defrauders_out_.size() == 1 );
-    BOOST_CHECK( obj_reg.overeager_.empty() );
-    BOOST_CHECK( obj_reg.overkilled_.empty() );
+    BOOST_TEST( obj_reg.db_.empty() );
+    BOOST_TEST( obj_reg.defrauders_in_.size() == 1 );
+    BOOST_TEST( obj_reg.defrauders_out_.size() == 1 );
+    BOOST_TEST( obj_reg.overeager_.empty() );
+    BOOST_TEST( obj_reg.overkilled_.empty() );
 
-    return boost::exit_success;
+    return boost::report_errors();
 }
 
 

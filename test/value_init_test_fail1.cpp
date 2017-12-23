@@ -17,9 +17,7 @@
 #pragma hdrstop
 #endif
 
-#include "boost/test/minimal.hpp"
-
-int test_main(int, char **)
+int main()
 {
   boost::value_initialized<int> const x_c ;
 
@@ -27,11 +25,3 @@ int test_main(int, char **)
 
   return 0;
 }
-
-
-unsigned int expected_failures = 0;
-
-
-
-
-

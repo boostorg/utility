@@ -17,11 +17,9 @@
 #error "Unsupported test"
 #endif
 
-#include "boost/test/minimal.hpp"
-
 std::string makeatemp() { return "abc"; }
 
-int test_main(int, char **)
+int main()
 {
   boost::basic_string_view<char> sv(makeatemp());
   return 0;

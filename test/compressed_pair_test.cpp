@@ -14,7 +14,7 @@
 #include <cassert>
 
 #include <boost/compressed_pair.hpp>
-#include <boost/test/test_tools.hpp>
+#include <boost/core/lightweight_test.hpp>
 
 using namespace boost;
 
@@ -79,47 +79,47 @@ void compressed_pair_tester<T1, T2>::test(first_param_type p1, second_param_type
    // first param construct:
    boost::compressed_pair<T1,T2> cp2(p1);
    cp2.second() = p2;
-   BOOST_CHECK(cp2.first() == p1);
-   BOOST_CHECK(cp2.second() == p2);
+   BOOST_TEST(cp2.first() == p1);
+   BOOST_TEST(cp2.second() == p2);
    // second param construct:
    boost::compressed_pair<T1,T2> cp3(p2);
    cp3.first() = p1;
-   BOOST_CHECK(cp3.second() == p2);
-   BOOST_CHECK(cp3.first() == p1);
+   BOOST_TEST(cp3.second() == p2);
+   BOOST_TEST(cp3.first() == p1);
    // both param construct:
    boost::compressed_pair<T1,T2> cp4(p1, p2);
-   BOOST_CHECK(cp4.first() == p1);
-   BOOST_CHECK(cp4.second() == p2);
+   BOOST_TEST(cp4.first() == p1);
+   BOOST_TEST(cp4.second() == p2);
    boost::compressed_pair<T1,T2> cp5(p3, p4);
-   BOOST_CHECK(cp5.first() == p3);
-   BOOST_CHECK(cp5.second() == p4);
+   BOOST_TEST(cp5.first() == p3);
+   BOOST_TEST(cp5.second() == p4);
    // check const members:
    const boost::compressed_pair<T1,T2>& cpr1 = cp4;
-   BOOST_CHECK(cpr1.first() == p1);
-   BOOST_CHECK(cpr1.second() == p2);
+   BOOST_TEST(cpr1.first() == p1);
+   BOOST_TEST(cpr1.second() == p2);
 
    // copy construct:
    boost::compressed_pair<T1,T2> cp6(cp4);
-   BOOST_CHECK(cp6.first() == p1);
-   BOOST_CHECK(cp6.second() == p2);
+   BOOST_TEST(cp6.first() == p1);
+   BOOST_TEST(cp6.second() == p2);
    // assignment:
    cp1 = cp4;
-   BOOST_CHECK(cp1.first() == p1);
-   BOOST_CHECK(cp1.second() == p2);
+   BOOST_TEST(cp1.first() == p1);
+   BOOST_TEST(cp1.second() == p2);
    cp1 = cp5;
-   BOOST_CHECK(cp1.first() == p3);
-   BOOST_CHECK(cp1.second() == p4);
+   BOOST_TEST(cp1.first() == p3);
+   BOOST_TEST(cp1.second() == p4);
    // swap:
    cp4.swap(cp5);
-   BOOST_CHECK(cp4.first() == p3);
-   BOOST_CHECK(cp4.second() == p4);
-   BOOST_CHECK(cp5.first() == p1);
-   BOOST_CHECK(cp5.second() == p2);
+   BOOST_TEST(cp4.first() == p3);
+   BOOST_TEST(cp4.second() == p4);
+   BOOST_TEST(cp5.first() == p1);
+   BOOST_TEST(cp5.second() == p2);
    swap(cp4,cp5);
-   BOOST_CHECK(cp4.first() == p1);
-   BOOST_CHECK(cp4.second() == p2);
-   BOOST_CHECK(cp5.first() == p3);
-   BOOST_CHECK(cp5.second() == p4);
+   BOOST_TEST(cp4.first() == p1);
+   BOOST_TEST(cp4.second() == p2);
+   BOOST_TEST(cp5.first() == p3);
+   BOOST_TEST(cp5.second() == p4);
 }
 
 //
@@ -148,20 +148,20 @@ void compressed_pair_reference_tester<T1, T2>::test(first_param_type p1, second_
 #endif
    // both param construct:
    boost::compressed_pair<T1,T2> cp4(p1, p2);
-   BOOST_CHECK(cp4.first() == p1);
-   BOOST_CHECK(cp4.second() == p2);
+   BOOST_TEST(cp4.first() == p1);
+   BOOST_TEST(cp4.second() == p2);
    boost::compressed_pair<T1,T2> cp5(p3, p4);
-   BOOST_CHECK(cp5.first() == p3);
-   BOOST_CHECK(cp5.second() == p4);
+   BOOST_TEST(cp5.first() == p3);
+   BOOST_TEST(cp5.second() == p4);
    // check const members:
    const boost::compressed_pair<T1,T2>& cpr1 = cp4;
-   BOOST_CHECK(cpr1.first() == p1);
-   BOOST_CHECK(cpr1.second() == p2);
+   BOOST_TEST(cpr1.first() == p1);
+   BOOST_TEST(cpr1.second() == p2);
 
    // copy construct:
    boost::compressed_pair<T1,T2> cp6(cp4);
-   BOOST_CHECK(cp6.first() == p1);
-   BOOST_CHECK(cp6.second() == p2);
+   BOOST_TEST(cp6.first() == p1);
+   BOOST_TEST(cp6.second() == p2);
    // assignment:
    // VC6 bug:
    // When second() is an empty class, VC6 performs the
@@ -174,8 +174,8 @@ void compressed_pair_reference_tester<T1, T2>::test(first_param_type p1, second_
    // settings - some generate the problem others do not.
    cp4.first() = p3;
    cp4.second() = p4;
-   BOOST_CHECK(cp4.first() == p3);
-   BOOST_CHECK(cp4.second() == p4);
+   BOOST_TEST(cp4.first() == p3);
+   BOOST_TEST(cp4.second() == p4);
 }
 //
 // supplimentary tests for case where first arg only is a reference type:
@@ -199,8 +199,8 @@ void compressed_pair_reference1_tester<T1, T2>::test(first_param_type p1, second
    // first param construct:
    boost::compressed_pair<T1,T2> cp2(p1);
    cp2.second() = p2;
-   BOOST_CHECK(cp2.first() == p1);
-   BOOST_CHECK(cp2.second() == p2);
+   BOOST_TEST(cp2.first() == p1);
+   BOOST_TEST(cp2.second() == p2);
 #endif
 }
 //
@@ -225,8 +225,8 @@ void compressed_pair_reference2_tester<T1, T2>::test(first_param_type p1, second
    // second param construct:
    boost::compressed_pair<T1,T2> cp3(p2);
    cp3.first() = p1;
-   BOOST_CHECK(cp3.second() == p2);
-   BOOST_CHECK(cp3.first() == p1);
+   BOOST_TEST(cp3.second() == p2);
+   BOOST_TEST(cp3.first() == p1);
 #endif
 }
 
@@ -253,14 +253,14 @@ void compressed_pair_array1_tester<T1, T2>::test(first_param_type p1, second_par
    // second param construct:
    boost::compressed_pair<T1,T2> cp3(p2);
    cp3.first()[0] = p1[0];
-   BOOST_CHECK(cp3.second() == p2);
-   BOOST_CHECK(cp3.first()[0] == p1[0]);
+   BOOST_TEST(cp3.second() == p2);
+   BOOST_TEST(cp3.first()[0] == p1[0]);
    // check const members:
    const boost::compressed_pair<T1,T2>& cpr1 = cp3;
-   BOOST_CHECK(cpr1.first()[0] == p1[0]);
-   BOOST_CHECK(cpr1.second() == p2);
+   BOOST_TEST(cpr1.first()[0] == p1[0]);
+   BOOST_TEST(cpr1.second() == p2);
 
-   BOOST_CHECK(sizeof(T1) == sizeof(cp1.first()));
+   BOOST_TEST(sizeof(T1) == sizeof(cp1.first()));
 }
 
 template <class T1, class T2>
@@ -283,14 +283,14 @@ void compressed_pair_array2_tester<T1, T2>::test(first_param_type p1, second_par
    // first param construct:
    boost::compressed_pair<T1,T2> cp2(p1);
    cp2.second()[0] = p2[0];
-   BOOST_CHECK(cp2.first() == p1);
-   BOOST_CHECK(cp2.second()[0] == p2[0]);
+   BOOST_TEST(cp2.first() == p1);
+   BOOST_TEST(cp2.second()[0] == p2[0]);
    // check const members:
    const boost::compressed_pair<T1,T2>& cpr1 = cp2;
-   BOOST_CHECK(cpr1.first() == p1);
-   BOOST_CHECK(cpr1.second()[0] == p2[0]);
+   BOOST_TEST(cpr1.first() == p1);
+   BOOST_TEST(cpr1.second()[0] == p2[0]);
 
-   BOOST_CHECK(sizeof(T2) == sizeof(cp1.second()));
+   BOOST_TEST(sizeof(T2) == sizeof(cp1.second()));
 }
 
 template <class T1, class T2>
@@ -312,18 +312,18 @@ void compressed_pair_array_tester<T1, T2>::test(first_param_type p1, second_para
    boost::compressed_pair<T1,T2> cp1;
    cp1.first()[0] = p1[0];
    cp1.second()[0] = p2[0];
-   BOOST_CHECK(cp1.first()[0] == p1[0]);
-   BOOST_CHECK(cp1.second()[0] == p2[0]);
+   BOOST_TEST(cp1.first()[0] == p1[0]);
+   BOOST_TEST(cp1.second()[0] == p2[0]);
    // check const members:
    const boost::compressed_pair<T1,T2>& cpr1 = cp1;
-   BOOST_CHECK(cpr1.first()[0] == p1[0]);
-   BOOST_CHECK(cpr1.second()[0] == p2[0]);
+   BOOST_TEST(cpr1.first()[0] == p1[0]);
+   BOOST_TEST(cpr1.second()[0] == p2[0]);
 
-   BOOST_CHECK(sizeof(T1) == sizeof(cp1.first()));
-   BOOST_CHECK(sizeof(T2) == sizeof(cp1.second()));
+   BOOST_TEST(sizeof(T1) == sizeof(cp1.first()));
+   BOOST_TEST(sizeof(T2) == sizeof(cp1.second()));
 }
 
-int test_main(int, char *[])
+int main()
 {
    // declare some variables to pass to the tester:
    non_empty1 ne1(2);
@@ -383,13 +383,5 @@ int test_main(int, char *[])
    compressed_pair_array2_tester<empty_POD_UDT,non_empty2[2]>::test(e1, nea3, e1, nea4);
    // T1 == T2, both non-empty
    compressed_pair_array_tester<non_empty1[2],non_empty1[2]>::test(nea1, nea1, nea2, nea2);
-   return 0;
+   return boost::report_errors();
 }
-
-
-unsigned int expected_failures = 0;
-
-
-
-
-

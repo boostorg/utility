@@ -16,14 +16,7 @@
 #include <boost/config.hpp>
 #include <boost/utility/string_view.hpp>
 
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
-
-
-#if __cplusplus < 201402L
-BOOST_AUTO_TEST_CASE( test_main ) {}
-#else
-
+#if __cplusplus >= 201402L
 struct constexpr_char_traits
 {
     typedef char		    char_type;
@@ -78,7 +71,7 @@ constexpr size_t constexpr_char_traits::length(const char_type* s) noexcept
 
 typedef boost::basic_string_view<char, constexpr_char_traits> string_view;
 
-BOOST_AUTO_TEST_CASE( test_main )
+int main()
 {
     constexpr string_view sv1;
     constexpr string_view sv2{"abc", 3}; // ptr, len
