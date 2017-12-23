@@ -34,7 +34,7 @@ install:
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\utility
   - python tools/boostdep/depinst/depinst.py utility
   - cmd /c bootstrap
-  - b2 headers
+  - b2 -d0 headers
 
 build: off
 
