@@ -15,6 +15,7 @@
 #include <boost/utility/base_from_member.hpp>
 #include <boost/utility/binary.hpp>
 #include <boost/utility/identity_type.hpp>
+#include <boost/utility/value_restore.hpp>
 
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
