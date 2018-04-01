@@ -245,12 +245,18 @@ namespace boost {
               return npos;
             if (s.empty())
               return pos;
-            const charT* first_char_ptr = traits::find(ptr_ + pos, len_ - pos, s[0]);
-            if (!first_char_ptr)
-              return npos;
-            const_iterator iter = std::search(first_char_ptr, this->cend(),
-                                               s.cbegin (), s.cend (), traits::eq);
-            return iter == this->cend () ? npos : std::distance(this->cbegin (), iter);
+            if (s.size() > size() - pos)
+                return npos;
+            const charT* cur = ptr_ + pos;
+            const charT* last = cend() - s.size() + 1;
+            for (; cur != last ; ++cur) {
+                cur = traits::find(cur, last - cur, s[0]);
+                if (!cur)
+                    return npos;
+                if (traits::compare(cur, s.cbegin(), s.size()) == 0)
+                    return cur - ptr_;
+            }
+            return npos;
             }
         BOOST_CXX14_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT {
             if (pos > size())
