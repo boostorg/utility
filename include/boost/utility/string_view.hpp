@@ -245,12 +245,21 @@ namespace boost {
               return npos;
             if (s.empty())
               return pos;
-            const_iterator iter = std::search(this->cbegin() + pos, this->cend(),
+            const charT* first_char_ptr = traits::find(ptr_ + pos, len_ - pos, s[0]);
+            if (!first_char_ptr)
+              return npos;
+            const_iterator iter = std::search(first_char_ptr, this->cend(),
                                                s.cbegin (), s.cend (), traits::eq);
             return iter == this->cend () ? npos : std::distance(this->cbegin (), iter);
             }
-        BOOST_CXX14_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT
-            { return find(basic_string_view(&c, 1), pos); }
+        BOOST_CXX14_CONSTEXPR size_type find(charT c, size_type pos = 0) const BOOST_NOEXCEPT {
+            if (pos > size())
+              return npos;
+            const charT* ret_ptr = traits::find(ptr_ + pos, len_ - pos, c);
+            if (ret_ptr)
+              return ret_ptr - ptr_;
+            return npos;
+            }
         BOOST_CXX14_CONSTEXPR size_type find(const charT* s, size_type pos, size_type n) const BOOST_NOEXCEPT
             { return find(basic_string_view(s, n), pos); }
         BOOST_CXX14_CONSTEXPR size_type find(const charT* s, size_type pos = 0) const BOOST_NOEXCEPT
@@ -287,7 +296,7 @@ namespace boost {
             return iter == this->cend () ? npos : std::distance ( this->cbegin (), iter );
             }
         BOOST_CXX14_CONSTEXPR size_type find_first_of(charT c, size_type pos = 0) const BOOST_NOEXCEPT
-            { return find_first_of(basic_string_view(&c, 1), pos); }
+            { return find(c, pos); }
         BOOST_CXX14_CONSTEXPR size_type find_first_of(const charT* s, size_type pos, size_type n) const BOOST_NOEXCEPT
             { return find_first_of(basic_string_view(s, n), pos); }
         BOOST_CXX14_CONSTEXPR size_type find_first_of(const charT* s, size_type pos = 0) const BOOST_NOEXCEPT
