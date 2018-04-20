@@ -12,6 +12,7 @@
 #include <string>
 
 #include <boost/utility/string_view.hpp>
+#include <boost/container_hash/hash.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 
