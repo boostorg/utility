@@ -194,6 +194,7 @@ install:
   - git submodule update --init libs/type_traits
   - git submodule update --init libs/container_hash
   - git submodule update --init libs/integer
+  - git submodule update --init libs/detail
   - cp -r $TRAVIS_BUILD_DIR/* libs/utility
   - ./bootstrap.sh
   - ./b2 headers
