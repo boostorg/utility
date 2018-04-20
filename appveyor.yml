@@ -37,6 +37,7 @@ install:
   - git submodule update --init libs/throw_exception
   - git submodule update --init libs/type_traits
   - git submodule update --init libs/container_hash
+  - git submodule update --init libs/integer
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\utility
   - cmd /c bootstrap
   - b2 -d0 headers
