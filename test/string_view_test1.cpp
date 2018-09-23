@@ -12,6 +12,7 @@
 #include <string>
 
 #include <boost/utility/string_view.hpp>
+#include <boost/container_hash/hash.hpp>
 
 #include <boost/core/lightweight_test.hpp>
 
@@ -85,6 +86,14 @@ void test_remove ( const std::string &str ) {
       }
     }
 
+void test_hash(const std::string& str) {
+    string_view ref = str;
+    BOOST_TEST(boost::hash_value(ref) == boost::hash_value(str));
+    boost::hash<std::string> hstr;
+    boost::hash<string_view> hsv;
+    BOOST_TEST(hsv(ref) == hstr(str));
+    }
+
 const char *test_strings [] = {
     "",
     "1",
@@ -102,6 +111,7 @@ int main()
         test_substr ( *p );
         test_remove ( *p );
         null_tests ( *p );
+        test_hash( *p );
 
         p++;
         }

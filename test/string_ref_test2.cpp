@@ -93,6 +93,10 @@ void find ( const char *arg ) {
     string_ref sr2;
     const char *p;
 
+//	When we search for the empty string, we find it at position 0
+    BOOST_TEST ( sr1.find (sr2) == 0 );
+    BOOST_TEST ( sr1.rfind(sr2) == 0 );
+
 //  Look for each character in the string(searching from the start)
     p = arg;
     sr1 = arg;

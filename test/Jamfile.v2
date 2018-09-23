@@ -16,6 +16,7 @@ run binary_test.cpp ;
 run call_traits_test.cpp : -u ;
 
 run compressed_pair_test.cpp ;
+run compressed_pair_final_test.cpp ;
 
 run iterators_test.cpp ;
 
