@@ -31,6 +31,10 @@
 #include <cstring>
 #include <iosfwd>
 
+#ifndef BOOST_NO_CXX17_HDR_STRING_VIEW
+#include <string_view>
+#endif
+
 #if defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS) || (defined(BOOST_GCC) && ((BOOST_GCC+0) / 100) <= 406)
 // GCC 4.6 cannot handle a defaulted function with noexcept specifier
 #define BOOST_STRING_VIEW_NO_CXX11_DEFAULTED_NOEXCEPT_FUNCTIONS
@@ -108,6 +112,11 @@ namespace boost {
       BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len)
         : ptr_(str), len_(len) {}
 
+#ifndef BOOST_NO_CXX17_HDR_STRING_VIEW
+    BOOST_CONSTEXPR basic_string_view(std::basic_string_view<charT, traits> view)
+        : ptr_(view.data()), len_(view.size()) {}
+#endif
+
         // iterators
         BOOST_CONSTEXPR const_iterator   begin() const BOOST_NOEXCEPT { return ptr_; }
         BOOST_CONSTEXPR const_iterator  cbegin() const BOOST_NOEXCEPT { return ptr_; }
@@ -134,6 +143,12 @@ namespace boost {
         BOOST_CONSTEXPR const_reference front() const                { return ptr_[0]; }
         BOOST_CONSTEXPR const_reference back()  const                { return ptr_[len_-1]; }
         BOOST_CONSTEXPR const_pointer data()    const BOOST_NOEXCEPT { return ptr_; }
+
+#ifndef BOOST_NO_CXX17_HDR_STRING_VIEW
+        operator std::basic_string_view<charT, traits>() const {
+            return std::basic_string_view<charT, traits>(ptr_, len_);
+            }
+#endif
 
         // modifiers
         void clear() BOOST_NOEXCEPT { len_ = 0; }          // Boost extension

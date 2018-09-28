@@ -32,6 +32,7 @@ run string_ref_test_io.cpp ;
 compile string_view_constexpr_test1.cpp ;
 run string_view_test1.cpp ;
 run string_view_test2.cpp ;
+run string_view_test3.cpp ;
 run string_view_test_io.cpp ;
 
 run value_init_test.cpp ;
