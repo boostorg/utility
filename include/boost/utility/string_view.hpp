@@ -108,6 +108,9 @@ namespace boost {
       BOOST_CONSTEXPR basic_string_view(const charT* str, size_type len)
         : ptr_(str), len_(len) {}
 
+      BOOST_CONSTEXPR basic_string_view(const charT* begin, const charT* end)
+        : ptr_(begin), len_(end - begin) {}
+
         // iterators
         BOOST_CONSTEXPR const_iterator   begin() const BOOST_NOEXCEPT { return ptr_; }
         BOOST_CONSTEXPR const_iterator  cbegin() const BOOST_NOEXCEPT { return ptr_; }
