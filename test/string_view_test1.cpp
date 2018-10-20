@@ -29,15 +29,24 @@ void interop ( const std::string &str, string_view ref ) {
 void null_tests ( const char *p ) {
 //  All zero-length string-refs should be equal
     string_view sr1; // NULL, 0
-    string_view sr2 ( NULL, 0 );
-    string_view sr3 ( p, 0 );
+    string_view sr2 ( NULL, std::size_t(0) );
+    string_view sr3 ( p, std::size_t(0) );
     string_view sr4 ( p );
+    string_view sr5 ( p, p );
+    // string_view sr6 ( NULL, NULL ); // ambiguous
+#ifndef BOOST_NO_CXX11_NULLPTR
+    string_view sr6 ( nullptr, nullptr );
+#endif
     sr4.clear ();
 
     BOOST_TEST ( sr1 == sr2 );
     BOOST_TEST ( sr1 == sr3 );
     BOOST_TEST ( sr2 == sr3 );
     BOOST_TEST ( sr1 == sr4 );
+    BOOST_TEST ( sr1 == sr5 );
+#ifndef BOOST_NO_CXX11_NULLPTR
+    BOOST_TEST ( sr1 == sr6 );
+#endif
     }
 
 //  make sure that substrings work just like strings

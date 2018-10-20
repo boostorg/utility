@@ -76,11 +76,13 @@ int main()
     constexpr string_view sv1;
     constexpr string_view sv2{"abc", 3}; // ptr, len
     constexpr string_view sv3{"def"}; 	 // ptr
+    constexpr string_view sv4{sv3.begin(), sv3.end()}; // begin, end
 
 	constexpr const char *s1 = "";
 	constexpr const char *s2 = "abc";
 	
 	static_assert( (sv1 == sv1), "" );
+	static_assert( (sv3 == sv4), "" );
 	
 	static_assert(!(sv1 == sv2), "" );    
 	static_assert( (sv1 != sv2), "" );    
