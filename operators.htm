@@ -454,7 +454,7 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
       </caption>
 
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <table align="center" border="1">
             <caption>
               <em>Key</em>
@@ -482,6 +482,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <th>Supplied Operations</th>
 
         <th>Requirements</th>
+
+        <th>Propagates <code>constexpr</code>?</th>
       </tr>
 
       <tr>
@@ -496,6 +498,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>t &lt; t1</code>.<br>
          Return convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -513,6 +517,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>t &lt; u</code>. <code>t &gt; u</code>.<br>
          Returns convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -524,6 +530,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>t == t1</code>.<br>
          Return convertible to <code>bool</code>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -537,6 +545,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>t == u</code>.<br>
          Return convertible to <code>bool</code>.</td>
+
+         <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -548,6 +558,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp += t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -560,6 +572,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp += u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -572,6 +586,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp -= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -584,6 +600,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp -= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -594,6 +612,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>T temp(u); temp -= t</code>.<br>
          Return convertible to <code>T</code>.</td>
+
+         <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -606,6 +626,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp *= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -619,6 +641,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp *= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -630,6 +654,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp /= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -641,6 +667,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp /= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -651,6 +679,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>T temp(u); temp /= t</code>.<br>
          Return convertible to <code>T</code>.</td>
+
+         <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -662,6 +692,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp %= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -673,6 +705,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp %= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -683,6 +717,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>T temp(u); temp %= t</code>.<br>
          Return convertible to <code>T</code>.</td>
+
+         <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -694,6 +730,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp |= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -706,6 +744,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp |= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -717,6 +757,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &amp;= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -729,6 +771,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &amp;= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -740,6 +784,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp ^= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -752,6 +798,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp ^= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -762,6 +810,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>T temp(t); ++t</code><br>
          Return convertible to <code>T</code>.</td>
+
+         <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -772,6 +822,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 
         <td><code>T temp(t); --t;</code><br>
          Return convertible to <code>T</code>.</td>
+
+         <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -784,6 +836,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &lt;&lt;= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -796,6 +850,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &lt;&lt;= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -808,6 +864,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &gt;&gt;= t1</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -820,6 +878,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>T temp(t); temp &gt;&gt;= u</code>.<br>
          Return convertible to <code>T</code>. See the <a href=
         "#symmetry">Symmetry Note</a>.</td>
+
+        <td>Since <code>C++14</code></td>
       </tr>
 
       <tr>
@@ -831,6 +891,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>t &lt; t1</code>.<br>
          Return convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -842,6 +904,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>t &lt; u</code>. <code>t &gt; u</code>.<br>
          Returns convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -856,6 +920,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         <td><code>t &lt; t1</code>. <code>t == t1</code>.<br>
          Returns convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
 
       <tr>
@@ -874,6 +940,8 @@ const point&lt;float&gt; pi_over_4_normalized = pi_over_4 / length(pi_over_4);
         u</code>.<br>
          Returns convertible to <code>bool</code>. See the <a href=
         "#ordering">Ordering Note</a>.</td>
+
+        <td>Since <code>C++11</code></td>
       </tr>
     </table>
 

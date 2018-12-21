@@ -50,9 +50,9 @@ namespace
         void operator!() const;
 
     public:
-        convertible_to_bool( const bool value ) : _value( value ) {}
+        BOOST_CONSTEXPR convertible_to_bool( const bool value ) : _value( value ) {}
 
-        operator unspecified_bool_type() const
+        BOOST_CONSTEXPR operator unspecified_bool_type() const
           { return _value ? &convertible_to_bool::_value : 0; }
     };
 
@@ -64,36 +64,36 @@ namespace
         , boost::shiftable<Wrapped1<T> >
     {
     public:
-        explicit Wrapped1( T v = T() ) : _value(v) {}
-        T value() const { return _value; }
+        BOOST_CONSTEXPR explicit Wrapped1( T v = T() ) : _value(v) {}
+        BOOST_CONSTEXPR T value() const { return _value; }
 
-        convertible_to_bool operator<(const Wrapped1& x) const
+        BOOST_CONSTEXPR convertible_to_bool operator<(const Wrapped1& x) const
           { return _value < x._value; }
-        convertible_to_bool operator==(const Wrapped1& x) const
+        BOOST_CONSTEXPR convertible_to_bool operator==(const Wrapped1& x) const
           { return _value == x._value; }
         
-        Wrapped1& operator+=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator+=(const Wrapped1& x)
           { _value += x._value; return *this; }
-        Wrapped1& operator-=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator-=(const Wrapped1& x)
           { _value -= x._value; return *this; }
-        Wrapped1& operator*=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator*=(const Wrapped1& x)
           { _value *= x._value; return *this; }
-        Wrapped1& operator/=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator/=(const Wrapped1& x)
           { _value /= x._value; return *this; }
-        Wrapped1& operator%=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator%=(const Wrapped1& x)
           { _value %= x._value; return *this; }
-        Wrapped1& operator|=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator|=(const Wrapped1& x)
           { _value |= x._value; return *this; }
-        Wrapped1& operator&=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator&=(const Wrapped1& x)
           { _value &= x._value; return *this; }
-        Wrapped1& operator^=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator^=(const Wrapped1& x)
           { _value ^= x._value; return *this; }
-        Wrapped1& operator<<=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator<<=(const Wrapped1& x)
           { _value <<= x._value; return *this; }
-        Wrapped1& operator>>=(const Wrapped1& x)
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator>>=(const Wrapped1& x)
           { _value >>= x._value; return *this; }
-        Wrapped1& operator++()               { ++_value; return *this; }
-        Wrapped1& operator--()               { --_value; return *this; }
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator++() { ++_value; return *this; }
+        BOOST_CXX14_CONSTEXPR Wrapped1& operator--() { --_value; return *this; }
         
     private:
         T _value;
@@ -931,6 +931,65 @@ main()
     PRIVATE_EXPR_TEST( (tmp2=li1), static_cast<bool>((tmp2+=li1) == li2) );
 
     cout << "Performed tests on MyLongInt objects.\n";
+
+// Where C++11 constexpr is available, compile-time test some of the operators that are able to use it to propagate constexpr
+#ifndef BOOST_NO_CXX11_CONSTEXPR
+    static_assert( ! static_cast<bool>( MyInt{ 1 } == MyInt{ 2 } ), "" );
+    static_assert(                      MyInt{ 1 } != MyInt{ 2 },   "" );
+    static_assert(                      MyInt{ 1 } <  MyInt{ 2 },   "" );
+    static_assert(                      MyInt{ 1 } <= MyInt{ 2 },   "" );
+    static_assert( ! static_cast<bool>( MyInt{ 1 } >  MyInt{ 2 } ), "" );
+    static_assert( ! static_cast<bool>( MyInt{ 1 } >= MyInt{ 2 } ), "" );
+
+    static_assert( ! static_cast<bool>( MyInt{ 2 } == MyInt{ 1 } ), "" );
+    static_assert(                      MyInt{ 2 } != MyInt{ 1 },   "" );
+    static_assert( ! static_cast<bool>( MyInt{ 2 } <  MyInt{ 1 } ), "" );
+    static_assert( ! static_cast<bool>( MyInt{ 2 } <= MyInt{ 1 } ), "" );
+    static_assert(                      MyInt{ 2 } >  MyInt{ 1 },   "" );
+    static_assert(                      MyInt{ 2 } >= MyInt{ 1 },   "" );
+
+    static_assert(                      MyInt{ 1 } == MyInt{ 1 },   "" );
+    static_assert( ! static_cast<bool>( MyInt{ 1 } != MyInt{ 1 } ), "" );
+    static_assert( ! static_cast<bool>( MyInt{ 1 } <  MyInt{ 1 } ), "" );
+    static_assert(                      MyInt{ 1 } <= MyInt{ 1 },   "" );
+    static_assert( ! static_cast<bool>( MyInt{ 1 } >  MyInt{ 1 } ), "" );
+    static_assert(                      MyInt{ 1 } >= MyInt{ 1 },   "" );
+#endif
+
+// Where C++14 constexpr is available, compile-time test some of the operators that are able to use it to propagate constexpr
+#ifndef BOOST_NO_CXX14_CONSTEXPR
+    static_assert( ( MyInt{ 1 } +  MyInt{ 2 } ) == MyInt{ 3 }, "" );
+    static_assert( ( MyInt{ 2 } +  MyInt{ 1 } ) == MyInt{ 3 }, "" );
+    static_assert( ( MyInt{ 2 } +  MyInt{ 1 } ) == MyInt{ 3 }, "" );
+    static_assert( ( MyInt{ 2 } +  MyInt{ 2 } ) == MyInt{ 4 }, "" );
+    static_assert( ( MyInt{ 3 } +  MyInt{ 2 } ) == MyInt{ 5 }, "" );
+
+    static_assert( ( MyInt{ 5 } -  MyInt{ 1 } ) == MyInt{ 4 }, "" );
+
+    static_assert( ( MyInt{ 3 } *  MyInt{ 3 } ) == MyInt{ 9 }, "" );
+    static_assert( ( MyInt{ 4 } *  MyInt{ 2 } ) == MyInt{ 8 }, "" );
+
+    static_assert( ( MyInt{ 8 } /  MyInt{ 2 } ) == MyInt{ 4 }, "" );
+
+    static_assert( ( MyInt{ 4 } %  MyInt{ 3 } ) == MyInt{ 1 }, "" );
+
+
+    static_assert( ( MyInt{ 7 } &  MyInt{ 2 } ) == MyInt{ 2 }, "" );
+
+    static_assert( ( MyInt{ 1 } |  MyInt{ 2 } ) == MyInt{ 3 }, "" );
+    static_assert( ( MyInt{ 1 } |  MyInt{ 4 } ) == MyInt{ 5 }, "" );
+    static_assert( ( MyInt{ 2 } |  MyInt{ 1 } ) == MyInt{ 3 }, "" );
+    static_assert( ( MyInt{ 2 } |  MyInt{ 4 } ) == MyInt{ 6 }, "" );
+    static_assert( ( MyInt{ 3 } |  MyInt{ 4 } ) == MyInt{ 7 }, "" );
+    static_assert( ( MyInt{ 5 } |  MyInt{ 2 } ) == MyInt{ 7 }, "" );
+    static_assert( ( MyInt{ 6 } |  MyInt{ 1 } ) == MyInt{ 7 }, "" );
+
+    static_assert( ( MyInt{ 3 } ^  MyInt{ 1 } ) == MyInt{ 2 }, "" );
+
+
+    static_assert( ( MyInt{ 1 } << MyInt{ 2 } ) == MyInt{ 4 }, "" );
+    static_assert( ( MyInt{ 2 } >> MyInt{ 1 } ) == MyInt{ 1 }, "" );
+#endif
 
     return boost::report_errors();
 }
