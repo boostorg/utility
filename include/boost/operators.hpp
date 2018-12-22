@@ -174,43 +174,43 @@ struct equality_comparable1 : B
 // If the compiler has no NRVO, this is the best symmetric
 // implementation available.
 
-#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                      \
-template <class T, class U, class B = operators_detail::empty_base<T> >    \
-struct NAME##2 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const U& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const U& lhs, const T& rhs ) \
-    { T nrv( rhs ); nrv OP##= lhs; return nrv; }                           \
-};                                                                         \
-                                                                           \
-template <class T, class B = operators_detail::empty_base<T> >             \
-struct NAME##1 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const T& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
+#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                   \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+  friend T operator OP( const U& lhs, const T& rhs )                    \
+    { T nrv( rhs ); nrv OP##= lhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
-#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )                  \
-template <class T, class U, class B = operators_detail::empty_base<T> >    \
-struct NAME##2 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const U& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
-};                                                                         \
-                                                                           \
-template <class T, class U, class B = operators_detail::empty_base<T> >    \
-struct BOOST_OPERATOR2_LEFT(NAME) : B                                      \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const U& lhs, const T& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
-};                                                                         \
-                                                                           \
-template <class T, class B = operators_detail::empty_base<T> >             \
-struct NAME##1 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const T& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
+#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct BOOST_OPERATOR2_LEFT(NAME) : B                                   \
+{                                                                       \
+  friend T operator OP( const U& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
 #else // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
@@ -274,7 +274,7 @@ BOOST_BINARY_OPERATOR_COMMUTATIVE( orable, | )
 template <class T, class B = operators_detail::empty_base<T> >
 struct incrementable : B
 {
-  friend BOOST_CXX14_CONSTEXPR T operator++(T& x, int)
+  friend T operator++(T& x, int)
   {
     incrementable_type nrv(x);
     ++x;
@@ -287,7 +287,7 @@ private: // The use of this typedef works around a Borland bug
 template <class T, class B = operators_detail::empty_base<T> >
 struct decrementable : B
 {
-  friend BOOST_CXX14_CONSTEXPR T operator--(T& x, int)
+  friend T operator--(T& x, int)
   {
     decrementable_type nrv(x);
     --x;
@@ -322,19 +322,19 @@ struct indexable : B
 
 #if defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
 
-#define BOOST_BINARY_OPERATOR( NAME, OP )                                  \
-template <class T, class U, class B = operators_detail::empty_base<T> >    \
-struct NAME##2 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const U& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
-};                                                                         \
-                                                                           \
-template <class T, class B = operators_detail::empty_base<T> >             \
-struct NAME##1 : B                                                         \
-{                                                                          \
-  friend BOOST_CXX14_CONSTEXPR T operator OP( const T& lhs, const T& rhs ) \
-    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                           \
+#define BOOST_BINARY_OPERATOR( NAME, OP )                               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const U& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( const T& lhs, const T& rhs )                    \
+    { T nrv( lhs ); nrv OP##= rhs; return nrv; }                        \
 };
 
 #else // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
