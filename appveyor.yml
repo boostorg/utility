@@ -23,6 +23,7 @@ environment:
       CXXSTD: 14,17
 
 install:
+  - set GIT_FETCH_JOBS=8
   - set BOOST_BRANCH=develop
   - if "%APPVEYOR_REPO_BRANCH%" == "master" set BOOST_BRANCH=master
   - cd ..
@@ -41,7 +42,7 @@ install:
   - git submodule init libs/container_hash
   - git submodule init libs/integer
   - git submodule init libs/detail
-  - git submodule update --jobs 4
+  - git submodule update --jobs %GIT_FETCH_JOBS%
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\utility
   - cmd /c bootstrap
   - b2 -d0 headers
