@@ -20,6 +20,7 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/utility/ostream_string.hpp>
 #include <boost/utility/string_view_fwd.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/container_hash/hash_fwd.hpp>
@@ -572,77 +573,12 @@ namespace boost {
         return basic_string_view<charT, traits>(x) >= y;
         }
 
-    namespace detail {
-
-        template<class charT, class traits>
-        inline std::size_t sv_os_put(std::basic_ostream<charT, traits>& os,
-            const charT* data, std::size_t size) {
-            return static_cast<std::size_t>(os.rdbuf()->sputn(data, size));
-        }
-
-        template<class charT, class traits>
-        inline bool sv_os_fill(std::basic_ostream<charT, traits>& os,
-            std::size_t size) {
-            enum { chunk = 8 };
-            charT fill[chunk];
-            std::fill_n(fill, static_cast<std::size_t>(chunk), os.fill());
-            for (; size > chunk; size -= chunk) {
-                if (detail::sv_os_put(os, fill, chunk) != chunk) {
-                    return false;
-                }
-            }
-            return detail::sv_os_put(os, fill, size) == size;
-        }
-
-        template<class charT, class traits>
-        class sv_os_holder {
-        public:
-            explicit sv_os_holder(std::basic_ostream<charT, traits>& os)
-                : os_(&os) { }
-            ~sv_os_holder() BOOST_NOEXCEPT_IF(false) {
-                if (os_) {
-                    os_->setstate(std::basic_ostream<charT, traits>::badbit);
-                }
-            }
-            void release() {
-                os_ = 0;
-            }
-        private:
-            sv_os_holder(const sv_os_holder&);
-            sv_os_holder& operator=(const sv_os_holder&);
-            std::basic_ostream<charT, traits>* os_;
-        };
-
-        } // namespace detail
-
     // Inserter
     template<class charT, class traits>
     inline std::basic_ostream<charT, traits>&
     operator<<(std::basic_ostream<charT, traits>& os,
       const basic_string_view<charT,traits>& str) {
-        typedef std::basic_ostream<charT, traits> stream;
-        detail::sv_os_holder<charT, traits> hold(os);
-        typename stream::sentry entry(os);
-        if (entry) {
-            std::size_t width = static_cast<std::size_t>(os.width());
-            std::size_t size = str.size();
-            if (width <= size) {
-                if (detail::sv_os_put(os, str.data(), size) != size) {
-                    return os;
-                }
-            } else if ((os.flags() & stream::adjustfield) == stream::left) {
-                if (detail::sv_os_put(os, str.data(), size) != size ||
-                    !detail::sv_os_fill(os, width - size)) {
-                    return os;
-                }
-            } else if (!detail::sv_os_fill(os, width - size) ||
-                detail::sv_os_put(os, str.data(), size) != size) {
-                return os;
-            }
-            os.width(0);
-        }
-        hold.release();
-        return os;
+        return boost::ostream_string(os, str.data(), str.size());
         }
 
 #if 0
