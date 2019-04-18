@@ -1,6 +1,7 @@
 /*
    Copyright (c) Marshall Clow 2012-2015.
    Copyright (c) Beman Dawes 2015
+   Copyright (c) Glen Joseph Fernandes 2019 (glenjofe@gmail.com)
 
    Distributed under the Boost Software License, Version 1.0. (See accompanying
    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -574,32 +575,43 @@ namespace boost {
     namespace detail {
 
         template<class charT, class traits>
-        inline void sv_insert_fill_chars(std::basic_ostream<charT, traits>& os, std::size_t n) {
-            enum { chunk_size = 8 };
-            charT fill_chars[chunk_size];
-            std::fill_n(fill_chars, static_cast< std::size_t >(chunk_size), os.fill());
-            for (; n >= chunk_size && os.good(); n -= chunk_size)
-                os.write(fill_chars, static_cast< std::size_t >(chunk_size));
-            if (n > 0 && os.good())
-                os.write(fill_chars, n);
-            }
+        inline std::size_t sv_os_put(std::basic_ostream<charT, traits>& os,
+            const charT* data, std::size_t size) {
+            return static_cast<std::size_t>(os.rdbuf()->sputn(data, size));
+        }
 
         template<class charT, class traits>
-        void sv_insert_aligned(std::basic_ostream<charT, traits>& os, const basic_string_view<charT,traits>& str) {
-            const std::size_t size = str.size();
-            const std::size_t alignment_size = static_cast< std::size_t >(os.width()) - size;
-            const bool align_left = (os.flags() & std::basic_ostream<charT, traits>::adjustfield) == std::basic_ostream<charT, traits>::left;
-            if (!align_left) {
-                detail::sv_insert_fill_chars(os, alignment_size);
-                if (os.good())
-                    os.write(str.data(), size);
-                }
-            else {
-                os.write(str.data(), size);
-                if (os.good())
-                    detail::sv_insert_fill_chars(os, alignment_size);
+        inline bool sv_os_fill(std::basic_ostream<charT, traits>& os,
+            std::size_t size) {
+            enum { chunk = 8 };
+            charT fill[chunk];
+            std::fill_n(fill, static_cast<std::size_t>(chunk), os.fill());
+            for (; size > chunk; size -= chunk) {
+                if (detail::sv_os_put(os, fill, chunk) != chunk) {
+                    return false;
                 }
             }
+            return detail::sv_os_put(os, fill, size) == size;
+        }
+
+        template<class charT, class traits>
+        class sv_os_holder {
+        public:
+            explicit sv_os_holder(std::basic_ostream<charT, traits>& os)
+                : os_(&os) { }
+            ~sv_os_holder() BOOST_NOEXCEPT_IF(false) {
+                if (os_) {
+                    os_->setstate(std::basic_ostream<charT, traits>::badbit);
+                }
+            }
+            void release() {
+                os_ = 0;
+            }
+        private:
+            sv_os_holder(const sv_os_holder&);
+            sv_os_holder& operator=(const sv_os_holder&);
+            std::basic_ostream<charT, traits>* os_;
+        };
 
         } // namespace detail
 
@@ -608,15 +620,28 @@ namespace boost {
     inline std::basic_ostream<charT, traits>&
     operator<<(std::basic_ostream<charT, traits>& os,
       const basic_string_view<charT,traits>& str) {
-        if (os.good()) {
-            const std::size_t size = str.size();
-            const std::size_t w = static_cast< std::size_t >(os.width());
-            if (w <= size)
-                os.write(str.data(), size);
-            else
-                detail::sv_insert_aligned(os, str);
-            os.width(0);
+        typedef std::basic_ostream<charT, traits> stream;
+        detail::sv_os_holder<charT, traits> hold(os);
+        typename stream::sentry entry(os);
+        if (entry) {
+            std::size_t width = static_cast<std::size_t>(os.width());
+            std::size_t size = str.size();
+            if (width <= size) {
+                if (detail::sv_os_put(os, str.data(), size) != size) {
+                    return os;
+                }
+            } else if ((os.flags() & stream::adjustfield) == stream::left) {
+                if (detail::sv_os_put(os, str.data(), size) != size ||
+                    !detail::sv_os_fill(os, width - size)) {
+                    return os;
+                }
+            } else if (!detail::sv_os_fill(os, width - size) ||
+                detail::sv_os_put(os, str.data(), size) != size) {
+                return os;
             }
+            os.width(0);
+        }
+        hold.release();
         return os;
         }
 
