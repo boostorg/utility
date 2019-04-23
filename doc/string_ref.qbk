@@ -156,6 +156,11 @@ String-like operations:
 [section History]
 [/===============]
 
+[heading boost 1.71]
+* Glen Fernandes updated the implementation of the stream insertion operator to
+write directly to the `basic_streambuf` and refactored that functionality into
+a common utility.
+
 [heading boost 1.53]
 * Introduced
     
