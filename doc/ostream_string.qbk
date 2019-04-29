@@ -15,7 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
 [section Overview]
 
 The header <boost/utility/ostream_string.hpp> provides the function template
-boost::ostream_string for formatted output that satisfies the requirements of
+`boost::ostream_string` for formatted output that satisfies the requirements of
 \[ostream.formatted.reqmts\].
 
 [endsect]
@@ -51,13 +51,17 @@ ostream_string(std::basic_ostream<charT, traits>& os,
 ```
 
 [variablelist
+[[`template<class charT, class traits> std::basic_ostream<charT, traits>&
+ostream_string(std::basic_ostream<charT, traits>& os, const charT* data,
+std::size_t size);`]
+[[variablelist
 [[Effects]
 [Behaves like a formatted inserter (as described in
 \[ostream.formatted.reqmts\]) of `os`. Creates a character sequence `seq` of
 `size` characters starting at `data`, each widened using `os.widen()`
 (\[basic.ios.members\]). Determines padding for `seq` as described in
 \[ostream.formatted.reqmts\]. Inserts `seq` into `os`. Calls `width(0)`.]]
-[[Returns] [`os`.]]]
+[[Returns][`os`.]]]]]]
 
 [endsect]
 
@@ -66,6 +70,6 @@ ostream_string(std::basic_ostream<charT, traits>& os,
 [heading boost 1.71]
 * Glen Fernandes updated the implementation of the `basic_string_ref` and
 `basic_string_view` stream insertion operators to write directly to the
-`basic_streambuf` and refactored that functionality into a common utility.
+`basic_streambuf` and refactored that functionality into this common utility.
 
 [endsect]

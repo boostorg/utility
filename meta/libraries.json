@@ -89,7 +89,7 @@
         "key": "utility/ostream_string",
         "name": "ostream_string",
         "description": "String formatted output function.",
-        "documentation": "ostream_string.html",
+        "documentation": "doc/html/ostream_string.html",
         "category": [
             "IO"
         ],
@@ -115,7 +115,7 @@
         "key": "utility/string_ref",
         "name": "string_ref",
         "description": "String view templates.",
-        "documentation": "string_ref.html",
+        "documentation": "doc/html/string_ref.html",
         "category": [
             "Containers"
         ],
