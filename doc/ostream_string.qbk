@@ -50,6 +50,8 @@ ostream_string(std::basic_ostream<charT, traits>& os,
 } /* boost */
 ```
 
+[heading Free functions]
+
 [variablelist
 [[`template<class charT, class traits> std::basic_ostream<charT, traits>&
 ostream_string(std::basic_ostream<charT, traits>& os, const charT* data,
@@ -68,6 +70,7 @@ std::size_t size);`]
 [section History]
 
 [heading boost 1.71]
+
 * Glen Fernandes updated the implementation of the `basic_string_ref` and
 `basic_string_view` stream insertion operators to write directly to the
 `basic_streambuf` and refactored that functionality into this common utility.
