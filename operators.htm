@@ -119,8 +119,8 @@
     also want <code>x &gt; y, x &gt;= y,</code> and <code>x &lt;= y</code>.
     Moreover, unless your class has really surprising behavior, some of these
     related operators can be defined in terms of others (e.g. <code>x &gt;= y
-    &lt;=&gt; !(x &lt; y)</code>). Replicating this boilerplate for multiple
-    classes is both tedious and error-prone. The <cite><a href=
+    is equivalent to !(x &lt; y)</code>). Replicating this boilerplate for
+    multiple classes is both tedious and error-prone. The <cite><a href=
     "../../boost/operators.hpp">boost/operators.hpp</a></cite> templates help
     by generating operators for you at namespace scope based on other
     operators you've defined in your class.</p>
