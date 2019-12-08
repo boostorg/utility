@@ -1,0 +1,134 @@
+[/
+Copyright 2019 Glen Joseph Fernandes
+(glenjofe@gmail.com)
+
+Distributed under the Boost Software License, Version 1.0.
+(http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[article ostream_joiner
+[quickbook 1.5]
+[authors [Fernandes, Glen]]
+[copyright 2019 Glen Joseph Fernandes]
+[license Distributed under the Boost Software License, Version 1.0.]]
+
+[section Overview]
+
+The header <boost/utility/ostream_joiner.hpp> provides the class template
+`boost::ostream_joiner` which is an output iterator that writes objects to a
+`std::basic_ostream` separated by a delimiter. It is an implementation of
+the Library Fundamentals TS `std::ostream_joiner` which supports C++03 and
+higher.
+
+It also provides a utility function `boost::make_ostream_joiner` for creating
+`boost::ostream_joiner` objects.
+
+[endsect]
+
+[section Examples]
+
+The following program writes the contents of a vector to standard output, with
+each element separated by a comma.
+
+```
+#include <boost/utility/ostream_joiner.hpp>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main()
+{
+    std::vector<int> v{ 2, 4, 6, 8 };
+    std::copy(begin(v), end(v), boost::make_ostream_joiner(std::cout, ", "));
+}
+```
+
+[endsect]
+
+[section Reference]
+
+```
+namespace boost {
+
+template<class Delim, class Char = char,
+    class Traits = std::char_traits<Char> >
+class ostream_joiner {
+public:
+    typedef Char char_type;
+    typedef Traits traits_type;
+    typedef std::basic_ostream<Char, Traits> ostream_type;
+    typedef std::output_iterator_tag iterator_category;
+    typedef void value_type;
+    typedef void difference_type;
+    typedef void pointer;
+    typedef void reference;
+
+    ostream_joiner(ostream_type& output, const Delim& delim);
+    ostream_joiner(ostream_type& output, Delim&& delim);
+
+    template<class T>
+    ostream_joiner& operator=(const T& value);
+
+    ostream_joiner& operator*() noexcept;
+    ostream_joiner& operator++() noexcept;
+    ostream_joiner& operator++(int) noexcept;
+};
+
+template<class Char, class Traits, class Delim>
+ostream_joiner<decay_t<Delim>, Char, Traits>
+make_ostream_joiner(std::basic_ostream<Char, Traits>& output, Delim&& delim);
+
+} /* boost */
+```
+
+[heading Constructors]
+
+[variablelist
+[[`ostream_joiner(ostream_type& output, const Delim& delim);`]
+[[variablelist
+[[Effects][Initializes the stored pointer to the stream with
+`std::addressof(output)` and the stored delimiter with `delim`.]]]]]
+[[`ostream_joiner(ostream_type& output, Delim&& delim);`]
+[[variablelist
+[[Effects][Initializes the stored pointer to the stream with
+`std::addressof(output)` and the stored delimiter with
+`std::move(delim)`.]]]]]]
+
+[heading Member functions]
+
+[variablelist
+[[`template<class T> ostream_joiner& operator=(const T& value);`]
+[[variablelist
+[[Remark]
+[Writes `value` to the stored reference to the stream, after first writing the
+stored delimiter to the stream (if this function has been called before).]]
+[[Returns][`*this`.]]]]]
+[[`ostream_joiner& operator*() noexcept;`]
+[[variablelist
+[[Returns][`*this`.]]]]]
+[[`ostream_joiner& operator++() noexcept;`]
+[[variablelist
+[[Returns][`*this`.]]]]]
+[[`ostream_joiner& operator++(int) noexcept;`]
+[[variablelist
+[[Returns][`*this`.]]]]]]
+
+[heading Free functions]
+
+[variablelist
+[[`template<class Char, class Traits, class Delim>
+ostream_joiner<decay_t<Delim>, Char, Traits>
+make_ostream_joiner(std::basic_ostream<Char, Traits>& output, Delim&& delim);`]
+[[variablelist
+[[Returns][`ostream_joiner<std::decay_t<Delim>, Char, Traits>(output,
+std::forward<Delim>(delim))`.]]]]]]
+
+[endsect]
+
+[section History]
+
+[heading boost 1.73]
+
+* Glen Fernandes implemented `ostream_joiner` and `make_ostream_joiner`.
+
+[endsect]
