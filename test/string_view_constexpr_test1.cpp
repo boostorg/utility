@@ -12,6 +12,7 @@
 #include <cstddef>    // for NULL, std::size_t, std::ptrdiff_t
 #include <cstring>    // for std::strchr and std::strcmp
 #include <cstdlib>    // for std::malloc and std::free
+#include <cstdio>     // for EOF
 
 #include <boost/config.hpp>
 #include <boost/utility/string_view.hpp>
@@ -19,11 +20,11 @@
 #if __cplusplus >= 201402L
 struct constexpr_char_traits
 {
-    typedef char		    char_type;
-    typedef int   			int_type;
-    typedef std::streamoff	off_type;
-    typedef std::streampos	pos_type;
-    typedef std::mbstate_t	state_type;
+    typedef char            char_type;
+    typedef int             int_type;
+    typedef std::streamoff  off_type;
+    typedef std::streampos  pos_type;
+    typedef std::mbstate_t  state_type;
 
     static void assign(char_type& c1, const char_type& c2) noexcept { c1 = c2; }
     static constexpr bool eq(char_type c1, char_type c2) noexcept   { return c1 == c2; }
@@ -77,38 +78,38 @@ int main()
     constexpr string_view sv2{"abc", 3}; // ptr, len
     constexpr string_view sv3{"def"}; 	 // ptr
 
-	constexpr const char *s1 = "";
-	constexpr const char *s2 = "abc";
-	
-	static_assert( (sv1 == sv1), "" );
-	
-	static_assert(!(sv1 == sv2), "" );    
-	static_assert( (sv1 != sv2), "" );    
-	static_assert( (sv1 <  sv2), "" );    
-	static_assert( (sv1 <= sv2), "" );    
-	static_assert(!(sv1 >  sv2), "" );    
-	static_assert(!(sv1 >= sv2), "" );    
+    constexpr const char *s1 = "";
+    constexpr const char *s2 = "abc";
 
-	static_assert(!(s1 == sv2), "" );    
-	static_assert( (s1 != sv2), "" );    
-	static_assert( (s1 <  sv2), "" );    
-	static_assert( (s1 <= sv2), "" );    
-	static_assert(!(s1 >  sv2), "" );    
-	static_assert(!(s1 >= sv2), "" );    
+    static_assert( (sv1 == sv1), "" );
 
-	static_assert(!(sv1 == s2), "" );    
-	static_assert( (sv1 != s2), "" );    
-	static_assert( (sv1 <  s2), "" );    
-	static_assert( (sv1 <= s2), "" );    
-	static_assert(!(sv1 >  s2), "" );    
-	static_assert(!(sv1 >= s2), "" );    
+    static_assert(!(sv1 == sv2), "" );
+    static_assert( (sv1 != sv2), "" );
+    static_assert( (sv1 <  sv2), "" );
+    static_assert( (sv1 <= sv2), "" );
+    static_assert(!(sv1 >  sv2), "" );
+    static_assert(!(sv1 >= sv2), "" );
 
-	static_assert( sv1.compare(sv2)  < 0, "" );    
-	static_assert( sv1.compare(sv1) == 0, "" );    
-	static_assert( sv3.compare(sv1)  > 0, "" );    
+    static_assert(!(s1 == sv2), "" );
+    static_assert( (s1 != sv2), "" );
+    static_assert( (s1 <  sv2), "" );
+    static_assert( (s1 <= sv2), "" );
+    static_assert(!(s1 >  sv2), "" );
+    static_assert(!(s1 >= sv2), "" );
 
-	static_assert( sv1.compare(s2)  < 0, "" );    
-	static_assert( sv1.compare(s1) == 0, "" );    
-	static_assert( sv3.compare(s1)  > 0, "" );    
+    static_assert(!(sv1 == s2), "" );
+    static_assert( (sv1 != s2), "" );
+    static_assert( (sv1 <  s2), "" );
+    static_assert( (sv1 <= s2), "" );
+    static_assert(!(sv1 >  s2), "" );
+    static_assert(!(sv1 >= s2), "" );
+
+    static_assert( sv1.compare(sv2)  < 0, "" );
+    static_assert( sv1.compare(sv1) == 0, "" );
+    static_assert( sv3.compare(sv1)  > 0, "" );
+
+    static_assert( sv1.compare(s2)  < 0, "" );
+    static_assert( sv1.compare(s1) == 0, "" );
+    static_assert( sv3.compare(s1)  > 0, "" );
 }
 #endif
