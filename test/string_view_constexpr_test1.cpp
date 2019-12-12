@@ -44,11 +44,11 @@ struct constexpr_char_traits
     static constexpr int_type  eof() noexcept                                 { return EOF; }
 };
 
-//	yields:
-//		0 if for each i in [0,n), X::eq(s1[i],s2[i]) is true; 
-//		else, a negative value if, for some j in [0,n), X::lt(s1[j],s2[j]) is true and
-//			for each i in [0,j) X::eq(s2[i],s2[i]) is true;
-//		else a positive value.
+//  yields:
+//      0 if for each i in [0,n), X::eq(s1[i],s2[i]) is true;
+//      else, a negative value if, for some j in [0,n), X::lt(s1[j],s2[j]) is true and
+//          for each i in [0,j) X::eq(s2[i],s2[i]) is true;
+//      else a positive value.
 constexpr int constexpr_char_traits::compare(const char_type* s1, const char_type* s2, size_t n) noexcept
 {
     for (; n != 0; --n, ++s1, ++s2)
