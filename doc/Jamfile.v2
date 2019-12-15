@@ -99,19 +99,6 @@ boostbook standalone_declval
         <xsl:param>generate.section.toc.level=1
      ;
 
-xml ostream_string : ostream_string.qbk ;
-boostbook standalone_ostream_string
-    :
-        ostream_string
-    :
-        <xsl:param>root.filename=ostream_string
-        <xsl:param>chunk.section.depth=0
-        <xsl:param>chunk.first.sections=0
-        <xsl:param>toc.section.depth=1
-        <xsl:param>toc.max.depth=1
-        <xsl:param>generate.section.toc.level=1
-     ;
-
 xml string_ref : string_ref.qbk ;
 boostbook standalone_string_ref
     :
@@ -136,5 +123,5 @@ alias boostdoc ;
 explicit boostdoc ;
 alias boostrelease :
     standalone_base_from_member standalone_compressed_pair
-    standalone_declval standalone_ostream_string standalone_string_ref ;
+    standalone_declval standalone_string_ref ;
 explicit boostrelease ;

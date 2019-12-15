@@ -42,5 +42,3 @@ compile-fail value_init_test_fail2.cpp ;
 compile-fail value_init_test_fail3.cpp ;
 compile-fail initialized_test_fail1.cpp ;
 compile-fail initialized_test_fail2.cpp ;
-
-run ostream_string_test.cpp ;
