@@ -66,7 +66,7 @@ class initialized
   private :
     struct wrapper
     {
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
+#if !BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x592))
       typename
 #endif 
       remove_const<T>::type data;
@@ -87,7 +87,7 @@ class initialized
     };
 
     mutable
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
+#if !BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x592))
       typename
 #endif 
       aligned_storage<sizeof(wrapper), alignment_of<wrapper>::value>::type x;
