@@ -109,9 +109,13 @@
 #   pragma warning( disable : 4284 ) // complaint about return type of
 #endif                               // operator-> not begin a UDT
 
-// Define BOOST_OPS_CONSTEXPR to be like BOOST_CONSTEXPR but empty under MSVC
+// Define BOOST_OPS_CONSTEXPR to be like BOOST_CONSTEXPR but empty under MSVC < v19.22
 #ifdef BOOST_MSVC
+#if BOOST_MSVC_FULL_VER >= 192200000
+#define BOOST_OPS_CONSTEXPR constexpr
+#else
 #define BOOST_OPS_CONSTEXPR
+#endif
 #else
 #define BOOST_OPS_CONSTEXPR BOOST_CONSTEXPR
 #endif
