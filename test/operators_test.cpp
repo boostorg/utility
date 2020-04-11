@@ -934,7 +934,7 @@ main()
 
 // Where C++11 constexpr is available, compile-time test some of the operators that are able to use it to propagate constexpr
 #ifndef BOOST_NO_CXX11_CONSTEXPR
-#ifndef BOOST_MSVC
+#if !defined(BOOST_MSVC) || (_MSC_VER >= 1922)
     static_assert( ! static_cast<bool>( MyInt{ 1 } == MyInt{ 2 } ), "" );
     static_assert(                      MyInt{ 1 } != MyInt{ 2 },   "" );
     static_assert(                      MyInt{ 1 } <  MyInt{ 2 },   "" );
