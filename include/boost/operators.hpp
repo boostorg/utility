@@ -231,38 +231,38 @@ struct NAME##1 : B                                                      \
 // BOOST_OPERATOR2_LEFT(NAME) only looks cool, but doesn't provide
 // optimization opportunities to the compiler :)
 
-#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                                       \
-template <class T, class U, class B = operators_detail::empty_base<T> >                     \
-struct NAME##2 : B                                                                          \
-{                                                                                           \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
-  friend BOOST_OPS_CONSTEXPR T operator OP( const U& lhs, T rhs ) { return rhs OP##= lhs; } \
-};                                                                                          \
-                                                                                            \
-template <class T, class B = operators_detail::empty_base<T> >                              \
-struct NAME##1 : B                                                                          \
-{                                                                                           \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
+#define BOOST_BINARY_OPERATOR_COMMUTATIVE( NAME, OP )                   \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
+  friend T operator OP( const U& lhs, T rhs ) { return rhs OP##= lhs; } \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
 };
 
-#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )                                   \
-template <class T, class U, class B = operators_detail::empty_base<T> >                     \
-struct NAME##2 : B                                                                          \
-{                                                                                           \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
-};                                                                                          \
-                                                                                            \
-template <class T, class U, class B = operators_detail::empty_base<T> >                     \
-struct BOOST_OPERATOR2_LEFT(NAME) : B                                                       \
-{                                                                                           \
-  friend BOOST_OPS_CONSTEXPR T operator OP( const U& lhs, const T& rhs )                    \
-    { return T( lhs ) OP##= rhs; }                                                          \
-};                                                                                          \
-                                                                                            \
-template <class T, class B = operators_detail::empty_base<T> >                              \
-struct NAME##1 : B                                                                          \
-{                                                                                           \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
+#define BOOST_BINARY_OPERATOR_NON_COMMUTATIVE( NAME, OP )               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
+};                                                                      \
+                                                                        \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct BOOST_OPERATOR2_LEFT(NAME) : B                                   \
+{                                                                       \
+  friend T operator OP( const U& lhs, const T& rhs )                    \
+    { return T( lhs ) OP##= rhs; }                                      \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
 };
 
 #endif // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
@@ -350,17 +350,17 @@ struct NAME##1 : B                                                      \
 
 #else // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
 
-#define BOOST_BINARY_OPERATOR( NAME, OP )                                               \
-template <class T, class U, class B = operators_detail::empty_base<T> >                 \
-struct NAME##2 : B                                                                      \
-{                                                                                       \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
-};                                                                                      \
-                                                                                        \
-template <class T, class B = operators_detail::empty_base<T> >                          \
-struct NAME##1 : B                                                                      \
-{                                                                                       \
-  friend BOOST_OPS_CONSTEXPR T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
+#define BOOST_BINARY_OPERATOR( NAME, OP )                               \
+template <class T, class U, class B = operators_detail::empty_base<T> > \
+struct NAME##2 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const U& rhs ) { return lhs OP##= rhs; } \
+};                                                                      \
+                                                                        \
+template <class T, class B = operators_detail::empty_base<T> >          \
+struct NAME##1 : B                                                      \
+{                                                                       \
+  friend T operator OP( T lhs, const T& rhs ) { return lhs OP##= rhs; } \
 };
 
 #endif // defined(BOOST_HAS_NRVO) || defined(BOOST_FORCE_SYMMETRIC_OPERATORS)
