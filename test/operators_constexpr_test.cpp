@@ -17,15 +17,15 @@ namespace {
 class Value
     : boost::operators<Value> {
 public:
-    BOOST_OPS_CONSTEXPR explicit Value(int v)
+    BOOST_OPERATORS_CONSTEXPR explicit Value(int v)
         : v_(v) { }
 
-    BOOST_OPS_CONSTEXPR bool
+    BOOST_OPERATORS_CONSTEXPR bool
     operator<(const Value& x) const {
         return v_ < x.v_;
     }
 
-    BOOST_OPS_CONSTEXPR bool
+    BOOST_OPERATORS_CONSTEXPR bool
     operator==(const Value& x) const {
         return v_ == x.v_;
     }

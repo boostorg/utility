@@ -109,15 +109,15 @@
 #   pragma warning( disable : 4284 ) // complaint about return type of
 #endif                               // operator-> not begin a UDT
 
-// Define BOOST_OPS_CONSTEXPR to be like BOOST_CONSTEXPR but empty under MSVC < v19.22
+// Define BOOST_OPERATORS_CONSTEXPR to be like BOOST_CONSTEXPR but empty under MSVC < v19.22
 #ifdef BOOST_MSVC
 #if BOOST_MSVC_FULL_VER >= 192200000
-#define BOOST_OPS_CONSTEXPR constexpr
+#define BOOST_OPERATORS_CONSTEXPR constexpr
 #else
-#define BOOST_OPS_CONSTEXPR
+#define BOOST_OPERATORS_CONSTEXPR
 #endif
 #else
-#define BOOST_OPS_CONSTEXPR BOOST_CONSTEXPR
+#define BOOST_OPERATORS_CONSTEXPR BOOST_CONSTEXPR
 #endif
 
 // In this section we supply the xxxx1 and xxxx2 forms of the operator
@@ -143,34 +143,34 @@ template <typename T> class empty_base {};
 template <class T, class U, class B = operators_detail::empty_base<T> >
 struct less_than_comparable2 : B
 {
-     friend BOOST_OPS_CONSTEXPR bool operator<=(const T& x, const U& y) { return !static_cast<bool>(x > y); }
-     friend BOOST_OPS_CONSTEXPR bool operator>=(const T& x, const U& y) { return !static_cast<bool>(x < y); }
-     friend BOOST_OPS_CONSTEXPR bool operator>(const U& x, const T& y)  { return y < x; }
-     friend BOOST_OPS_CONSTEXPR bool operator<(const U& x, const T& y)  { return y > x; }
-     friend BOOST_OPS_CONSTEXPR bool operator<=(const U& x, const T& y) { return !static_cast<bool>(y < x); }
-     friend BOOST_OPS_CONSTEXPR bool operator>=(const U& x, const T& y) { return !static_cast<bool>(y > x); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const T& x, const U& y) { return !static_cast<bool>(x > y); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const T& x, const U& y) { return !static_cast<bool>(x < y); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator>(const U& x, const T& y)  { return y < x; }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator<(const U& x, const T& y)  { return y > x; }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const U& x, const T& y) { return !static_cast<bool>(y < x); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const U& x, const T& y) { return !static_cast<bool>(y > x); }
 };
 
 template <class T, class B = operators_detail::empty_base<T> >
 struct less_than_comparable1 : B
 {
-     friend BOOST_OPS_CONSTEXPR bool operator>(const T& x, const T& y)  { return y < x; }
-     friend BOOST_OPS_CONSTEXPR bool operator<=(const T& x, const T& y) { return !static_cast<bool>(y < x); }
-     friend BOOST_OPS_CONSTEXPR bool operator>=(const T& x, const T& y) { return !static_cast<bool>(x < y); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator>(const T& x, const T& y)  { return y < x; }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const T& x, const T& y) { return !static_cast<bool>(y < x); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const T& x, const T& y) { return !static_cast<bool>(x < y); }
 };
 
 template <class T, class U, class B = operators_detail::empty_base<T> >
 struct equality_comparable2 : B
 {
-     friend BOOST_OPS_CONSTEXPR bool operator==(const U& y, const T& x) { return x == y; }
-     friend BOOST_OPS_CONSTEXPR bool operator!=(const U& y, const T& x) { return !static_cast<bool>(x == y); }
-     friend BOOST_OPS_CONSTEXPR bool operator!=(const T& y, const U& x) { return !static_cast<bool>(y == x); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator==(const U& y, const T& x) { return x == y; }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const U& y, const T& x) { return !static_cast<bool>(x == y); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const T& y, const U& x) { return !static_cast<bool>(y == x); }
 };
 
 template <class T, class B = operators_detail::empty_base<T> >
 struct equality_comparable1 : B
 {
-     friend BOOST_OPS_CONSTEXPR bool operator!=(const T& x, const T& y) { return !static_cast<bool>(x == y); }
+     friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const T& x, const T& y) { return !static_cast<bool>(x == y); }
 };
 
 // A macro which produces "name_2left" from "name".
@@ -373,7 +373,7 @@ BOOST_BINARY_OPERATOR( right_shiftable, >> )
 template <class T, class U, class B = operators_detail::empty_base<T> >
 struct equivalent2 : B
 {
-  friend BOOST_OPS_CONSTEXPR bool operator==(const T& x, const U& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator==(const T& x, const U& y)
   {
     return !static_cast<bool>(x < y) && !static_cast<bool>(x > y);
   }
@@ -382,7 +382,7 @@ struct equivalent2 : B
 template <class T, class B = operators_detail::empty_base<T> >
 struct equivalent1 : B
 {
-  friend BOOST_OPS_CONSTEXPR bool operator==(const T&x, const T&y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator==(const T&x, const T&y)
   {
     return !static_cast<bool>(x < y) && !static_cast<bool>(y < x);
   }
@@ -391,28 +391,28 @@ struct equivalent1 : B
 template <class T, class U, class B = operators_detail::empty_base<T> >
 struct partially_ordered2 : B
 {
-  friend BOOST_OPS_CONSTEXPR bool operator<=(const T& x, const U& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const T& x, const U& y)
     { return static_cast<bool>(x < y) || static_cast<bool>(x == y); }
-  friend BOOST_OPS_CONSTEXPR bool operator>=(const T& x, const U& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const T& x, const U& y)
     { return static_cast<bool>(x > y) || static_cast<bool>(x == y); }
-  friend BOOST_OPS_CONSTEXPR bool operator>(const U& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator>(const U& x, const T& y)
     { return y < x; }
-  friend BOOST_OPS_CONSTEXPR bool operator<(const U& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator<(const U& x, const T& y)
     { return y > x; }
-  friend BOOST_OPS_CONSTEXPR bool operator<=(const U& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const U& x, const T& y)
     { return static_cast<bool>(y > x) || static_cast<bool>(y == x); }
-  friend BOOST_OPS_CONSTEXPR bool operator>=(const U& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const U& x, const T& y)
     { return static_cast<bool>(y < x) || static_cast<bool>(y == x); }
 };
 
 template <class T, class B = operators_detail::empty_base<T> >
 struct partially_ordered1 : B
 {
-  friend BOOST_OPS_CONSTEXPR bool operator>(const T& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator>(const T& x, const T& y)
     { return y < x; }
-  friend BOOST_OPS_CONSTEXPR bool operator<=(const T& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator<=(const T& x, const T& y)
     { return static_cast<bool>(x < y) || static_cast<bool>(x == y); }
-  friend BOOST_OPS_CONSTEXPR bool operator>=(const T& x, const T& y)
+  friend BOOST_OPERATORS_CONSTEXPR bool operator>=(const T& x, const T& y)
     { return static_cast<bool>(y < x) || static_cast<bool>(x == y); }
 };
 
