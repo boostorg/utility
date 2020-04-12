@@ -21,6 +21,7 @@ run compressed_pair_final_test.cpp ;
 run iterators_test.cpp ;
 
 run operators_test.cpp ;
+compile operators_constexpr_test.cpp ;
 
 compile result_of_test.cpp ;
 
