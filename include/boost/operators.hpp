@@ -110,12 +110,8 @@
 #endif                               // operator-> not begin a UDT
 
 // Define BOOST_OPERATORS_CONSTEXPR to be like BOOST_CONSTEXPR but empty under MSVC < v19.22
-#ifdef BOOST_MSVC
-#if BOOST_MSVC_FULL_VER >= 192200000
-#define BOOST_OPERATORS_CONSTEXPR constexpr
-#else
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1922)
 #define BOOST_OPERATORS_CONSTEXPR
-#endif
 #else
 #define BOOST_OPERATORS_CONSTEXPR BOOST_CONSTEXPR
 #endif
