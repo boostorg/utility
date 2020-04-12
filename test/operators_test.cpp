@@ -50,9 +50,9 @@ namespace
         void operator!() const;
 
     public:
-        BOOST_OPS_CONSTEXPR convertible_to_bool( const bool value ) : _value( value ) {}
+         convertible_to_bool( const bool value ) : _value( value ) {}
 
-        BOOST_OPS_CONSTEXPR operator unspecified_bool_type() const
+         operator unspecified_bool_type() const
           { return _value ? &convertible_to_bool::_value : 0; }
     };
 
@@ -64,12 +64,12 @@ namespace
         , boost::shiftable<Wrapped1<T> >
     {
     public:
-        BOOST_OPS_CONSTEXPR explicit Wrapped1( T v = T() ) : _value(v) {}
-        BOOST_OPS_CONSTEXPR T value() const { return _value; }
+         explicit Wrapped1( T v = T() ) : _value(v) {}
+         T value() const { return _value; }
 
-        BOOST_OPS_CONSTEXPR convertible_to_bool operator<(const Wrapped1& x) const
+         convertible_to_bool operator<(const Wrapped1& x) const
           { return _value < x._value; }
-        BOOST_OPS_CONSTEXPR convertible_to_bool operator==(const Wrapped1& x) const
+         convertible_to_bool operator==(const Wrapped1& x) const
           { return _value == x._value; }
         
         Wrapped1& operator+=(const Wrapped1& x)
@@ -931,32 +931,6 @@ main()
     PRIVATE_EXPR_TEST( (tmp2=li1), static_cast<bool>((tmp2+=li1) == li2) );
 
     cout << "Performed tests on MyLongInt objects.\n";
-
-// Where C++11 constexpr is available, compile-time test some of the operators that are able to use it to propagate constexpr
-#ifndef BOOST_NO_CXX11_CONSTEXPR
-#if !defined(BOOST_MSVC) || (_MSC_VER >= 1922)
-    static_assert( ! static_cast<bool>( MyInt{ 1 } == MyInt{ 2 } ), "" );
-    static_assert(                      MyInt{ 1 } != MyInt{ 2 },   "" );
-    static_assert(                      MyInt{ 1 } <  MyInt{ 2 },   "" );
-    static_assert(                      MyInt{ 1 } <= MyInt{ 2 },   "" );
-    static_assert( ! static_cast<bool>( MyInt{ 1 } >  MyInt{ 2 } ), "" );
-    static_assert( ! static_cast<bool>( MyInt{ 1 } >= MyInt{ 2 } ), "" );
-
-    static_assert( ! static_cast<bool>( MyInt{ 2 } == MyInt{ 1 } ), "" );
-    static_assert(                      MyInt{ 2 } != MyInt{ 1 },   "" );
-    static_assert( ! static_cast<bool>( MyInt{ 2 } <  MyInt{ 1 } ), "" );
-    static_assert( ! static_cast<bool>( MyInt{ 2 } <= MyInt{ 1 } ), "" );
-    static_assert(                      MyInt{ 2 } >  MyInt{ 1 },   "" );
-    static_assert(                      MyInt{ 2 } >= MyInt{ 1 },   "" );
-
-    static_assert(                      MyInt{ 1 } == MyInt{ 1 },   "" );
-    static_assert( ! static_cast<bool>( MyInt{ 1 } != MyInt{ 1 } ), "" );
-    static_assert( ! static_cast<bool>( MyInt{ 1 } <  MyInt{ 1 } ), "" );
-    static_assert(                      MyInt{ 1 } <= MyInt{ 1 },   "" );
-    static_assert( ! static_cast<bool>( MyInt{ 1 } >  MyInt{ 1 } ), "" );
-    static_assert(                      MyInt{ 1 } >= MyInt{ 1 },   "" );
-#endif
-#endif
 
     return boost::report_errors();
 }
