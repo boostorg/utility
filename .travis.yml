@@ -294,7 +294,7 @@ matrix:
     - os: linux
       dist: xenial
       compiler: clang-10
-      env: TOOLSET=clang COMPILER=clang++-10 CXXSTD=03,11,14,17,2a
+      env: TOOLSET=clang COMPILER=clang++-10 CXXSTD=03,11,14,17,20
       addons:
         apt:
           packages:
@@ -308,7 +308,7 @@ matrix:
     - os: linux
       dist: xenial
       compiler: clang-libc++
-      env: TOOLSET=clang COMPILER=clang++-10 CXXSTD=03,11,14,17,2a CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
+      env: TOOLSET=clang COMPILER=clang++-10 CXXSTD=03,11,14,17,20 CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
       addons:
         apt:
           packages:
