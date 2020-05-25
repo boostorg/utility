@@ -37,6 +37,7 @@ run string_view_test_io.cpp ;
 
 run value_init_test.cpp ;
 run value_init_test2.cpp ;
+run value_init_test3.cpp ;
 run value_init_workaround_test.cpp ;
 run initialized_test.cpp ;
 compile-fail value_init_test_fail1.cpp ;
