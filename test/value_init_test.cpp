@@ -22,6 +22,7 @@
 #endif
 
 #include <boost/core/lightweight_test.hpp>
+#include <boost/config/workaround.hpp>
 
 //
 // Sample POD type
