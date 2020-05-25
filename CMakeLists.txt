@@ -15,7 +15,6 @@ target_include_directories(boost_utility INTERFACE include)
 target_link_libraries(boost_utility
     INTERFACE
         Boost::config
-        Boost::container_hash
         Boost::core
         Boost::io
         Boost::preprocessor
