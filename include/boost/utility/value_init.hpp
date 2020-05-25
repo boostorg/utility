@@ -35,8 +35,6 @@
 // It is safe to ignore the following MSVC warning, which may pop up when T is 
 // a const type: "warning C4512: assignment operator could not be generated".
 #pragma warning(disable: 4512)
-// C4355: 'this' : used in base member initializer list
-#pragma warning(disable: 4355)
 #endif
 
 #ifdef BOOST_NO_COMPLETE_VALUE_INITIALIZATION
@@ -89,7 +87,7 @@ class initialized
     BOOST_GPU_ENABLED
     initialized():
 #if BOOST_DETAIL_VALUE_INIT_WORKAROUND
-      zero_init( this, sizeof(*this) ),
+      zero_init( &const_cast< char& >( reinterpret_cast<char const volatile&>( data_ ) ), sizeof( data_ ) ),
 #endif
       data_()
     {
