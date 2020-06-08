@@ -153,49 +153,10 @@ void swap ( initialized<T> & lhs, initialized<T> & rhs )
 
 template<class T>
 class value_initialized
+  : public initialized<T>
 {
-  private :
-
-    // initialized<T> does value-initialization by default.
-    initialized<T> m_data;
-
-  public :
-    
-    BOOST_GPU_ENABLED
-    value_initialized()
-    :
-    m_data()
-    { }
-    
-    BOOST_GPU_ENABLED
-    T const & data() const
-    {
-      return m_data.data();
-    }
-
-    BOOST_GPU_ENABLED
-    T& data()
-    {
-      return m_data.data();
-    }
-
-    BOOST_GPU_ENABLED
-    void swap(value_initialized & arg)
-    {
-      m_data.swap(arg.m_data);
-    }
-
-    BOOST_GPU_ENABLED
-    operator T const &() const
-    {
-      return m_data;
-    }
-
-    BOOST_GPU_ENABLED
-    operator T&()
-    {
-      return m_data;
-    }
+    // initialized<T> does value-initialization by default and implements
+    // all the needed interface; the forwarding constructor is not inherited.
 } ;
 
 
