@@ -144,9 +144,11 @@ struct less_than_comparable1 : B
 template <class T, class U, class B = ::boost::detail::empty_base<T> >
 struct equality_comparable2 : B
 {
+#if !defined(__cpp_impl_three_way_comparison)
      friend bool operator==(const U& y, const T& x) { return x == y; }
      friend bool operator!=(const U& y, const T& x) { return !static_cast<bool>(x == y); }
-     friend bool operator!=(const T& y, const U& x) { return !static_cast<bool>(y == x); }
+#endif
+     friend bool operator!=(const T& x, const U& y) { return !static_cast<bool>(x == y); }
 };
 
 template <class T, class B = ::boost::detail::empty_base<T> >

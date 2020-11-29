@@ -568,6 +568,25 @@ namespace
         int v;
     };
 
+    // Test type designed specifically to test C++20 operator rewriting support
+    struct my_int :
+        public boost::equality_comparable2< my_int, int >
+    {
+        explicit my_int(int n) : m_n(n) {}
+
+        operator int () const
+        {
+            return m_n;
+        }
+
+        bool operator== (my_int that)
+        {
+            return that.m_n == m_n;
+        }
+
+        int m_n;
+    };
+
 } // unnamed namespace
 
 
@@ -931,6 +950,12 @@ main()
     PRIVATE_EXPR_TEST( (tmp2=li1), static_cast<bool>((tmp2+=li1) == li2) );
 
     cout << "Performed tests on MyLongInt objects.\n";
+
+    my_int my_n = my_int(10);
+
+    // Test if C++20 operator rewriting causes infinite recursion (https://github.com/boostorg/utility/issues/65)
+    BOOST_TEST(my_n == 10);
+    BOOST_TEST(my_n != 20);
 
     return boost::report_errors();
 }

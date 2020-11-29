@@ -100,6 +100,11 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/core/addressof.hpp>
+#if defined(__cpp_impl_three_way_comparison)
+#include <boost/core/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/declval.hpp>
+#endif
 
 #if defined(__sgi) && !defined(__GNUC__)
 #   pragma set woff 1234
@@ -158,9 +163,21 @@ struct less_than_comparable1 : B
 template <class T, class U, class B = operators_detail::empty_base<T> >
 struct equality_comparable2 : B
 {
+#if defined(__cpp_impl_three_way_comparison)
+     template< typename R = decltype(boost::declval< T const& >() == boost::declval< U const& >()) >
+     friend BOOST_OPERATORS_CONSTEXPR
+     typename boost::enable_if_c< !boost::is_same< R, bool >::value, bool >::type
+     operator==(const U& y, const T& x) { return x == y; }
+
+     template< typename R = decltype(boost::declval< T const& >() == boost::declval< U const& >()) >
+     friend BOOST_OPERATORS_CONSTEXPR
+     typename boost::enable_if_c< !boost::is_same< R, bool >::value, bool >::type
+     operator!=(const U& y, const T& x) { return !static_cast<bool>(x == y); }
+#else
      friend BOOST_OPERATORS_CONSTEXPR bool operator==(const U& y, const T& x) { return x == y; }
      friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const U& y, const T& x) { return !static_cast<bool>(x == y); }
-     friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const T& y, const U& x) { return !static_cast<bool>(y == x); }
+#endif
+     friend BOOST_OPERATORS_CONSTEXPR bool operator!=(const T& x, const U& y) { return !static_cast<bool>(x == y); }
 };
 
 template <class T, class B = operators_detail::empty_base<T> >
