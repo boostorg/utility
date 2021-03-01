@@ -141,15 +141,15 @@ namespace boost {
         void clear() BOOST_NOEXCEPT { len_ = 0; }          // Boost extension
 
         BOOST_CXX14_CONSTEXPR void remove_prefix(size_type n) {
-            if ( n > len_ )
-                n = len_;
+            if ( n > size())
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
             ptr_ += n;
             len_ -= n;
             }
 
         BOOST_CXX14_CONSTEXPR void remove_suffix(size_type n) {
-            if ( n > len_ )
-                n = len_;
+            if ( n > size())
+                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
             len_ -= n;
             }
 
