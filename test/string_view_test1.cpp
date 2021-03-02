@@ -75,13 +75,6 @@ void test_remove ( const std::string &str ) {
           }
       }
 
-	ref = str;
-	try {
-		ref.remove_prefix(ref.size() + 1);
-		BOOST_TEST(false);
-		}
-	catch ( const std::out_of_range &) {}
-
     for ( size_t i = 1; i < sz; ++ i ) {
       work = str;
       ref  = str;
@@ -91,13 +84,6 @@ void test_remove ( const std::string &str ) {
           ref.remove_suffix (i);
           }
       }
-
-	ref = str;
-	try {
-		ref.remove_suffix(ref.size() + 1);
-		BOOST_TEST(false);
-		}
-	catch ( const std::out_of_range &) {}
     }
 
 void test_hash(const std::string& str) {

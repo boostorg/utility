@@ -147,15 +147,15 @@ namespace boost {
         // modifiers
         void clear() { len_ = 0; }
         void remove_prefix(size_type n) {
-            if ( n > size())
-                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
+            if ( n > len_ )
+                n = len_;
             ptr_ += n;
             len_ -= n;
             }
 
         void remove_suffix(size_type n) {
-            if ( n > size())
-                BOOST_THROW_EXCEPTION( std::out_of_range ( "string_ref::substr" ) );
+            if ( n > len_ )
+                n = len_;
             len_ -= n;
             }
 
