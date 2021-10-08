@@ -1,0 +1,30 @@
+[/
+    Copyright (c) 2019 Vinnie Falco (vinnie.falco@gmail.com)
+    Copyright (c) 2020 Krystian Stasiowski (sdkrystian@gmail.com)
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+    Official repository: https://github.com/cppalliance/json
+]
+
+[section:utilities Utilities]
+
+The entire contents of Boost.Utility are in `namespace boost`.
+
+Direct use of the header [@../../boost/utility.hpp `<boost/utility.hpp>`] is discouraged and it will be deprecated.
+
+Please include the headers relative to individual components instead.
+
+[include 02_01_base_from_member.qbk]
+[include 02_02_BOOST_BINARY.qbk]
+[include 02_03_call_traits.qbk]
+[include 02_04_compressed_pair.qbk]
+[include 02_05_in_place_factory.qbk]
+[include 02_06_operators.qbk]
+[include 02_07_result_of.qbk]
+[include 02_08_string_view.qbk]
+[include 02_09_value_init.qbk]
+
+[endsect]
+
