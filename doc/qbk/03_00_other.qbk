@@ -1,0 +1,31 @@
+[/
+    Copyright (c) 2019 Vinnie Falco (vinnie.falco@gmail.com)
+    Copyright (c) 2020 Krystian Stasiowski (sdkrystian@gmail.com)
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+    Official repository: https://github.com/cppalliance/json
+]
+
+[section:utilities More Utilities]
+
+Some utilities have been moved from Boost.Utilities to more appropriate Boost libraries:
+
+# Moved to [@../core/index.html Boost.Core]
+    # [@../core/doc/html/core/addressof.html addressof]
+    # [@../core/doc/html/core/checked_delete.html checked_delete]
+    # [@../core/doc/html/core/enable_if.html enable_if]
+    # [@../core/doc/html/core/noncopyable.html noncopyable]
+# Moved to [@../type_traits/index.html Boost.TypeTraits]
+    # [@../type_traits/doc/html/boost_typetraits/reference/declval.html declval]
+# Moved to [@../iterator/index.html Boost.Iterator]
+    # [@../iterator/doc/generator_iterator.htm generator iterator adaptors]
+    # [@../iterator/doc/html/iterator/algorithms/next_prior.html next/prior]
+# Moved to [@../io/index.html Boost.IO]
+    # [@../io/doc/html/io.html ostream_string]
+# Moved to [@../throw_exception/index.html Boost.ThrowException]
+    # [@../throw_exception/doc/html/throw_exception.html#using_boost_throw_exception throw_exception]
+
+[endsect]
+
