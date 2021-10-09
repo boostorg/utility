@@ -33,7 +33,7 @@ environment:
     - TOOLSET: clang-win
       ADDRMD: 64
       CXXSTD: 14,17
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - TOOLSET: gcc
       CXXSTD: 03,11,14,1z
       ADDPATH: C:\cygwin\bin;
