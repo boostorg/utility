@@ -10,8 +10,6 @@
 [section Overview]
 [block'''<?dbhtml stop-chunking?>''']
 
-[$images/logo.png]
-
 Boost.Utility is a collection of small, useful, and general-purpose components for language support.
 
 Over time,
