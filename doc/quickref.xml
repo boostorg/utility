@@ -2,10 +2,99 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "../../../tools/boostbook/dtd/boostbook.dtd">
 
 <informaltable frame="all">
-  <tgroup cols="4">
+  <tgroup cols="1">
     <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
     <thead><row>
-      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">Utility</bridgehead></entry>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">base_from_member</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Classes</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__base_from_member">base_from_member</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="1">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">call_traits</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Type Traits</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__call_traits">call_traits</link></member>
+            <member><link linkend="utility.ref.boost__call_traits">call_traits</link></member>
+            <member><link linkend="utility.ref.boost__call_traits_lt__T_">call_traits&lt;T&amp;&gt;</link></member>
+            <member><link linkend="utility.ref.boost__call_traits_lt__T_lb_N_rb__gt_">call_traits&lt;T[N]&gt;</link></member>
+            <member><link linkend="utility.ref.boost__call_traits_lt__const_T_lb_N_rb__gt_">call_traits&lt;const T[N]&gt;</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+    <tgroup cols="2">
+        <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+        <thead><row>
+            <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">compare_pointees</bridgehead></entry>
+        </row></thead>
+        <tbody><row>
+            <entry valign="top">
+                <bridgehead renderas="sect3">Classes</bridgehead>
+                <simplelist type="vert" columns="1">
+                    <member><link linkend="utility.ref.boost__equal_pointees_t">equal_pointees_t</link></member>
+                    <member><link linkend="utility.ref.boost__less_pointees_t">less_pointees_t</link></member>
+                </simplelist>
+            </entry>
+            <entry valign="top">
+                <bridgehead renderas="sect3">Functions</bridgehead>
+                <simplelist type="vert" columns="1">
+                    <member><link linkend="utility.ref.boost__less_pointees">less_pointees</link></member>
+                    <member><link linkend="utility.ref.boost__equal_pointees">equal_pointees</link></member>
+                </simplelist>
+            </entry>
+        </row></tbody>
+    </tgroup>
+  <tgroup cols="2">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">compressed_pair</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Classes</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__compressed_pair">compressed_pair</link></member>
+        </simplelist>
+      </entry>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Functions</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__swap">swap</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="1">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">in_place_factory</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Classes</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__in_place_factory_base">in_place_factory_base</link></member>
+            <member><link linkend="utility.ref.boost__typed_in_place_factory_base">typed_in_place_factory_base</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="2">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">operators</bridgehead></entry>
     </row></thead>
     <tbody><row>
       <entry valign="top">
@@ -15,19 +104,14 @@
             <member><link linkend="utility.ref.boost__additive2">additive2</link></member>
             <member><link linkend="utility.ref.boost__arithmetic1">arithmetic1</link></member>
             <member><link linkend="utility.ref.boost__arithmetic2">arithmetic2</link></member>
-            <member><link linkend="utility.ref.boost__base_from_member">base_from_member</link></member>
-            <member><link linkend="utility.ref.boost__basic_string_ref">basic_string_ref</link></member>
-            <member><link linkend="utility.ref.boost__basic_string_view">basic_string_view</link></member>
             <member><link linkend="utility.ref.boost__bidirectional_iteratable">bidirectional_iteratable</link></member>
             <member><link linkend="utility.ref.boost__bidirectional_iterator_helper">bidirectional_iterator_helper</link></member>
             <member><link linkend="utility.ref.boost__bitwise1">bitwise1</link></member>
             <member><link linkend="utility.ref.boost__bitwise2">bitwise2</link></member>
-            <member><link linkend="utility.ref.boost__compressed_pair">compressed_pair</link></member>
             <member><link linkend="utility.ref.boost__decrementable">decrementable</link></member>
             <member><link linkend="utility.ref.boost__decrementable">decrementable</link></member>
             <member><link linkend="utility.ref.boost__dereferenceable">dereferenceable</link></member>
             <member><link linkend="utility.ref.boost__dereferenceable">dereferenceable</link></member>
-            <member><link linkend="utility.ref.boost__equal_pointees_t">equal_pointees_t</link></member>
             <member><link linkend="utility.ref.boost__equality_comparable1">equality_comparable1</link></member>
             <member><link linkend="utility.ref.boost__equality_comparable2">equality_comparable2</link></member>
             <member><link linkend="utility.ref.boost__equivalent1">equivalent1</link></member>
@@ -38,12 +122,8 @@
             <member><link linkend="utility.ref.boost__field_operators2">field_operators2</link></member>
             <member><link linkend="utility.ref.boost__forward_iteratable">forward_iteratable</link></member>
             <member><link linkend="utility.ref.boost__forward_iterator_helper">forward_iterator_helper</link></member>
-            <member><link linkend="utility.ref.boost__in_place_factory_base">in_place_factory_base</link></member>
             <member><link linkend="utility.ref.boost__incrementable">incrementable</link></member>
             <member><link linkend="utility.ref.boost__indexable">indexable</link></member>
-            <member><link linkend="utility.ref.boost__initialized">initialized</link></member>
-            <member><link linkend="utility.ref.boost__initialized">initialized</link></member>
-            <member><link linkend="utility.ref.boost__initialized_value_t">initialized_value_t</link></member>
             <member><link linkend="utility.ref.boost__input_iteratable">input_iteratable</link></member>
             <member><link linkend="utility.ref.boost__input_iterator_helper">input_iterator_helper</link></member>
             <member><link linkend="utility.ref.boost__integer_arithmetic1">integer_arithmetic1</link></member>
@@ -51,14 +131,13 @@
             <member><link linkend="utility.ref.boost__integer_multiplicative1">integer_multiplicative1</link></member>
             <member><link linkend="utility.ref.boost__integer_multiplicative2">integer_multiplicative2</link></member>
             <member><link linkend="utility.ref.boost__is_chained_base">is_chained_base</link></member>
-            <member><link linkend="utility.ref.boost__less_pointees_t">less_pointees_t</link></member>
             <member><link linkend="utility.ref.boost__less_than_comparable1">less_than_comparable1</link></member>
             <member><link linkend="utility.ref.boost__less_than_comparable2">less_than_comparable2</link></member>
             <member><link linkend="utility.ref.boost__multiplicative1">multiplicative1</link></member>
             <member><link linkend="utility.ref.boost__multiplicative2">multiplicative2</link></member>
             <member><link linkend="utility.ref.boost__operators">operators</link></member>
             <member><link linkend="utility.ref.boost__operators2">operators2</link></member>
-            <member><link linkend="utility.ref.boost__operators_lt_T">operators_lt_T</link></member>
+            <member><link linkend="utility.ref.boost__operators_lt_T">operators&lt;T,T&gt;</link></member>
             <member><link linkend="utility.ref.boost__ordered_euclidean_ring_operators1">ordered_euclidean_ring_operators1</link></member>
             <member><link linkend="utility.ref.boost__ordered_euclidean_ring_operators2">ordered_euclidean_ring_operators2</link></member>
             <member><link linkend="utility.ref.boost__ordered_euclidian_ring_operators1">ordered_euclidian_ring_operators1</link></member>
@@ -68,7 +147,6 @@
             <member><link linkend="utility.ref.boost__ordered_ring_operators1">ordered_ring_operators1</link></member>
             <member><link linkend="utility.ref.boost__ordered_ring_operators2">ordered_ring_operators2</link></member>
             <member><link linkend="utility.ref.boost__output_iteratable">output_iteratable</link></member>
-            <member><link linkend="utility.ref.boost__output_iterator_helper">output_iterator_helper</link></member>
             <member><link linkend="utility.ref.boost__output_iterator_helper">output_iterator_helper</link></member>
             <member><link linkend="utility.ref.boost__partially_ordered1">partially_ordered1</link></member>
             <member><link linkend="utility.ref.boost__partially_ordered1">partially_ordered1</link></member>
@@ -81,36 +159,52 @@
             <member><link linkend="utility.ref.boost__ring_operators2">ring_operators2</link></member>
             <member><link linkend="utility.ref.boost__shiftable1">shiftable1</link></member>
             <member><link linkend="utility.ref.boost__shiftable2">shiftable2</link></member>
-            <member><link linkend="utility.ref.boost__string_view">string_view</link></member>
             <member><link linkend="utility.ref.boost__totally_ordered1">totally_ordered1</link></member>
             <member><link linkend="utility.ref.boost__totally_ordered2">totally_ordered2</link></member>
-            <member><link linkend="utility.ref.boost__typed_in_place_factory_base">typed_in_place_factory_base</link></member>
-            <member><link linkend="utility.ref.boost__typed_in_place_factory_base">typed_in_place_factory_base</link></member>
             <member><link linkend="utility.ref.boost__unit_steppable">unit_steppable</link></member>
-            <member><link linkend="utility.ref.boost__value_initialized">value_initialized</link></member>
-            <member><link linkend="utility.ref.boost__value_initialized">value_initialized</link></member>
+        </simplelist>
+      </entry>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Type Traits</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__is_chained_base">is_chained_base</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="1">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">result_of</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Type Traits</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__tr1_result_of">tr1_result_of</link></member>
+            <member><link linkend="utility.ref.boost__result_of">result_of</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="4">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">string_view</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Classes</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__basic_string_ref">basic_string_ref</link></member>
+            <member><link linkend="utility.ref.boost__basic_string_view">basic_string_view</link></member>
         </simplelist>
       </entry>
       <entry valign="top">
         <bridgehead renderas="sect3">Functions</bridgehead>
         <simplelist type="vert" columns="1">
-            <member><link linkend="utility.ref.boost__get">get</link></member>
             <member><link linkend="utility.ref.boost__hash_range">hash_range</link></member>
             <member><link linkend="utility.ref.boost__hash_value">hash_value</link></member>
-            <member><link linkend="utility.ref.boost__less_pointees">less_pointees</link></member>
-            <member><link linkend="utility.ref.boost__swap">swap</link></member>
-            <member><link linkend="utility.ref.boost__equal_pointees">equal_pointees</link></member>
-        </simplelist>
-        <bridgehead renderas="sect3">Type Traits</bridgehead>
-        <simplelist type="vert" columns="1">
-            <member><link linkend="utility.ref.boost__call_traits">call_traits</link></member>
-            <member><link linkend="utility.ref.boost__call_traits">call_traits</link></member>
-            <member><link linkend="utility.ref.boost__call_traits_lt__T_">call_traits&lt;T&amp;&gt;</link></member>
-            <member><link linkend="utility.ref.boost__call_traits_lt__T_lb_N_rb__gt_">call_traits&lt;T[N]&gt;</link></member>
-            <member><link linkend="utility.ref.boost__call_traits_lt__const_T_lb_N_rb__gt_">call_traits&lt;const T[N]&gt;</link></member>
-            <member><link linkend="utility.ref.boost__is_chained_base">is_chained_base</link></member>
-            <member><link linkend="utility.ref.boost__tr1_result_of">tr1_result_of</link></member>
-            <member><link linkend="utility.ref.boost__result_of">result_of</link></member>
         </simplelist>
       </entry>
       <entry valign="top">
@@ -124,10 +218,6 @@
             <member><link linkend="utility.ref.boost__operator_gt__eq_">operator&gt;=</link></member>
             <member><link linkend="utility.ref.boost__operator_lt__lt_">operator&lt;&lt;</link></member>
         </simplelist>
-        <bridgehead renderas="sect3">Constants</bridgehead>
-        <simplelist type="vert" columns="1">
-            <member><link linkend="utility.ref.boost__initialized_value">initialized_value</link></member>
-        </simplelist>
       </entry>
       <entry valign="top">
         <bridgehead renderas="sect3">Aliases</bridgehead>
@@ -140,6 +230,35 @@
             <member><link linkend="utility.ref.boost__wstring_ref">wstring_ref</link></member>
             <member><link linkend="utility.ref.boost__wstring_view">wstring_view</link></member>
             <member><link linkend="utility.ref.boost__string_ref">string_ref</link></member>
+        </simplelist>
+      </entry>
+    </row></tbody>
+  </tgroup>
+  <tgroup cols="3">
+    <colspec colname="a"/><colspec colname="b"/><colspec colname="c"/><colspec colname="d"/>
+    <thead><row>
+      <entry valign="center" namest="a" nameend="d"><bridgehead renderas="sect2">value_init</bridgehead></entry>
+    </row></thead>
+    <tbody><row>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Classes</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__initialized">initialized</link></member>
+            <member><link linkend="utility.ref.boost__initialized_value_t">initialized_value_t</link></member>
+            <member><link linkend="utility.ref.boost__value_initialized">value_initialized</link></member>
+        </simplelist>
+      </entry>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Functions</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__get">get</link></member>
+            <member><link linkend="utility.ref.boost__swap">swap</link></member>
+        </simplelist>
+      </entry>
+      <entry valign="top">
+        <bridgehead renderas="sect3">Constants</bridgehead>
+        <simplelist type="vert" columns="1">
+            <member><link linkend="utility.ref.boost__initialized_value">initialized_value</link></member>
         </simplelist>
       </entry>
     </row></tbody>
