@@ -290,7 +290,7 @@ class __value_initialized__
 
   private :
 
-    ['unspecified] x ;
+    [unspecified] x ;
 
 } ;
 
@@ -447,7 +447,7 @@ class __initialized__
 
   private :
 
-    ['unspecified] x ;
+    [unspecified] x ;
 
 };
 

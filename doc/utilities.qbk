@@ -11,19 +11,25 @@
 
 The entire contents of Boost.Utility are in `namespace boost`.
 
+[warning
+
 Direct use of the header [@../../boost/utility.hpp `<boost/utility.hpp>`] is discouraged and it will be deprecated.
 
 Please include the headers relative to individual components instead.
 
-[include 02_01_base_from_member.qbk]
-[include 02_02_BOOST_BINARY.qbk]
-[include 02_03_call_traits.qbk]
-[include 02_04_compressed_pair.qbk]
-[include 02_05_in_place_factory.qbk]
-[include 02_06_operators.qbk]
-[include 02_07_result_of.qbk]
-[include 02_08_string_view.qbk]
-[include 02_09_value_init.qbk]
+]
+
+
+
+[include base_from_member.qbk]
+[include BOOST_BINARY.qbk]
+[include call_traits.qbk]
+[include compressed_pair.qbk]
+[include in_place_factory.qbk]
+[include operators.qbk]
+[include result_of.qbk]
+[include string_view.qbk]
+[include value_init.qbk]
 
 [endsect]
 

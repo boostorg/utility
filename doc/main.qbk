@@ -220,11 +220,11 @@
 [/ [import ../../test/doc_using_numbers.cpp] ]
 [/ [import ../../test/snippets.cpp] ]
 
-[include 01_overview.qbk]
+[include overview.qbk]
 
-[include 02_00_utilities.qbk]
+[include utilities.qbk]
 
-[include 03_00_other.qbk]
+[include other.qbk]
 
 [section:quickref Reference]
 [xinclude quickref.xml]
