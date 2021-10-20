@@ -429,6 +429,36 @@
 
                 <!-- string_view -->
                 <entry valign="top">
+                    <bridgehead renderas="sect3">Aliases</bridgehead>
+                    <simplelist type="vert" columns="1">
+                        <member>
+                            <link linkend="utility.ref.boost__string_view">string_view</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__u16string_ref">u16string_ref</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__u16string_view">u16string_view</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__u32string_ref">u32string_ref</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__u32string_view">u32string_view</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__wstring_ref">wstring_ref</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__wstring_view">wstring_view</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.ref.boost__string_ref">string_ref</link>
+                        </member>
+                    </simplelist>
+                </entry>
+
+                <entry valign="top">
                     <bridgehead renderas="sect3">Classes</bridgehead>
                     <simplelist type="vert" columns="1">
                         <member>
@@ -472,36 +502,6 @@
                         </member>
                         <member>
                             <link linkend="utility.ref.boost__operator_lt__lt_">operator&lt;&lt;</link>
-                        </member>
-                    </simplelist>
-                </entry>
-
-                <entry valign="top">
-                    <bridgehead renderas="sect3">Aliases</bridgehead>
-                    <simplelist type="vert" columns="1">
-                        <member>
-                            <link linkend="utility.ref.boost__string_view">string_view</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__u16string_ref">u16string_ref</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__u16string_view">u16string_view</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__u32string_ref">u32string_ref</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__u32string_view">u32string_view</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__wstring_ref">wstring_ref</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__wstring_view">wstring_view</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.ref.boost__string_ref">string_ref</link>
                         </member>
                     </simplelist>
                 </entry>
