@@ -1,5 +1,6 @@
 [/
  / Copyright (c) 2012 Marshall Clow
+ / Copyright (c) 2021, Alan Freitas
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -90,7 +91,7 @@ No memory allocations. No copying of character data. No changes to the code othe
 [heading:reference Synopsis ]
 [/=================]
 
-The header file [@../../boost/utility/string_view.hpp `<boost/utility/string_view.hpp>`] defines a template __boost_basic_string_view__, and four specializations __string_view__, __wstring_view__, __u16string_view__, __u32string_view__ - for `char` / `wchar_t` / `char16_t` / `char32_t`.
+The header file [@../../../include/boost/utility/string_view.hpp `<boost/utility/string_view.hpp>`] defines a template __boost_basic_string_view__, and four specializations __string_view__, __wstring_view__, __u16string_view__, __u32string_view__ - for `char` / `wchar_t` / `char16_t` / `char32_t`.
 
 `#include <boost/utility/string_view.hpp>`
 

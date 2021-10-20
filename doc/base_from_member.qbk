@@ -1,5 +1,6 @@
 [/
   Copyright 2001, 2003, 2004, 2012 Daryle Walker.
+  Copyright (c) 2021, Alan Freitas
 
   Distributed under the Boost Software License, Version 1.0.
 
@@ -354,10 +355,10 @@ the idiom of how to use a class member for initializing a base class.
 
 * Jonathan Turkanis supplied an implementation of generating the constructor
 templates that can be controlled and automated with macros. The
-implementation uses the [@../../../preprocessor/index.html Preprocessor library].
+implementation uses the [@boost:/doc/html/preprocessor/index.html Preprocessor library].
 
 * [@http://www.boost.org/people/daryle_walker.html">Daryle Walker] started the
-library. Contributed the test file [@../../test/base_from_member_test.cpp
+library. Contributed the test file [@../../../test/base_from_member_test.cpp
 base_from_member_test.cpp].
 
 [endsect]

@@ -1,5 +1,6 @@
 [/
  / Copyright (c) 2012 Marshall Clow
+ / Copyright (c) 2021, Alan Freitas
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,7 +13,7 @@
 
 [heading Introduction]
 
-The header [@../../boost/operators.hpp `<boost/operators.hpp>`] supplies
+The header [@../../../include/boost/operators.hpp `<boost/operators.hpp>`] supplies
 several sets of class templates in `namespace boost`. These templates define
 operators at namespace scope in terms of a minimal number of fundamental
 operators provided by the class.
@@ -29,7 +30,7 @@ related operators can be defined in terms of others (e.g. `x >= y`
 is equivalent to `!(x < y)`).
 
 Replicating this boilerplate for multiple classes is both tedious and
-error-prone. The [@../../boost/operators.hpp `<boost/operators.hpp>`] templates
+error-prone. The [@../../../include/boost/operators.hpp `<boost/operators.hpp>`] templates
 help by generating operators for you at namespace scope based on other
 operators you have defined in your class.
 
@@ -1591,7 +1592,7 @@ of the header, cannot be used for [link sec:chaining base class chaining].
 
 [#sec:a_demo]
 ['Arithmetic Operators Demonstration and Test Program]: The
-[@../../test/operators_test.cpp `operators_test.cpp`]
+[@../../../test/operators_test.cpp `operators_test.cpp`]
 program demonstrates the use of the arithmetic operator templates, and
 can also be used to verify correct operation. Check the compiler status
 report for the test results with selected platforms.
@@ -1833,7 +1834,7 @@ __output_iterator_helper__ supports the idiom by defining `operator*` and `opera
 just return a non-const reference to the iterator itself. Support for self-proxying allows us, in many cases,
 to reduce the task of writing an output iterator to writing just two member functions - an appropriate
 constructor and a copy-assignment operator. For example, here is a possible implementation of
-[@../../..iterator/doc/function_output_iterator.html `boost::function_output_iterator`] adaptor:
+[@boost:/doc/html/iterator/doc/function_output_iterator.html `boost::function_output_iterator`] adaptor:
 
 ```
 template<class UnaryFunction>
@@ -1866,7 +1867,7 @@ __output_iterator_helper__ will never be instantiated.
 [#sec:i_demo]
 [h5 Iterator Demonstration and Test Program]
 
-The [@../../test/iterators_test.cpp `iterators_test.cpp`]
+The [@../../../test/iterators_test.cpp `iterators_test.cpp`]
 program demonstrates the use of the iterator templates, and can also be
 used to verify correct operation. The following is the custom iterator
 defined in the test program. It demonstrates a correct (though trivial)
@@ -1956,12 +1957,12 @@ library to remain backward-compatible.
 
 * [@http://www.boost.org/people/dave_abrahams.htm Dave Abrahams]:
   Started the library and contributed the arithmetic operators in
-  [@../../boost/operators.hpp `boost/operators.hpp`].
+  [@../../../include/boost/operators.hpp `boost/operators.hpp`].
 
 * [@http://www.boost.org/people/jeremy_siek.htm Jeremy Siek]:
   Contributed the [link sec:deref dereference operators and iterator
-  helpers] in [@../../boost/operators.hpp boost/operators.hpp].
-  Also contributed [@../../test/iterators_test.cpp iterators_test.cpp].
+  helpers] in [@../../../include/boost/operators.hpp boost/operators.hpp].
+  Also contributed [@../../../test/iterators_test.cpp iterators_test.cpp].
 
 * [@http://www.boost.org/people/aleksey_gurtovoy.htm Aleksey Gurtovoy]:
   Contributed the code to support [link sec:chaining base class
@@ -1969,7 +1970,7 @@ library to remain backward-compatible.
   the library.
 
 * [@http://www.boost.org/people/beman_dawes.html Beman Dawes]:
-  Contributed [@../../test/operators_test.cpp `operators_test.cpp`].
+  Contributed [@../../../test/operators_test.cpp `operators_test.cpp`].
 
 * [@http://www.boost.org/people/daryle_walker.html Daryle Walker]:
   Contributed classes for the shift operators, equivalence, partial

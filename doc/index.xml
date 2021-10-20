@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "../../../tools/boostbook/dtd/boostbook.dtd">
 
+<!--
+    Copyright (c) 2021, Alan Freitas
+
+    Distributed under the Boost Software License, Version 1.0.
+
+    See accompanying file LICENSE_1_0.txt
+    or copy at http://boost.org/LICENSE_1_0.txt
+-->
+
+
 <section id="utility.index">
   <title>Index</title>
   <index/>

@@ -1,5 +1,6 @@
 [/
   Copyright 2000 Beman Dawes & John Maddock.
+  Copyright (c) 2021, Alan Freitas
 
   Distributed under the Boost Software License, Version 1.0.
 
@@ -11,7 +12,7 @@
 
 [heading Introduction]
 
-All of the contents of [@../../include/boost/compressed_pair.hpp `<boost/compressed_pair.hpp>`] are defined inside
+All of the contents of [@../../../include/boost/compressed_pair.hpp `<boost/compressed_pair.hpp>`] are defined inside
 `namespace boost`.
 
 The class __compressed_pair__ is very similar to __std_pair__. However, if either of
@@ -68,8 +69,8 @@ a default value.
 
 Note that __compressed_pair__ can not be instantiated if either of the
 template arguments is a union type, unless there is compiler support for
-[@https://www.boost.org/doc/libs/1_77_0/libs/type_traits/doc/html/boost_typetraits/reference/is_union.html `boost::is_union`], or
-if [@https://www.boost.org/doc/libs/1_77_0/libs/type_traits/doc/html/boost_typetraits/reference/is_union.html `boost::is_union`] is
+[@boost:/doc/html/type_traits/index.html `boost::is_union`], or
+if [@boost:/doc/html/type_traits/index.html `boost::is_union`] is
 specialised for the union type.
 
 Finally, a word of caution for Visual C++ 6 users: if either argument is an

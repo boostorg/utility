@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2001, Beman Dawes
+    Copyright (c) 2021, Alan Freitas
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -30,8 +30,8 @@
 [template indexterm1[term1] '''<indexterm><primary>'''[term1]'''</primary></indexterm>''']
 [template indexterm2[term1 term2] '''<indexterm><primary>'''[term1]'''</primary><secondary>'''[term2]'''</secondary></indexterm>''']
 
-[template include_file[path][^<'''<ulink url="https://github.com/cppalliance/utility/blob/master/include/'''[path]'''">'''[path]'''</ulink>'''>]]
-[template issue[n] '''<ulink url="https://github.com/cppalliance/utility/issues/'''[n]'''">#'''[n]'''</ulink>''']
+[template include_file[path][^<'''<ulink url="https://github.com/boostorg/utility/blob/master/include/'''[path]'''">'''[path]'''</ulink>'''>]]
+[template issue[n] '''<ulink url="https://github.com/boostorg/utility/issues/'''[n]'''">#'''[n]'''</ulink>''']
 
 [/ Named Requirements ]
 
@@ -207,18 +207,6 @@
 [def __bad__  [role red   \u2718]]
 
 [/-----------------------------------------------------------------------------]
-
-[/ [import ../../example/pretty.cpp] ]
-[/ [import ../../example/validate.cpp] ]
-[/ [import ../../include/boost/utility/impl/serialize.ipp] ]
-[/ [import ../../test/doc_background.cpp] ]
-[/ [import ../../test/doc_parsing.cpp] ]
-[/ [import ../../test/doc_quick_look.cpp] ]
-[/ [import ../../test/doc_serializing.cpp] ]
-[/ [import ../../test/doc_storage_ptr.cpp] ]
-[/ [import ../../test/doc_uses_allocator.cpp] ]
-[/ [import ../../test/doc_using_numbers.cpp] ]
-[/ [import ../../test/snippets.cpp] ]
 
 [include overview.qbk]
 

@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2021 Alan de Freitas (alandefreitas @ gmail.com)
+    Copyright (c) 2021 Alan de Freitas (alandefreitas@gmail.com)
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,24 +22,24 @@ in other libraries.
 
 [table:id Components
     [[Boost.Utility] [Moved to Boost] [C++ Standard variant]]
-    [[[@../core/doc/html/core/addressof.html `addressof`]] [[@../core/index.html Boost.Core]] [C++11 __std_addressof__]]
+    [[[@boost:/doc/html/core/doc/html/core/addressof.html `addressof`]] [[@boost:/doc/html/core/index.html Boost.Core]] [C++11 __std_addressof__]]
     [[__base_from_member__]      [] []]
     [[__BOOST_BINARY__] [] [C++14 [@https://en.cppreference.com/w/cpp/language/integer_literal Binary integer literal]]]
     [[__call_traits__]      [] []]
-    [[[@../core/doc/html/core/checked_delete.html `checked_delete`]] [[@../core/index.html Boost.Core]] []]
+    [[[@boost:/doc/html/core/doc/html/core/checked_delete.html `checked_delete`]] [[@boost:/doc/html/core/index.html Boost.Core]] []]
     [[__compressed_pair__]      [] []]
-    [[[@../type_traits/doc/html/boost_typetraits/reference/declval.html `declval`]] [[@../type_traits/index.html Boost.TypeTraits]] [C++11 __std_declval__]]
-    [[[@../core/doc/html/core/enable_if.html `enable_if`]] [[@../core/index.html Boost.Core]] [C++11 __std_enable_if__]]
-    [[[@../iterator/doc/generator_iterator.htm generator iterator adaptors]] [[@../iterator/index.html Boost.Iterator]] []]
+    [[[@boost:/doc/html/type_traits/doc/html/boost_typetraits/reference/declval.html `declval`]] [[@boost:/doc/html/type_traits/index.html Boost.TypeTraits]] [C++11 __std_declval__]]
+    [[[@boost:/doc/html/core/doc/html/core/enable_if.html `enable_if`]] [[@boost:/doc/html/core/index.html Boost.Core]] [C++11 __std_enable_if__]]
+    [[[@boost:/doc/html/iterator/doc/generator_iterator.htm generator iterator adaptors]] [[@boost:/doc/html/iterator/index.html Boost.Iterator]] []]
     [[__in_place_factory__]      [] []]
-    [[[@../iterator/index.html `iterator_adaptors`]]      [[@../iterator/index.html Boost.Iterator]] []]
-    [[[@../iterator/doc/html/iterator/algorithms/next_prior.html `next` / `prior`]] [[@../iterator/index.html Boost.Iterator]] [C++11 __std_next__ / __std_prev__]]
-    [[[@../core/doc/html/core/noncopyable.html `noncopyable`]] [[@../core/index.html Boost.Core]] []]
+    [[[@boost:/doc/html/iterator/index.html `iterator_adaptors`]]      [[@boost:/doc/html/iterator/index.html Boost.Iterator]] []]
+    [[[@boost:/doc/html/iterator/doc/html/iterator/algorithms/next_prior.html `next` / `prior`]] [[@boost:/doc/html/iterator/index.html Boost.Iterator]] [C++11 __std_next__ / __std_prev__]]
+    [[[@boost:/doc/html/core/doc/html/core/noncopyable.html `noncopyable`]] [[@boost:/doc/html/core/index.html Boost.Core]] []]
     [[[link sec:operators `operators`]]      [] []]
-    [[[@../io/doc/html/io.html `ostream_string`]] [[@../io/index.html Boost.IO]] []]
+    [[[@boost:/doc/html/io/doc/html/io.html `ostream_string`]] [[@boost:/doc/html/io/index.html Boost.IO]] []]
     [[__result_of__]      [] [C++11 __std_result_of__]]
     [[__string_view__]      [] [C++17 __std_string_view__]]
-    [[[@../throw_exception/doc/html/throw_exception.html#using_boost_throw_exception `throw_exception`]] [[@../throw_exception/index.html Boost.ThrowException]] []]
+    [[[@boost:/doc/html/throw_exception/doc/html/throw_exception.html#using_boost_throw_exception `throw_exception`]] [[@boost:/doc/html/throw_exception/index.html Boost.ThrowException]] []]
     [[[link sec:value_init `value_init`]]      [] [C++11 [@https://en.cppreference.com/w/cpp/language/list_initialization List initialization]]]
 ]
 

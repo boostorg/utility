@@ -1,5 +1,6 @@
 [/
  / Copyright (c) 2012 Marshall Clow
+ / Copyright (c) 2021, Alan Freitas
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,7 +23,7 @@ function reference, member function pointer, or class type. By default,
 N may be any value between 0 and 16. To change the upper limit, define
 the macro `BOOST_RESULT_OF_NUM_ARGS` to the maximum value for N. Class
 template __result_of__ resides in the header
-[@../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
+[@../../../include/boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
 
 If your compiler's support for __decltype__ is adequate, __result_of__
 automatically uses it to deduce the type of the call expression, in
@@ -90,7 +91,7 @@ If you wish to continue to use the protocol on compilers that
 support __decltype__, there are two options:
 
 * You can use __boost_tr1_result_of__, which is also defined in
-[@../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
+[@../../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
 
 * Alternatively, you can define the macro `BOOST_RESULT_OF_USE_TR1`,
 which causes __result_of__ to use the protocol described above instead
@@ -127,7 +128,7 @@ between __boost_result_of__ and TR1.
 * [#BOOST_NO_RESULT_OF] This implementation of __result_of__ requires class template
 partial specialization, the ability to parse function types properly, and support
 for SFINAE. If __result_of__ is not supported by your compiler, including the header
-[@../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`] will define
+[@../../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`] will define
 the macro `BOOST_NO_RESULT_OF`.
 
 For additional information about __result_of__, see the C++ Library

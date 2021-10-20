@@ -1,5 +1,6 @@
 [/
  / Copyright (c) 2012 Marshall Clow
+ / Copyright (c) 2021, Alan Freitas
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -98,8 +99,8 @@ correctly aligned and sized. Naturally, the container will typically support uni
 in-place construction to override a fully-constructed object, as this would defeat the purpose of in-place construction.
 
 For this purpose, the framework provides two concepts called: InPlaceFactories and TypedInPlaceFactories.
-Helpers to declare these classes are declared in [@../../include/boost/utility/in_place_factory.hpp `<boost/utility/in_place_factory.hpp>`]
-and [@../../include/boost/utility/typed_in_place_factory.hpp `<boost/utility/typed_in_place_factory.hpp>`].
+Helpers to declare these classes are declared in [@../../../include/boost/utility/in_place_factory.hpp `<boost/utility/in_place_factory.hpp>`]
+and [@../../../include/boost/utility/typed_in_place_factory.hpp `<boost/utility/typed_in_place_factory.hpp>`].
 
 Essentially, these classes hold a sequence of actual parameters and a method to construct an object in place using these parameters.
 Each member of the family differs only in the number and type of the parameter list. The first family
@@ -211,11 +212,11 @@ As you can see, the `in_place_factory` and `typed_in_place_factory` template cla
 the target type: in the first family, the type is given as a template argument to the apply member function while in the
 second it is given directly as part of the factory class.
 
-When the container holds a unique non-polymorphic type, such as the case of [@../../../optional/index.html Boost.Optional],
+When the container holds a unique non-polymorphic type, such as the case of [@boost:/doc/html/optional/index.html Boost.Optional],
 it knows the exact dynamic-type of the contained object and can pass it to the `apply()` method of a non-typed factory.
 In this case, end users can use an `in_place_factory` instance which can be constructed without the type of the object to construct.
 
-However, if the container holds heterogeneous or polymorphic objects, such as the case of [@../../../variant/index.html Boost.Variant],
+However, if the container holds heterogeneous or polymorphic objects, such as the case of [@boost:/doc/html/variant/index.html Boost.Variant],
 the dynamic-type of the object to be constructed must be known by the factory. In this case, end users must use a `typed_in_place_factory`
 instead.
 
@@ -232,7 +233,7 @@ The correct function overload must be based on the only distinctive and common
 characteristic of all the classes in each family: the base class.
 
 Depending on the container class, you can use `enable_if` to generate the right overload, or use the following
-dispatch technique, which is used in the [@../../../optional/index.html Boost.Optional] class:
+dispatch technique, which is used in the [@boost:/doc/html/optional/index.html Boost.Optional] class:
 
 
 ```
