@@ -59,9 +59,6 @@
                             <link linkend="utility.ref.boost__call_traits">call_traits</link>
                         </member>
                         <member>
-                            <link linkend="utility.ref.boost__call_traits">call_traits</link>
-                        </member>
-                        <member>
                             <link linkend="utility.ref.boost__call_traits_lt__T_">call_traits&lt;T&amp;&gt;</link>
                         </member>
                         <member>
