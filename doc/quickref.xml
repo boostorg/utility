@@ -59,7 +59,7 @@
                             <link linkend="utility.index_and_ref.ref.boost__call_traits">call_traits</link>
                         </member>
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__call_traits_lt__T_">call_traits&lt;T&amp;&gt;</link>
+                            <link linkend="utility.index_and_ref.ref.boost__call_traits_lt__T__ampersand___gt_">call_traits&lt;T&amp;&gt;</link>
                         </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__call_traits_lt__T_lb_N_rb__gt_">call_traits&lt;T[N]&gt;
@@ -180,16 +180,16 @@
                             <link linkend="utility.index_and_ref.ref.boost__decrementable">decrementable</link>
                         </member>
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__decrementable">decrementable</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.index_and_ref.ref.boost__dereferenceable">dereferenceable</link>
-                        </member>
-                        <member>
                             <link linkend="utility.index_and_ref.ref.boost__dereferenceable">dereferenceable</link>
                         </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__equality_comparable1">equality_comparable1</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.index_and_ref.ref.boost__equality_comparable2">equality_comparable2</link>
+                        </member>
+                        <member>
+                            <link linkend="utility.index_and_ref.ref.boost__equivalent1">equivalent1</link>
                         </member>
                     </simplelist>
                 </entry>
@@ -197,12 +197,6 @@
                 <entry valign="top">
                     <bridgehead renderas="sect3">Classes (2 of 5)</bridgehead>
                     <simplelist type="vert" columns="1">
-                        <member>
-                            <link linkend="utility.index_and_ref.ref.boost__equality_comparable2">equality_comparable2</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.index_and_ref.ref.boost__equivalent1">equivalent1</link>
-                        </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__equivalent2">equivalent2</link>
                         </member>
@@ -238,18 +232,18 @@
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__input_iterator_helper">input_iterator_helper</link>
                         </member>
-                    </simplelist>
-                </entry>
-
-                <entry valign="top">
-                    <bridgehead renderas="sect3">Classes (3 of 5)</bridgehead>
-                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__integer_arithmetic1">integer_arithmetic1</link>
                         </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__integer_arithmetic2">integer_arithmetic2</link>
                         </member>
+                    </simplelist>
+                </entry>
+
+                <entry valign="top">
+                    <bridgehead renderas="sect3">Classes (3 of 5)</bridgehead>
+                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__integer_multiplicative1">integer_multiplicative1</link>
                         </member>
@@ -278,19 +272,13 @@
                             <link linkend="utility.index_and_ref.ref.boost__operators2">operators2</link>
                         </member>
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__operators_lt_T">operators&lt;T,T&gt;</link>
+                            <link linkend="utility.index_and_ref.ref.boost__operators_lt_T_comma__T__gt_">operators&lt;T,T&gt;</link>
                         </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__ordered_euclidean_ring_operators1">
                                 ordered_euclidean_ring_operators1
                             </link>
                         </member>
-                    </simplelist>
-                </entry>
-
-                <entry valign="top">
-                    <bridgehead renderas="sect3">Classes (4 of 5)</bridgehead>
-                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__ordered_euclidean_ring_operators2">
                                 ordered_euclidean_ring_operators2
@@ -301,6 +289,12 @@
                                 ordered_euclidian_ring_operators1
                             </link>
                         </member>
+                    </simplelist>
+                </entry>
+
+                <entry valign="top">
+                    <bridgehead renderas="sect3">Classes (4 of 5)</bridgehead>
+                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__ordered_euclidian_ring_operators2">
                                 ordered_euclidian_ring_operators2
@@ -328,27 +322,10 @@
                             <link linkend="utility.index_and_ref.ref.boost__partially_ordered1">partially_ordered1</link>
                         </member>
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__partially_ordered1">partially_ordered1</link>
-                        </member>
-                        <member>
                             <link linkend="utility.index_and_ref.ref.boost__partially_ordered2">partially_ordered2</link>
                         </member>
-                        <member>
-                            <link linkend="utility.index_and_ref.ref.boost__partially_ordered2">partially_ordered2</link>
-                        </member>
-                    </simplelist>
-                </entry>
-
-                <entry valign="top">
-                    <bridgehead renderas="sect3">Classes (5 of 5)</bridgehead>
-                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__random_access_iteratable">random_access_iteratable</link>
-                        </member>
-                        <member>
-                            <link linkend="utility.index_and_ref.ref.boost__random_access_iterator_helper">
-                                random_access_iterator_helper
-                            </link>
                         </member>
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__random_access_iterator_helper">
@@ -361,6 +338,12 @@
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__ring_operators2">ring_operators2</link>
                         </member>
+                    </simplelist>
+                </entry>
+
+                <entry valign="top">
+                    <bridgehead renderas="sect3">Classes (5 of 5)</bridgehead>
+                    <simplelist type="vert" columns="1">
                         <member>
                             <link linkend="utility.index_and_ref.ref.boost__shiftable1">shiftable1</link>
                         </member>
@@ -416,10 +399,10 @@
                     <bridgehead renderas="sect3">Type Traits</bridgehead>
                     <simplelist type="vert" columns="1">
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__tr1_result_of">tr1_result_of</link>
+                            <link linkend="utility.index_and_ref.ref.boost__result_of">result_of</link>
                         </member>
                         <member>
-                            <link linkend="utility.index_and_ref.ref.boost__result_of">result_of</link>
+                            <link linkend="utility.index_and_ref.ref.boost__tr1_result_of">tr1_result_of</link>
                         </member>
                     </simplelist>
                 </entry>
