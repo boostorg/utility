@@ -4,7 +4,7 @@
   exclude-result-prefixes="xs"
   expand-text="yes">
 
-  <xsl:variable name="doc-ref" select="'utility.ref'"/>
+  <xsl:variable name="doc-ref" select="'utility.index_and_ref.ref'"/>
   <xsl:variable name="doc-ns" select="'boost::utility'"/>
   <xsl:variable name="include-private-members" select="false()"/>
 
