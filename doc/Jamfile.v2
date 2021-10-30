@@ -23,7 +23,7 @@ import ../../../tools/docca/docca.jam ;
 docca.reference reference.qbk
     :
         custom-overrides.xsl
-        [ glob-tree-ex ../include/boost : *.hpp *.ipp ]
+        [ glob-tree-ex ../include/boost : *.hpp *.ipp : utility/detail detail/ob_compressed_pair.hpp ]
     :
         <doxygen:param>PROJECT_NAME=Utility
         <doxygen:param>PROJECT_BRIEF="Boost.Utility Library"
@@ -108,9 +108,9 @@ boostbook utility
         <xsl:param>chapter.autolabel=1
         <xsl:param>chunk.section.depth=8                # Depth to which sections should be chunked
         <xsl:param>chunk.first.sections=1               # Chunk the first top-level section?
-        <xsl:param>toc.section.depth=8                  # How deep should recursive sections appear in the TOC?
-        <xsl:param>toc.max.depth=8                      # How many levels should be created for each TOC?
-        <xsl:param>generate.section.toc.level=8         # Control depth of TOC generation in sections
+        <xsl:param>toc.section.depth=2                  # How deep should recursive sections appear in the TOC?
+        <xsl:param>toc.max.depth=2                      # How many levels should be created for each TOC?
+        <xsl:param>generate.section.toc.level=2         # Control depth of TOC generation in sections
         <xsl:param>generate.toc="chapter toc,title section nop reference nop"
         <include>../../../tools/boostbook/dtd
     :
