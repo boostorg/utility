@@ -11,7 +11,7 @@
 [section In-place Factory]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 Suppose we have a class
 
@@ -88,7 +88,8 @@ void foo()
 Clearly, this solution does not scale well since the container must duplicate all the constructor overloads
 from the contained type, or at least all those which are to be supported directly in the container.
 
-[heading Framework]
+[endsect]
+[section Framework]
 
 This library proposes a framework to allow some containers to directly construct contained objects in-place without requiring
 the entire set of constructor overloads from the contained type. It also allows the container to remove the __CopyConstructible__
@@ -141,7 +142,8 @@ void foo()
 
 ```
 
-[heading Specification]
+[endsect]
+[section Specification]
 
 The following is the first member of the family of `InPlaceFactory` classes, along with its corresponding helper template function.
 The rest of the family varies only in the number and type of template and constructor parameters.
@@ -220,7 +222,8 @@ However, if the container holds heterogeneous or polymorphic objects, such as th
 the dynamic-type of the object to be constructed must be known by the factory. In this case, end users must use a `typed_in_place_factory`
 instead.
 
-[heading Container-side Usage]
+[endsect]
+[section Container-side Usage]
 
 As shown in the introductory simplified example, the container class must contain methods that accept an instance of
 these factories and pass the object's storage to the factory's apply method.
@@ -270,7 +273,8 @@ struct C
 };
 ```
 
-[heading User-side Usage]
+[endsect]
+[section User-side Usage]
 
 End users pass to the container an instance of a factory object holding the actual parameters needed to construct the
 contained object directly within the container. For this, the helper template function `in_place` is used.
@@ -289,10 +293,18 @@ void foo()
 
 ```
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[#boost.typed_in_place_factory_base]
+[xinclude in_place_factory_reference.xml]
+[/===============]
+
+[section Acknowledgments]
 
 Copyright Fernando Luis Cacciola Carballal, 2004
 
+[endsect]
 [endsect]
 
 

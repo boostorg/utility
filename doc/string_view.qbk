@@ -10,7 +10,7 @@
 [section String View]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 The class __boost_string_view__ and other classes derived from __basic_string_view__ represent references to strings or substrings. When you are parsing/processing strings from some external source, frequently you want to pass a piece of text to a procedure for specialized processing. Before __std_string_view__, the canonical way to do this used to be a __std_string__, but that has certain drawbacks:
 
@@ -51,9 +51,10 @@ Please prefer __string_view__ / __basic_string_view__ over __string_ref__ / __ba
 
 
 ]
+[endsect]
 
 [/===============]
-[heading Examples]
+[section Examples]
 [/===============]
 
 Integrating __string_view__ into your code is fairly simple. Wherever you pass a `const __std_string__ &` or __std_string__ as a parameter, that's a candidate for passing a __boost_string_view__.
@@ -86,9 +87,10 @@ if ( extract_part ( "ABCDEFG" ).front() == "C" ) { /* do something */ }
 ```
 
 No memory allocations. No copying of character data. No changes to the code other than the types. There are two __string_view__ s created, and two __string_view__ s copied, but those are cheap operations.
+[endsect]
 
 [/=================]
-[heading:reference Synopsis ]
+[section:reference Synopsis]
 [/=================]
 
 The header file [@../../../include/boost/utility/string_view.hpp `<boost/utility/string_view.hpp>`] defines a template __boost_basic_string_view__, and four specializations __string_view__, __wstring_view__, __u16string_view__, __u32string_view__ - for `char` / `wchar_t` / `char16_t` / `char32_t`.
@@ -173,9 +175,11 @@ bool starts_with(basic_string_view x) const ;
 bool ends_with(charT c) const ;
 bool ends_with(basic_string_view x) const ;
 ```
+[endsect]
+
 
 [/===============]
-[h1 History]
+[section History]
 [/===============]
 
 [h5 boost 1.71]
@@ -186,7 +190,15 @@ a common utility.
 [h5 boost 1.53]
 * Introduced
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[xinclude string_view_reference.xml]
+[/===============]
+
+[/===============]
+[section Acknowledgments]
+[/===============]
 
 Author: Clow, Marshall
 
@@ -194,6 +206,5 @@ Copyright 2012 Marshall Clow
 
 [endsect]
 
-
-
+[endsect]
 

@@ -10,7 +10,7 @@
 
 [section Compressed Pair]
 
-[heading Introduction]
+[section Introduction]
 
 All of the contents of [@../../../include/boost/compressed_pair.hpp `<boost/compressed_pair.hpp>`] are defined inside
 `namespace boost`.
@@ -20,7 +20,9 @@ the template arguments are empty classes, then the
 [@https://en.cppreference.com/w/cpp/language/ebo ['empty base-class optimisation]]
 is applied to compress the size of the pair.
 
-[heading Synopsis]
+[endsect]
+
+[section Synopsis]
 
 ```cpp
 template <class T1, class T2>
@@ -78,11 +80,19 @@ empty type, then assigning to that member will produce memory corruption,
 unless the empty type has a "do nothing" assignment operator defined. This
 is due to a bug in the way VC6 generates implicit assignment operators.
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[xinclude compressed_pair_reference.xml]
+[/===============]
+
+[section Acknowledgments]
 
 Based on contributions by Steve Cleary, Beman Dawes, Howard Hinnant and
 John Maddock.
 
 Maintained by [@mailto:john@johnmaddock.co.uk John Maddock].
+
+[endsect]
 
 [endsect]

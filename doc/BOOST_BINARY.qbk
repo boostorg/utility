@@ -10,7 +10,7 @@
 [section Binary Integer Literals]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 The macro `BOOST_BINARY` is used for the representation of binary
 literals. It takes as an argument a binary number arranged as an
@@ -37,7 +37,9 @@ them as an extension.
 The `BOOST_BINARY` family of macros resides in the header
 [@../../../include/boost/utility/binary.hpp <boost/utility/binary.hpp>].
 
-[heading Example]
+[endsect]
+
+[section Example]
 
 ```
 void foo( int );
@@ -63,9 +65,18 @@ void bar()
 }
 ```
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[xinclude boost_binary_reference.xml]
+[/===============]
+
+
+[section Acknowledgments]
 
 Contributed by Matt Calabrese.
+
+[endsect]
 
 [endsect]
 

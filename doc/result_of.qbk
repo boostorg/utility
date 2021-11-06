@@ -10,7 +10,7 @@
 [section Result of]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 The class template __result_of__ helps determine the type of a
 call expression. For example, given an lvalue `f` of type `F`
@@ -136,8 +136,10 @@ Technical Report, [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n183
 or, for motivation and design rationale, the __result_of__
 [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2003/n1454.html proposal].
 
+[endsect]
+
 [#sec:result_of_guidelines]
-[heading Usage guidelines for __boost_result_of__]
+[section Usage guidelines for __boost_result_of__]
 
 The following are general suggestions about when and how to use __boost_result_of__.
 
@@ -191,8 +193,10 @@ typedef __boost_result_of__<
 >::type type4; // type4 is float const &
 ```
 
+[endsect]
+
 [#sec:result_of_tr1_protocol_guidelines]
-[heading Usage guidelines for the TR1 result_of protocol]
+[section Usage guidelines for the TR1 result_of protocol]
 
 On compliant C++11 compilers, __boost_result_of__ can
 use __decltype__ to deduce the type of any
@@ -268,8 +272,10 @@ struct functor {
 };
 ```
 
+[endsect]
+
 [#sec:result_of_tr1_diff]
-[heading Known differences between __boost_result_of__ and __boost_tr1_result_of__]
+[section Known differences between __boost_result_of__ and __boost_tr1_result_of__]
 
 When using __decltype__, __boost_result_of__ ignores the TR1 protocol and instead deduces the
 return type of function objects directly via __decltype__. In most situations, users
@@ -391,16 +397,26 @@ BOOST_STATIC_ASSERT((
 #endif
 ```
 
+[endsect]
+
 [#sec:result_of_cxx11_diff]
-[heading Known differences between __boost_result_of__ and C++11 result_of]
+[section Known differences between __boost_result_of__ and C++11 result_of]
 
 When using __decltype__, __boost_result_of__ implements most of the C++11 __std_result_of__
 specification. One known exception is that __boost_result_of__ does not implement the
 requirements regarding pointers to member data.
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[xinclude result_of_reference.xml]
+[/===============]
+
+[section Acknowledgments]
 
 Created by Doug Gregor. Contributions from Daniel Walker, Eric Niebler, Michel Morin and others.
+
+[endsect]
 
 [endsect]
 

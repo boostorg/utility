@@ -11,15 +11,17 @@
 [section Operators]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 The header [@../../../include/boost/operators.hpp `<boost/operators.hpp>`] supplies
 several sets of class templates in `namespace boost`. These templates define
 operators at namespace scope in terms of a minimal number of fundamental
 operators provided by the class.
 
+[endsect]
+
 [#sec:rationale]
-[heading Rationale]
+[section Rationale]
 
 Overloaded operators for class types typically occur in groups. If you
 can write `x + y`, you probably also want to be able to write `x += y`.
@@ -90,8 +92,10 @@ semantics of return types of corresponding operators for built-in types
 requirements make `operators` library applicable to broader set of
 target classes from different domains, i.e. eventually more useful.
 
+[endsect]
+
 [#sec:example]
-[heading Example]
+[section Example]
 
 This example shows how some of the [link sec:arithmetic arithmetic
 operator templates] can be used with a geometric point class
@@ -145,8 +149,10 @@ const point<float> pi_over_4 = up + right;
 const point<float> pi_over_4_normalized = pi_over_4 / length(pi_over_4);
 ```
 
+[endsect]
+
 [#sec:usage]
-[heading Usage]
+[section Usage]
 
 [#sec:two_arg]
 [h5 Two-Argument Template Forms]
@@ -304,8 +310,10 @@ whether they implement all the requirements of those templates, this
 shortcut is not portable. Even if this currently works with your
 compiler, it may not work later.
 
+[endsect]
+
 [#sec:arithmetic]
-[heading Arithmetic Operators]
+[section Arithmetic Operators]
 
 The arithmetic operator templates ease the task of creating a custom
 numeric type. Given a core set of operators, the templates add related
@@ -1597,8 +1605,10 @@ program demonstrates the use of the arithmetic operator templates, and
 can also be used to verify correct operation. Check the compiler status
 report for the test results with selected platforms.
 
+[endsect]
+
 [#sec:deref]
-[heading Dereference Operators and Iterator Helpers]
+[section Dereference Operators and Iterator Helpers]
 
 The [link sec:iterator iterator helper] templates ease the task of
 creating a custom iterator. Similar to arithmetic types, a complete
@@ -1904,8 +1914,10 @@ public:
 Check the [@http://www.boost.org/development/testing.html compiler status report] for the
 test results with selected platforms.
 
+[endsect]
+
 [#sec:old_lib_note]
-[heading Note for Users of Older Versions]
+[section Note for Users of Older Versions]
 
 The [link sec:chaining changes in the library interface and
 recommended usage] were motivated by some practical issues described
@@ -1952,8 +1964,10 @@ it's worth it to make the library more useful in real world. Alexy Gurtovoy
 contributed the code which supports the new usage idiom while allowing the
 library to remain backward-compatible.
 
+[endsect]
+
 [#sec:contributors]
-[heading Acknowledgments]
+[section Acknowledgments]
 
 * [@http://www.boost.org/people/dave_abrahams.htm Dave Abrahams]:
   Started the library and contributed the arithmetic operators in
@@ -1982,5 +1996,7 @@ library to remain backward-compatible.
 
 * Daniel Frey: Contributed the NRVO-friendly and symmetric implementation of
   arithmetic operators.
+
+[endsect]
 
 [endsect]

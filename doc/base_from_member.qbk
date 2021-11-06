@@ -11,7 +11,7 @@
 [section:base_from_member Base from Member]
 [block'''<?dbhtml stop-chunking?>''']
 
-[heading Introduction]
+[section Introduction]
 
 The class templates __base_from_member__ support the base-from-member idiom.
 When developing a class, sometimes a base class needs to be initialized
@@ -101,7 +101,9 @@ This parameter has a default value so a single use of a particular member
 type does not need to concern itself with the integer.
 
 
-[heading Synopsis]
+[endsect]
+
+[section Synopsis]
 
     #include <type_traits>  /* exposition only */
 
@@ -191,7 +193,9 @@ this class template as a base class for a member with a flexible set of
 constructors.) This constant is ignored when C++11 features are present.
 
 
-[heading Basic Usage]
+[endsect]
+
+[section Basic Usage]
 
 With the starting example, the `fdoutbuf` sub-object needs to be
 encapsulated in a base class that is inherited before `__std_ostream__`.
@@ -234,7 +238,9 @@ sub-object of the final type is the only sub-object with the name `member`
 that name can be used unqualified within the final class.
 
 
-[heading Multiple Sub-Objects]
+[endsect]
+
+[section Multiple Sub-Objects]
 
 The base-from-member class templates should commonly involve only one
 base-from-member sub-object, usually for attaching a stream-buffer to an
@@ -336,7 +342,13 @@ The last conversion is necessary for the compiler to call a constructor form
  __nullptr__ is used, it still needs a conversion if multiple pointer types can
  be accepted in a constructor call but `__std_nullptr_t__` cannot.)
 
-[heading Acknowledgments]
+[endsect]
+
+[/===============]
+[xinclude base_from_member_reference.xml]
+[/===============]
+
+[section Acknowledgments]
 
 Author: Walker, Daryle
 
@@ -360,6 +372,8 @@ implementation uses the [@boost:/doc/html/preprocessor/index.html Preprocessor l
 * [@http://www.boost.org/people/daryle_walker.html">Daryle Walker] started the
 library. Contributed the test file [@../../../test/base_from_member_test.cpp
 base_from_member_test.cpp].
+
+[endsect]
 
 [endsect]
 

@@ -10,7 +10,7 @@
 [section Call Traits]
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 All of the contents of [@../../../include/boost/call_traits.hpp `<boost/call_traits.hpp>`] are
 defined inside `namespace boost`.
@@ -118,7 +118,8 @@ Notes:
         otherwise unchanged (requires partial specialization).
 
 
-[heading Copy constructibility]
+[endsect]
+[section Copy constructibility]
 
 The following table defines which __call_traits__ types can always
 be copy-constructed from which other types:
@@ -142,9 +143,10 @@ If `T` is an assignable type the following assignments are possible:
     [[From `const_reference`]    [Yes] [Yes] [-] [-] [-]]
     [[From `param_type`]    [Yes] [Yes] [-] [-] [-]]
 ]
+[endsect]
 
 [#sec:examples]
-[heading Examples]
+[section Examples]
 
 The following table shows the effect that __call_traits__ has on
 various types.
@@ -165,7 +167,7 @@ specialization: if it does not then all types behave in
 the same way as the entry for "`my_class`", and
 __call_traits__ can not be used with reference or array types.
 
-[heading Example 1:]
+[section Example 1:]
 
 The following class is a trivial class that stores some type `T`
 by value (see the [@../../../test/call_traits_test.cpp `call_traits_test.cpp`]
@@ -200,9 +202,10 @@ struct contained
 
 };
 ```
+[endsect]
 
 [#sec:refs]
-[heading Example 2 (the reference to reference problem):]
+[section Example 2 (the reference to reference problem):]
 
 Consider the definition of __std_binder1st__:
 
@@ -236,8 +239,10 @@ Now in the case that `Operation::second_argument_type`
 is a reference type, the argument is passed as a reference, and
 the no "reference to reference" occurs.
 
+[endsect]
+
 [#sec:example3]
-[heading Example 3 (the `make_pair` problem):]
+[section Example 3 (the `make_pair` problem):]
 
 If we pass the name of an array as one (or both) arguments to `__std_make_pair__`,
 then template argument deduction deduces the passed parameter as
@@ -270,9 +275,10 @@ principle in any function that "wraps" a temporary
 whose type is deduced. Note that the function arguments to
 __std_make_pair__ are not expressed in terms of __call_traits__: doing so
 would prevent template argument deduction from functioning.
+[endsect]
 
 [#sec:example4]
-[heading Example 4 (optimising fill):]
+[section Example 4 (optimising fill):]
 
 The __call_traits__ template will "optimize" the passing
 of a small built-in type as a function parameter. This mainly has
@@ -339,7 +345,10 @@ deduction, the compiler will optimise away the call to fill all
 together, replacing it with the call to `filler<>::do_fill`,
 which does use __call_traits__.
 
-[heading Rationale]
+[endsect]
+[endsect]
+
+[section Rationale]
 
 The following notes are intended to briefly describe the
 rationale behind choices made in __call_traits__.
@@ -426,6 +435,13 @@ it. Most people though will probably never need to use this
 specialisation.
 
 [endsect]
+
+[/===============]
+[xinclude call_traits_reference.xml]
+[/===============]
+
+[endsect]
+
 
 
 

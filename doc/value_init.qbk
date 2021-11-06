@@ -9,9 +9,10 @@
 [/===============]
 [#sec:value_init]
 [section Value Init]
+
 [/===============]
 
-[heading Introduction]
+[section Introduction]
 
 Constructing and initializing objects in a generic way is difficult in
 C++. The problem is that there are several different rules that apply
@@ -100,8 +101,10 @@ T var = initialized_value;
 This form of initialization is semantically equivalent to `T4 var4 = T4()`,
 but robust against the aforementioned compiler issues.
 
+[endsect]
+
 [#sec:details]
-[heading Details]
+[section Details]
 
 The C++ standard \[[link sec:references 3]\] contains the definitions
 of `zero-initialization` and `default-initialization`. Informally, zero-initialization
@@ -262,11 +265,13 @@ contains. It will do so for those compilers that need to have such a workaround,
 [@boost:/doc/html/config/doc/html/boost_config/boost_macro_reference.html#boost_config.boost_macro_reference.macros_that_describe_defects
 compiler defect macro] `BOOST_NO_COMPLETE_VALUE_INITIALIZATION`.
 
+[endsect]
+
 [#sec:types]
-[heading Types and objects]
+[section Types and objects]
 
 [#sec:val_init]
-[heading `template class value_initialized<T>`]
+[section `template class value_initialized<T>`]
 
 ```
 namespace boost {
@@ -419,8 +424,10 @@ value_initialized<int const> const cx_c;
 get(cx_c) = 1; // ERROR: Cannot modify a const object
 ```
 
+[endsect]
+
 [#sec:initialized]
-[heading `template class initialized<T>`]
+[section `template class initialized<T>`]
 
 
 ```
@@ -482,8 +489,10 @@ object must ['always] be value-initialized, `__value_initialized__<T>`
 may be preferable. And if the object must always be
 direct-initialized, none of the two wrappers really needs to be used.
 
+[endsect]
+
 [#sec:initialized_value]
-[heading `initialized_value`]
+[section `initialized_value`]
 
 ```
 namespace boost {
@@ -526,8 +535,11 @@ Instead, one could use __initialized_value__ as follows:
 T var = __initialized_value__;
 ```
 
+[endsect]
+[endsect]
+
 [#sec:references]
-[h5 References]
+[section References]
 
 # Bjarne Stroustrup, Gabriel Dos Reis, and J. Stephen Adamczyk wrote various papers,
 proposing to extend the support for brace-enclosed ['initializer lists]
@@ -543,8 +555,14 @@ compiler-generated functions you do not want], [@http://www.aristeia.com/books.h
 
 # POD stands for "Plain Old Data"
 
+[endsect]
+
+[/===============]
+[xinclude value_init_reference.xml]
+[/===============]
+
 [#sec:acknowledgements]
-[h5 Acknowledgements]
+[section Acknowledgements]
 
 __value_initialized__ was developed by Fernando Cacciola, with help and suggestions
 from David Abrahams and Darin Adler.
@@ -560,5 +578,7 @@ __initialized_value__ was written by Niels Dekker, and added to Boost release ve
 
 Developed by [@mailto:fernando_cacciola@hotmail.com Fernando Cacciola]. The latest version of
 this file can be found at [@http://www.boost.org www.boost.org].
+
+[endsect]
 
 [endsect]
