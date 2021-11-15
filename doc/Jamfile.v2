@@ -38,11 +38,12 @@ project : requirements
         # better use SVG's instead:
         <format>pdf:<xsl:param>admon.graphics.extension=".svg"
         <format>pdf:<xsl:param>admon.graphics.path=$(boost-images)/
-        <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/utility/doc/html
+        <format>pdf:<xsl:param>boost.url.prefix=http\://www.boost.org/doc/libs/release/libs/utility/doc/html
 ;
 
 path-constant boost-images : ../../../doc/src/images ;
 
+# Generate XML doxygen reference for base_from_member component in base_from_member_reference.xml
 doxygen base_from_member_reference
   :
     [ glob ../include/boost/utility/base_from_member.hpp ]
@@ -83,6 +84,7 @@ doxygen base_from_member_reference
 
   ;
 
+# Generate XML doxygen reference for boost_binary component in boost_binary_reference.xml
 doxygen boost_binary_reference
   :
     [ glob ../include/boost/utility/binary.hpp ]
@@ -122,6 +124,7 @@ doxygen boost_binary_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for call_traits component in call_traits_reference.xml
 doxygen call_traits_reference
   :
     [ glob ../include/boost/call_traits.hpp ../include/boost/detail/call_traits.hpp ]
@@ -161,6 +164,7 @@ doxygen call_traits_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for compressed_pair component in compressed_pair_reference.xml
 doxygen compressed_pair_reference
   :
     [ glob ../include/boost/compressed_pair.hpp ../include/boost/detail/compressed_pair.hpp ]
@@ -200,6 +204,7 @@ doxygen compressed_pair_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for in_place_factory component in in_place_factory_reference.xml
 doxygen in_place_factory_reference
   :
     [ glob ../include/boost/utility/in_place_factory.hpp ../include/boost/utility/typed_in_place_factory.hpp ]
@@ -239,8 +244,10 @@ doxygen in_place_factory_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for operators component in operators_reference.xml
 # we skip operators_reference because operators.hpp is not adapted for doxygen
 
+# Generate XML doxygen reference for result_of component in result_of_reference.xml
 doxygen result_of_reference
   :
     [ glob ../include/boost/utility/result_of.hpp ]
@@ -280,6 +287,7 @@ doxygen result_of_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for string_view component in string_view_reference.xml
 doxygen string_view_reference
   :
     [ glob ../include/boost/utility/string_view.hpp ]
@@ -319,6 +327,7 @@ doxygen string_view_reference
             boost::operators_impl"
   ;
 
+# Generate XML doxygen reference for value_init component in value_init_reference.xml
 doxygen value_init_reference
   :
     [ glob ../include/boost/utility/value_init.hpp ]
@@ -358,7 +367,14 @@ doxygen value_init_reference
             boost::operators_impl"
   ;
 
+# Generate main.xml boostbook documentation from main.qbk quickbook documentation
 xml main : main.qbk ;
+
+# Generate ./html documentation from main.xml boostbook documentation
+# Each doxygen reference in quickbook files with [xinclude <component>_reference.xml] becomes:
+# <xi:include href="../../../../libs/utility/doc/<component>_reference.xml"/>
+# in boostbook.
+# All of these <xi:include> commands give the reference the id "utility.reference"
 boostbook standalone_main
     :
         main
@@ -374,7 +390,7 @@ boostbook standalone_main
         # File name of HTML output:
         # <xsl:param>root.filename=main
         <xsl:param>boost.root=../../../..
-        <format>pdf:<xsl:param>boost.url.prefix="http://www.boost.org/doc/libs/release/libs/core/doc/html"
+        <format>pdf:<xsl:param>boost.url.prefix="http\://www.boost.org/doc/libs/release/libs/core/doc/html"
         # How far down we chunk nested sections: no more than two so utility component pages include their reference
         <xsl:param>chunk.section.depth=2 # 8
         # Don't put the first section on the same page as the TOC:
