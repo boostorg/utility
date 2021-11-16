@@ -108,7 +108,7 @@ class point    // note: private inheritance is OK here!
     , boost::subtractable< point<T>     // point - point
     , boost::dividable2< point<T>, T    // point / T
     , boost::multipliable2< point<T>, T // point * T, T * point
-  > > > >
+      > > > >
 {
 public:
     point(T, T);
