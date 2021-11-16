@@ -40,7 +40,7 @@ If, for example, you declare a class like this:
 
 ```
 class MyInt
-: boost::__operators__<MyInt>
+    : boost::__operators__<MyInt>
 {
     bool operator<(const MyInt& x) const;
     bool operator==(const MyInt& x) const;
@@ -104,10 +104,10 @@ template.
 ```
 template <class T>
 class point    // note: private inheritance is OK here!
-: boost::addable< point<T>          // point + point
-, boost::subtractable< point<T>     // point - point
-, boost::dividable2< point<T>, T    // point / T
-, boost::multipliable2< point<T>, T // point * T, T * point
+    : boost::addable< point<T>          // point + point
+    , boost::subtractable< point<T>     // point - point
+    , boost::dividable2< point<T>, T    // point / T
+    , boost::multipliable2< point<T>, T // point * T, T * point
   > > > >
 {
 public:
