@@ -17,7 +17,7 @@ project : requirements
         # HTML options first:
         # Use graphics not text for navigation:
         <xsl:param>navig.graphics=1
-       # PDF Options:
+        # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
         <xsl:param>fop1.extensions=0
         <xsl:param>xep.extensions=1
@@ -81,7 +81,8 @@ doxygen base_from_member_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
-
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=base_from_member.reference"
   ;
 
 # Generate XML doxygen reference for boost_binary component in boost_binary_reference.xml
@@ -122,6 +123,8 @@ doxygen boost_binary_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=boost_binary.reference"
   ;
 
 # Generate XML doxygen reference for call_traits component in call_traits_reference.xml
@@ -162,6 +165,8 @@ doxygen call_traits_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=call_traits.reference"
   ;
 
 # Generate XML doxygen reference for compressed_pair component in compressed_pair_reference.xml
@@ -202,6 +207,8 @@ doxygen compressed_pair_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=compressed_pair.reference"
   ;
 
 # Generate XML doxygen reference for in_place_factory component in in_place_factory_reference.xml
@@ -242,6 +249,8 @@ doxygen in_place_factory_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=in_place_factory.reference"
   ;
 
 # Generate XML doxygen reference for operators component in operators_reference.xml
@@ -285,6 +294,8 @@ doxygen result_of_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=result_of.reference"
   ;
 
 # Generate XML doxygen reference for string_view component in string_view_reference.xml
@@ -325,6 +336,8 @@ doxygen string_view_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=string_view.reference"
   ;
 
 # Generate XML doxygen reference for value_init component in value_init_reference.xml
@@ -365,6 +378,8 @@ doxygen value_init_reference
             result_of_has_result_type_impl \\
             conditional \\
             boost::operators_impl"
+     <xsl:param>"boost.doxygen.reftitle=Reference"
+     <xsl:param>"boost.doxygen.refid=value_init.reference"
   ;
 
 # Generate main.xml boostbook documentation from main.qbk quickbook documentation
