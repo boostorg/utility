@@ -47,6 +47,7 @@ doxygen base_from_member_reference
   :
     ../include/boost/utility/base_from_member.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -90,6 +91,7 @@ doxygen boost_binary_reference
   :
     ../include/boost/utility/binary.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -134,6 +136,7 @@ doxygen call_traits_reference
     ../include/boost/call_traits.hpp
     ../include/boost/detail/call_traits.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -178,6 +181,7 @@ doxygen compressed_pair_reference
     ../include/boost/compressed_pair.hpp
     ../include/boost/detail/compressed_pair.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -222,6 +226,7 @@ doxygen in_place_factory_reference
     ../include/boost/utility/in_place_factory.hpp
     ../include/boost/utility/typed_in_place_factory.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -268,6 +273,7 @@ doxygen result_of_reference
   :
     ../include/boost/utility/result_of.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -311,6 +317,7 @@ doxygen string_view_reference
   :
     ../include/boost/utility/string_view.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -354,6 +361,7 @@ doxygen value_init_reference
   :
     ../include/boost/utility/value_init.hpp
   :
+    <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>EXTRACT_ALL=NO
@@ -396,8 +404,8 @@ doxygen value_init_reference
 xml main : main.qbk ;
 
 # Generate ./html documentation from main.xml boostbook documentation
-# Each doxygen reference in quickbook files with [xinclude <component>_reference.xml] becomes:
-# <xi:include href="../../../../libs/utility/doc/<component>_reference.xml"/>
+# Each doxygen reference in quickbook files with [xinclude tmp/<component>_reference.xml] becomes:
+# <xi:include href="../../../../libs/utility/doc/tmp/<component>_reference.xml"/>
 # in boostbook.
 # All of these <xi:include> commands give the reference the id "utility.reference"
 boostbook standalone_main

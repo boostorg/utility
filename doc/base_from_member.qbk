@@ -345,7 +345,7 @@ The last conversion is necessary for the compiler to call a constructor form
 [endsect]
 
 [/===============]
-[xinclude base_from_member_reference.xml]
+[xinclude tmp/base_from_member_reference.xml]
 [/===============]
 
 [section Acknowledgments]

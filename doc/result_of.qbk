@@ -409,7 +409,7 @@ requirements regarding pointers to member data.
 [endsect]
 
 [/===============]
-[xinclude result_of_reference.xml]
+[xinclude tmp/result_of_reference.xml]
 [/===============]
 
 [section Acknowledgments]

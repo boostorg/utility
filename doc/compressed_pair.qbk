@@ -83,7 +83,7 @@ is due to a bug in the way VC6 generates implicit assignment operators.
 [endsect]
 
 [/===============]
-[xinclude compressed_pair_reference.xml]
+[xinclude tmp/compressed_pair_reference.xml]
 [/===============]
 
 [section Acknowledgments]

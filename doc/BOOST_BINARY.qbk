@@ -68,7 +68,7 @@ void bar()
 [endsect]
 
 [/===============]
-[xinclude boost_binary_reference.xml]
+[xinclude tmp/boost_binary_reference.xml]
 [/===============]
 
 

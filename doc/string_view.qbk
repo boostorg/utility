@@ -193,7 +193,7 @@ a common utility.
 [endsect]
 
 [/===============]
-[xinclude string_view_reference.xml]
+[xinclude tmp/string_view_reference.xml]
 [/===============]
 
 [/===============]

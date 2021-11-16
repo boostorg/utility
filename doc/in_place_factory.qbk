@@ -297,7 +297,7 @@ void foo()
 
 [/===============]
 [#boost.typed_in_place_factory_base]
-[xinclude in_place_factory_reference.xml]
+[xinclude tmp/in_place_factory_reference.xml]
 [/===============]
 
 [section Acknowledgments]

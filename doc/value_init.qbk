@@ -558,7 +558,7 @@ compiler-generated functions you do not want], [@http://www.aristeia.com/books.h
 [endsect]
 
 [/===============]
-[xinclude value_init_reference.xml]
+[xinclude tmp/value_init_reference.xml]
 [/===============]
 
 [#sec:acknowledgements]

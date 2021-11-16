@@ -437,7 +437,7 @@ specialisation.
 [endsect]
 
 [/===============]
-[xinclude call_traits_reference.xml]
+[xinclude tmp/call_traits_reference.xml]
 [/===============]
 
 [endsect]
