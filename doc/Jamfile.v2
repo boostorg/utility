@@ -1,4 +1,3 @@
-
 # Copyright John Maddock 2005. Use, modification, and distribution are
 # subject to the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -37,8 +36,8 @@ project : requirements
         # default pnd graphics are awful in PDF form,
         # better use SVG's instead:
         <format>pdf:<xsl:param>admon.graphics.extension=".svg"
-        <format>pdf:<xsl:param>admon.graphics.path=$(boost-images)/
-        <format>pdf:<xsl:param>boost.url.prefix=http\://www.boost.org/doc/libs/release/libs/utility/doc/html
+        <format>pdf:<xsl:param>"admon.graphics.path=$(boost-images)/"
+        <format>pdf:<xsl:param>"boost.url.prefix=http://www.boost.org/doc/libs/release/libs/utility/doc/html"
 ;
 
 path-constant boost-images : ../../../doc/src/images ;
@@ -46,7 +45,7 @@ path-constant boost-images : ../../../doc/src/images ;
 # Generate XML doxygen reference for base_from_member component in base_from_member_reference.xml
 doxygen base_from_member_reference
   :
-    [ glob ../include/boost/utility/base_from_member.hpp ]
+    ../include/boost/utility/base_from_member.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -76,19 +75,20 @@ doxygen base_from_member_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=base_from_member.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=base_from_member.reference"
   ;
 
 # Generate XML doxygen reference for boost_binary component in boost_binary_reference.xml
 doxygen boost_binary_reference
   :
-    [ glob ../include/boost/utility/binary.hpp ]
+    ../include/boost/utility/binary.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -118,19 +118,21 @@ doxygen boost_binary_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=boost_binary.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=boost_binary.reference"
   ;
 
 # Generate XML doxygen reference for call_traits component in call_traits_reference.xml
 doxygen call_traits_reference
   :
-    [ glob ../include/boost/call_traits.hpp ../include/boost/detail/call_traits.hpp ]
+    ../include/boost/call_traits.hpp
+    ../include/boost/detail/call_traits.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -160,19 +162,21 @@ doxygen call_traits_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=call_traits.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=call_traits.reference"
   ;
 
 # Generate XML doxygen reference for compressed_pair component in compressed_pair_reference.xml
 doxygen compressed_pair_reference
   :
-    [ glob ../include/boost/compressed_pair.hpp ../include/boost/detail/compressed_pair.hpp ]
+    ../include/boost/compressed_pair.hpp
+    ../include/boost/detail/compressed_pair.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -202,19 +206,21 @@ doxygen compressed_pair_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=compressed_pair.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=compressed_pair.reference"
   ;
 
 # Generate XML doxygen reference for in_place_factory component in in_place_factory_reference.xml
 doxygen in_place_factory_reference
   :
-    [ glob ../include/boost/utility/in_place_factory.hpp ../include/boost/utility/typed_in_place_factory.hpp ]
+    ../include/boost/utility/in_place_factory.hpp
+    ../include/boost/utility/typed_in_place_factory.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -244,13 +250,14 @@ doxygen in_place_factory_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=in_place_factory.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=in_place_factory.reference"
   ;
 
 # Generate XML doxygen reference for operators component in operators_reference.xml
@@ -259,7 +266,7 @@ doxygen in_place_factory_reference
 # Generate XML doxygen reference for result_of component in result_of_reference.xml
 doxygen result_of_reference
   :
-    [ glob ../include/boost/utility/result_of.hpp ]
+    ../include/boost/utility/result_of.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -289,19 +296,20 @@ doxygen result_of_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=result_of.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=result_of.reference"
   ;
 
 # Generate XML doxygen reference for string_view component in string_view_reference.xml
 doxygen string_view_reference
   :
-    [ glob ../include/boost/utility/string_view.hpp ]
+    ../include/boost/utility/string_view.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -331,19 +339,20 @@ doxygen string_view_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=string_view.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=string_view.reference"
   ;
 
 # Generate XML doxygen reference for value_init component in value_init_reference.xml
 doxygen value_init_reference
   :
-    [ glob ../include/boost/utility/value_init.hpp ]
+    ../include/boost/utility/value_init.hpp
   :
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
@@ -373,13 +382,14 @@ doxygen value_init_reference
                     BOOST_DELETED_FUNCTION(x)=\"x = delete;\" \\
                     BOOST_EXPLICIT_OPERATOR_BOOL()=\"explicit operator bool() const;\" \\
                     BOOST_REF_CONST=const"
-     <doxygen:param>"EXCLUDE_SYMBOLS=detail \\
-            F \\
-            result_of_has_result_type_impl \\
-            conditional \\
-            boost::operators_impl"
-     <xsl:param>"boost.doxygen.reftitle=Reference"
-     <xsl:param>"boost.doxygen.refid=value_init.reference"
+    <doxygen:param>"EXCLUDE_SYMBOLS= \\
+                    detail \\
+                    F \\
+                    result_of_has_result_type_impl \\
+                    conditional \\
+                    boost::operators_impl"
+    <xsl:param>"boost.doxygen.reftitle=Reference"
+    <xsl:param>"boost.doxygen.refid=value_init.reference"
   ;
 
 # Generate main.xml boostbook documentation from main.qbk quickbook documentation
@@ -405,7 +415,7 @@ boostbook standalone_main
         # File name of HTML output:
         # <xsl:param>root.filename=main
         <xsl:param>boost.root=../../../..
-        <format>pdf:<xsl:param>boost.url.prefix="http\://www.boost.org/doc/libs/release/libs/core/doc/html"
+        <format>pdf:<xsl:param>"boost.url.prefix=http://www.boost.org/doc/libs/release/libs/utility/doc/html"
         # How far down we chunk nested sections: no more than two so utility component pages include their reference
         <xsl:param>chunk.section.depth=2 # 8
         # Don't put the first section on the same page as the TOC:
