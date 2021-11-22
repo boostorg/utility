@@ -402,7 +402,7 @@ class compressed_pair<T, T>
                     ::boost::is_same<typename remove_cv<T>::type, typename remove_cv<T>::type>::value,
                     ::boost::details::compressed_pair_empty<T>::value,
                     ::boost::details::compressed_pair_empty<T>::value>::value>
-#endif BOOST_UTILITY_DOCS
+#endif // BOOST_UTILITY_DOCS
 {
 private:
    typedef details::compressed_pair_imp<T, T,
