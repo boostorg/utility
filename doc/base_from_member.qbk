@@ -192,7 +192,6 @@ maintain the same maximum size. (Example code would be a class that uses
 this class template as a base class for a member with a flexible set of
 constructors.) This constant is ignored when C++11 features are present.
 
-
 [endsect]
 
 [section Basic Usage]
@@ -236,7 +235,6 @@ before the `__std_ostream__` sub-object does, making the former sub-object
 safe to use in the latter sub-object's construction. Since the `fdoutbuf`
 sub-object of the final type is the only sub-object with the name `member`
 that name can be used unqualified within the final class.
-
 
 [endsect]
 
@@ -338,9 +336,9 @@ C++ always interprets such code as an integer when it has overloads that can
 take either an integer or a pointer.
 
 The last conversion is necessary for the compiler to call a constructor form
- with the exact pointer type used in `switcher`'s constructor. (If C++11's
- __nullptr__ is used, it still needs a conversion if multiple pointer types can
- be accepted in a constructor call but `__std_nullptr_t__` cannot.)
+with the exact pointer type used in `switcher`'s constructor. (If C++11's
+__nullptr__ is used, it still needs a conversion if multiple pointer types can
+be accepted in a constructor call but `__std_nullptr_t__` cannot.)
 
 [endsect]
 
@@ -355,23 +353,23 @@ Author: Walker, Daryle
 Copyright 2001, 2003, 2004, 2012 Daryle Walker
 
 * [@http://www.boost.org/people/ed_brey.htm Ed Brey] suggested some interface
-changes.
+  changes.
 
 * [@http://www.moocat.org R. Samuel Klatchko] ([@mailto:rsk@moocat.org
-rsk@moocat.org], [@mailto:rsk@brightmail.com rsk@brightmail.com]) invented
-the idiom of how to use a class member for initializing a base class.
+  rsk@moocat.org], [@mailto:rsk@brightmail.com rsk@brightmail.com]) invented
+  the idiom of how to use a class member for initializing a base class.
 
 * [@http://www.boost.org/people/dietmar_kuehl.htm Dietmar Kuehl] popularized the
- base-from-member idiom in his [@http://www.informatik.uni-konstanz.de/~kuehl/c++/iostream/
+  base-from-member idiom in his [@http://www.informatik.uni-konstanz.de/~kuehl/c++/iostream/
   IOStream example classes].
 
 * Jonathan Turkanis supplied an implementation of generating the constructor
-templates that can be controlled and automated with macros. The
-implementation uses the [@boost:/doc/html/preprocessor/index.html Preprocessor library].
+  templates that can be controlled and automated with macros. The
+  implementation uses the [@boost:/doc/html/preprocessor/index.html Preprocessor library].
 
 * [@http://www.boost.org/people/daryle_walker.html">Daryle Walker] started the
-library. Contributed the test file [@../../../test/base_from_member_test.cpp
-base_from_member_test.cpp].
+  library. Contributed the test file [@../../../test/base_from_member_test.cpp
+  base_from_member_test.cpp].
 
 [endsect]
 
