@@ -26,12 +26,16 @@
     [category generic]
 ]
 
-[template mdash[] '''&mdash; ''']
-[template indexterm1[term1] '''<indexterm><primary>'''[term1]'''</primary></indexterm>''']
-[template indexterm2[term1 term2] '''<indexterm><primary>'''[term1]'''</primary><secondary>'''[term2]'''</secondary></indexterm>''']
+[template mdash[]'''&mdash;''']
+[template ndash[]'''&ndash;''']
+[template sect[]'''&sect;''']
+[template hellip[]'''&hellip;''']
+
+[template indexterm1[term1]'''<indexterm><primary>'''[term1]'''</primary></indexterm>''']
+[template indexterm2[term1 term2]'''<indexterm><primary>'''[term1]'''</primary><secondary>'''[term2]'''</secondary></indexterm>''']
 
 [template include_file[path][^<'''<ulink url="https://github.com/boostorg/utility/blob/master/include/'''[path]'''">'''[path]'''</ulink>'''>]]
-[template issue[n] '''<ulink url="https://github.com/boostorg/utility/issues/'''[n]'''">#'''[n]'''</ulink>''']
+[template issue[n]'''<ulink url="https://github.com/boostorg/utility/issues/'''[n]'''">#'''[n]'''</ulink>''']
 
 [/ Named Requirements ]
 

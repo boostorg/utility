@@ -18,7 +18,7 @@ Suppose we have a class
 ```
 struct X
 {
-  X ( int, _std__string_ ) ;
+  X ( int, __std_string__ ) ;
 };
 ```
 
@@ -70,7 +70,7 @@ struct C
 {
    C() : contained_(0) {}
    C ( X const& v ) : contained_ ( new X(v) ) {}
-   C ( int a0, std::string a1 ) : contained_ ( new X(a0,a1) ) {}
+   C ( int a0, __std_string__ a1 ) : contained_ ( new X(a0,a1) ) {}
   ~C() { delete contained_ ; }
   X* contained_ ;
 };
@@ -306,7 +306,3 @@ Copyright Fernando Luis Cacciola Carballal, 2004
 
 [endsect]
 [endsect]
-
-
-
-

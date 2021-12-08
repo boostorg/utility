@@ -116,7 +116,7 @@ A ['declaration] can contain an ['initializer], which specifies the
 object's initial value. The initializer can be just '()', which states that
 the object shall be value-initialized (but see below). However, if a ['declaration]
 has no ['initializer] and it is of a non-`const`, non-`static` POD type, the
-initial value is indeterminate: (see &sect;8.5, [dcl.init], for the
+initial value is indeterminate: (see [sect]8.5, \[dcl.init\], for the
 accurate definitions).
 
 ```

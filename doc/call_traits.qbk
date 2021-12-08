@@ -159,7 +159,7 @@ various types.
     [[From `int&`]    [`int&`] [`int&`] [`const int&`] [`int&`] [All reference types]]
     [[From `const int&`]    [`const int&`] [`const int&`] [`const int&`] [`const int&`] [All constant reference types]]
     [[From `int[3]`]    [`const int*`] [`int(&)[3]`] [`const int(&)[3]`] [`const int* const`] [All array types]]
-    [[From `const int[3]`]    [`const int*`] [`const int(&)[3]`] [`const int(&)[3]`] [`const int *const`] [All constant array types]]
+    [[From `const int[3]`]    [`const int*`] [`const int(&)[3]`] [`const int(&)[3]`] [`const int* const`] [All constant array types]]
 ]
 
 The table assumes the compiler supports partial
@@ -441,8 +441,3 @@ specialisation.
 [/===============]
 
 [endsect]
-
-
-
-
-

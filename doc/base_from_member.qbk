@@ -112,7 +112,7 @@ type does not need to concern itself with the integer.
     #endif
 
     template < typename MemberType, int UniqueID = 0 >
-    class __boost_base_from_member__
+    class __base_from_member__
     {
     protected:
         MemberType  member;
@@ -322,8 +322,8 @@ type. Using `typedef`s ease mentioning the base types.
 
 However, the fix introduces a new problem when a pointer is needed. Using the
 address operator with a sub-object qualified with its class's name results in a
-pointer-to-member (here, having a type of `an_int __boost_base_from_member__<an_int, 0>:: *`)
-instead of a pointer to the member (having a type of `an_int *`).
+pointer-to-member (here, having a type of `an_int __boost_base_from_member__<an_int, 0>::*`)
+instead of a pointer to the member (having a type of `an_int*`).
 The new problem is fixed by qualifying the sub-object with `this->` and is needed
 just for pointers, and not for references or values.
 
@@ -376,4 +376,3 @@ base_from_member_test.cpp].
 [endsect]
 
 [endsect]
-
