@@ -45,7 +45,7 @@ path-constant boost-images : ../../../doc/src/images ;
 # Generate XML doxygen reference for base_from_member component in base_from_member_reference.xml
 doxygen base_from_member_reference
   :
-    ../../../boost/utility/base_from_member.hpp
+   [ glob ../../../boost/utility/base_from_member.hpp ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -89,7 +89,7 @@ doxygen base_from_member_reference
 # Generate XML doxygen reference for boost_binary component in boost_binary_reference.xml
 doxygen boost_binary_reference
   :
-    ../../../boost/utility/binary.hpp
+    [ glob ../../../boost/utility/binary.hpp ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -133,8 +133,10 @@ doxygen boost_binary_reference
 # Generate XML doxygen reference for call_traits component in call_traits_reference.xml
 doxygen call_traits_reference
   :
+  [ glob 
     ../../../boost/call_traits.hpp
     ../../../boost/detail/call_traits.hpp
+  ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -178,8 +180,11 @@ doxygen call_traits_reference
 # Generate XML doxygen reference for compressed_pair component in compressed_pair_reference.xml
 doxygen compressed_pair_reference
   :
+  [ glob 
     ../../../boost/compressed_pair.hpp
     ../../../boost/detail/compressed_pair.hpp
+  ]
+
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -223,8 +228,10 @@ doxygen compressed_pair_reference
 # Generate XML doxygen reference for in_place_factory component in in_place_factory_reference.xml
 doxygen in_place_factory_reference
   :
+   [ glob
     ../../../boost/utility/in_place_factory.hpp
     ../../../boost/utility/typed_in_place_factory.hpp
+   ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -271,7 +278,7 @@ doxygen in_place_factory_reference
 # Generate XML doxygen reference for result_of component in result_of_reference.xml
 doxygen result_of_reference
   :
-    ../../../boost/utility/result_of.hpp
+   [ glob ../../../boost/utility/result_of.hpp ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -315,7 +322,9 @@ doxygen result_of_reference
 # Generate XML doxygen reference for string_view component in string_view_reference.xml
 doxygen string_view_reference
   :
+   [ glob 
     ../../../boost/utility/string_view.hpp
+   ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -359,7 +368,9 @@ doxygen string_view_reference
 # Generate XML doxygen reference for value_init component in value_init_reference.xml
 doxygen value_init_reference
   :
+   [ glob
     ../../../boost/utility/value_init.hpp
+   ]
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
