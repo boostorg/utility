@@ -1098,20 +1098,24 @@ function return value (which is another unnamed object of type
 `T`). The standard doesn't generally allow the intermediate
 object to be optimized away:
 
-[:['3.7.2/2: Automatic storage duration:] If a named automatic object has initialization or a destructor with
-side effects, it shall not be destroyed before the end of its block,
-nor shall it be eliminated as an optimization even if it appears to be
-unused, except that a class object or its copy may be eliminated as
-specified in 12.8.]
+[:['C++11 [sect]3.7.3/3 \[basic.stc.auto\]: Automatic storage duration:] If a variable with automatic storage
+duration has initialization or a destructor with side effects, it shall not be destroyed before the end of
+its block, nor shall it be eliminated as an optimization even if it appears to be unused, except that a class
+object or its copy/move may be eliminated as specified in 12.8.]
 
-The reference to 12.8 is important for us:
+The reference to [sect]12.8 is important for us:
 
-[:['12.8/15: Copying class objects:] ([hellip]) For a function with a class return type, if the expression in the
-return statement is the name of a local object, and the cv-unqualified
-type of the local object is the same as the function return type, an
-implementation is permitted to omit creating the temporary object to
-hold the function return value, even if the class copy constructor or
-destructor has side effects.]
+[:['C++11 [sect]12.8/31 \[class.copy\]: Copying and moving class objects:] When certain criteria are met, an implementation is allowed to omit the copy/move construction of a class
+object, even if the copy/move constructor and/or destructor for the object have side effects. ([hellip])  This elision of copy/move
+operations, called ['copy elision], is permitted in the following circumstances (which may be combined to
+eliminate multiple copies):
+
+[mdash] in a `return` statement in a function with a class return type, when the expression is the name of a
+non-volatile automatic object (other than a function or catch-clause parameter) with the same cv-
+unqualified type as the function return type, the copy/move operation can be omitted by constructing
+the automatic object directly into the function's return value
+
+([hellip])]
 
 This optimization is known as the named return value optimization ([@https://en.cppreference.com/w/cpp/language/copy_elision#Non-mandatory_elision_of_copy.2Fmove_.28since_C.2B.2B11.29_operations NRVO]),
 which leads us to the following implementation for `operator+`:
@@ -1142,7 +1146,8 @@ T operator+( T lhs, const T& rhs )
 The difference to the first implementation is that `lhs` is
 not taken as a constant reference used to create a copy; instead,
 `lhs` is a by-value parameter, thus it is already the copy
-needed. This allows another optimization (12.2/2) for some cases.
+needed. This allows another optimization (C++11 [sect]12.2/2 \[class.temporary\])
+for some cases.
 
 Consider `a + b + c` where the result of `a + b` is not copied when
 used as `lhs` when adding `c`. This is more efficient than the original
@@ -1835,11 +1840,11 @@ such as `iterator_category` and `value_type`.
 
 # [#note:1] Unlike other iterator helpers templates, __output_iterator_helper__ takes only one template parameter -
 the type of its target class. Although to some it might seem like an unnecessary restriction, the standard requires
-`difference_type` and `value_type` of any output iterator to be `void` (24.3.1 [lib.iterator.traits]), and
+`difference_type` and `value_type` of any output iterator to be `void` (C++11 [sect]24.4.1 \[lib.iterator.traits\]), and
 __output_iterator_helper__ template respects this requirement. Also, output iterators in the standard have void `pointer` and
 `reference` types, so the __output_iterator_helper__ does the same.
 # [#note:2] As self-proxying is the easiest and most common way to implement output iterators (see,
-for example, insert [24.4.2] and stream iterators [24.5] in the standard library),
+for example, insert (C++11 [sect]24.5.2 \[insert.iterators\]) and stream iterators (C++11 [sect]24.6 \[stream.iterators\]) in the standard library),
 __output_iterator_helper__ supports the idiom by defining `operator*` and `operator++` member functions which
 just return a non-const reference to the iterator itself. Support for self-proxying allows us, in many cases,
 to reduce the task of writing an output iterator to writing just two member functions - an appropriate
@@ -1940,7 +1945,7 @@ Strictly speaking, it was not the library's fault [ndash] the language rules
 allow the compiler to apply the empty base class optimization in that
 situation. In principle an arbitrary number of empty base classes can be
 allocated at the same offset, provided that none of them have a common
-ancestor (see section 10.5 [class.derived] paragraph 5 of the standard).
+ancestor (see [sect]10 \[class.derived\] paragraph 8 of the C++11 standard).
 
 But the language definition also does not ['require] implementations
 to do the optimization, and few if any of today's compilers implement it
