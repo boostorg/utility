@@ -109,7 +109,7 @@ but robust against the aforementioned compiler issues.
 The C++ standard \[[link sec:references 3]\] contains the definitions
 of `zero-initialization` and `default-initialization`. Informally, zero-initialization
 means that the object is given the initial value `0` converted to the type and
-default-initialization means that POD \[[link sec:references 4]\] types are zero-initialized,
+default-initialization means that [@https://en.cppreference.com/w/cpp/named_req/PODType POD] \[[link sec:references 4]\] types are zero-initialized,
 while non-POD class types are initialized with their corresponding default constructors.
 
 A ['declaration] can contain an ['initializer], which specifies the
@@ -553,7 +553,7 @@ compiler-generated functions you do not want], [@http://www.aristeia.com/books.h
 
 # The C++ Standard, Second edition (2003), ISO/IEC 14882:2003
 
-# POD stands for "Plain Old Data"
+# POD stands for [@https://en.cppreference.com/w/cpp/named_req/PODType "Plain Old Data"]
 
 [endsect]
 
