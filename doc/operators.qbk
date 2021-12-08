@@ -291,11 +291,12 @@ are:
 * [link table:indexable `indexable<>`]
 * Any composite operator template that includes at least one of the above
 
-As Daniel Krugler pointed out, this technique violates 14.6.5/2 and is thus
-non-portable. The reasoning is, that the operators injected by the instantiation
+As Daniel Krugler pointed out, this technique violates C++11 [sect]14.6.5/2 \[temp.inject\]
+and is thus non-portable. The reasoning is, that the operators injected by the instantiation
 of e.g. `less_than_comparable<my_class>` can not be found by ADL according to the
-rules given by 3.4.2/2, since `my_class` is not an associated class of
-`less_than_comparable<my_class>`. Thus only use this technique if all else fails.
+rules given by C++11 [sect]3.4.2/2 \[basic.lookup.argdep\], since `my_class` is not
+an associated class of `less_than_comparable<my_class>`. Thus only use this technique
+if all else fails.
 
 [#sec:portability]
 [h5 Requirement Portability]
