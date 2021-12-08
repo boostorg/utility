@@ -1942,9 +1942,9 @@ above was 12-24 bytes on various compilers for the Win32 platform,
 instead of the expected 8 bytes.
 
 Strictly speaking, it was not the library's fault [ndash] the language rules
-allow the compiler to apply the empty base class optimization in that
-situation. In principle an arbitrary number of empty base classes can be
-allocated at the same offset, provided that none of them have a common
+allow the compiler to apply the [@https://en.cppreference.com/w/cpp/language/ebo empty base class optimization]
+in that situation. In principle an arbitrary number of empty base classes can
+be allocated at the same offset, provided that none of them have a common
 ancestor (see [sect]10 \[class.derived\] paragraph 8 of the C++11 standard).
 
 But the language definition also does not ['require] implementations
