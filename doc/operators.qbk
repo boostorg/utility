@@ -1155,7 +1155,7 @@ used as `lhs` when adding `c`. This is more efficient than the original
 code, but not as efficient as a compiler using the NRVO. For most people,
 it is still preferable for compilers that don't implement the NRVO, but
 the `operator+` now has a different function signature. Also,
-the number of objects created differs for `(a + b ) + c` and `a + ( b + c )`.
+the number of objects created differs for `(a + b) + c` and `a + (b + c)`.
 
 Most probably, this won't be a problem for you, but if your code relies on the function
 signature or a strict symmetric behaviour, you should set
