@@ -23,7 +23,7 @@ function reference, member function pointer, or class type. By default,
 N may be any value between 0 and 16. To change the upper limit, define
 the macro `BOOST_RESULT_OF_NUM_ARGS` to the maximum value for N. Class
 template __result_of__ resides in the header
-[@../../../include/boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
+[@../../../../boost/utility/result_of.hpp `<boost/utility/result_of.hpp>`].
 
 If your compiler's support for __decltype__ is adequate, __result_of__
 automatically uses it to deduce the type of the call expression, in

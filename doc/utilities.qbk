@@ -13,7 +13,7 @@ The entire contents of Boost.Utility are in `namespace boost`.
 
 [warning
 
-Direct use of the header [@../../../include/boost/utility.hpp `<boost/utility.hpp>`] is discouraged and it will be deprecated.
+Direct use of the header [@../../../../boost/utility.hpp `<boost/utility.hpp>`] is discouraged and it will be deprecated.
 
 Please include the headers relative to individual components instead.
 

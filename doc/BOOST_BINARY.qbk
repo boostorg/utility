@@ -35,7 +35,7 @@ In addition, LL and ULL suffixes may be used for representing
 them as an extension.
 
 The `BOOST_BINARY` family of macros resides in the header
-[@../../../include/boost/utility/binary.hpp <boost/utility/binary.hpp>].
+[@../../../../boost/utility/binary.hpp <boost/utility/binary.hpp>].
 
 [endsect]
 
