@@ -13,7 +13,7 @@
 
 [section Introduction]
 
-The header [@../../../include/boost/operators.hpp `<boost/operators.hpp>`] supplies
+The header [@../../../../boost/operators.hpp `<boost/operators.hpp>`] supplies
 several sets of class templates in `namespace boost`. These templates define
 operators at namespace scope in terms of a minimal number of fundamental
 operators provided by the class.
@@ -32,7 +32,7 @@ related operators can be defined in terms of others (e.g. `x >= y`
 is equivalent to `!(x < y)`).
 
 Replicating this boilerplate for multiple classes is both tedious and
-error-prone. The [@../../../include/boost/operators.hpp `<boost/operators.hpp>`] templates
+error-prone. The [@../../../../boost/operators.hpp `<boost/operators.hpp>`] templates
 help by generating operators for you at namespace scope based on other
 operators you have defined in your class.
 
@@ -1850,7 +1850,7 @@ __output_iterator_helper__ supports the idiom by defining `operator*` and `opera
 just return a non-const reference to the iterator itself. Support for self-proxying allows us, in many cases,
 to reduce the task of writing an output iterator to writing just two member functions - an appropriate
 constructor and a copy-assignment operator. For example, here is a possible implementation of
-[@boost:/doc/html/iterator/doc/function_output_iterator.html `boost::function_output_iterator`] adaptor:
+[@boost:/libs/iterator/doc/function_output_iterator.html `boost::function_output_iterator`] adaptor:
 
 ```
 template<class UnaryFunction>
@@ -1977,11 +1977,11 @@ library to remain backward-compatible.
 
 * [@http://www.boost.org/people/dave_abrahams.htm Dave Abrahams]:
   Started the library and contributed the arithmetic operators in
-  [@../../../include/boost/operators.hpp `boost/operators.hpp`].
+  [@../../../../boost/operators.hpp `boost/operators.hpp`].
 
 * [@http://www.boost.org/people/jeremy_siek.htm Jeremy Siek]:
   Contributed the [link sec:deref dereference operators and iterator
-  helpers] in [@../../../include/boost/operators.hpp boost/operators.hpp].
+  helpers] in [@../../../../boost/operators.hpp boost/operators.hpp].
   Also contributed [@../../../test/iterators_test.cpp iterators_test.cpp].
 
 * [@http://www.boost.org/people/aleksey_gurtovoy.htm Aleksey Gurtovoy]:

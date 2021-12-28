@@ -365,7 +365,7 @@ Copyright 2001, 2003, 2004, 2012 Daryle Walker
 
 * Jonathan Turkanis supplied an implementation of generating the constructor
   templates that can be controlled and automated with macros. The
-  implementation uses the [@boost:/doc/html/preprocessor/index.html Preprocessor library].
+  implementation uses the [@boost:/libs/preprocessor/index.html Preprocessor library].
 
 * [@http://www.boost.org/people/daryle_walker.html">Daryle Walker] started the
   library. Contributed the test file [@../../../test/base_from_member_test.cpp

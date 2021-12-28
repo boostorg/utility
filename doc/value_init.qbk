@@ -262,7 +262,7 @@ is fixed.
 New versions of __value_initialized__ (Boost release version 1.35 or higher) offer a workaround to these
 issues: __value_initialized__ may now clear its internal data, prior to constructing the object that it
 contains. It will do so for those compilers that need to have such a workaround, based on the
-[@boost:/doc/html/config/doc/html/boost_config/boost_macro_reference.html#boost_config.boost_macro_reference.macros_that_describe_defects
+[@boost:/libs/config/doc/html/boost_config/boost_macro_reference.html#boost_config.boost_macro_reference.macros_that_describe_defects
 compiler defect macro] `BOOST_NO_COMPLETE_VALUE_INITIALIZATION`.
 
 [endsect]

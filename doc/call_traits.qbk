@@ -12,7 +12,7 @@
 
 [section Introduction]
 
-All of the contents of [@../../../include/boost/call_traits.hpp `<boost/call_traits.hpp>`] are
+All of the contents of [@../../../../boost/call_traits.hpp `<boost/call_traits.hpp>`] are
 defined inside `namespace boost`.
 
 The template class __call_traits_T__ encapsulates the
@@ -284,7 +284,7 @@ The __call_traits__ template will "optimize" the passing
 of a small built-in type as a function parameter. This mainly has
 an effect when the parameter is used within a loop body.
 
-In the following example (see [@boost:/doc/html/type_traits/examples/fill_example.cpp `fill_example.cpp`]),
+In the following example (see [@boost:/libs/type_traits/examples/fill_example.cpp `fill_example.cpp`]),
 a version of __std_fill__ is optimized in two ways: if the type
 passed is a single byte built-in type then __std_memset__ is used to
 effect the fill, otherwise a conventional C++ implementation is
