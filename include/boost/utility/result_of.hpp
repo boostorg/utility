@@ -134,12 +134,19 @@ template<typename T>
 result_of_no_type result_of_is_private_type(T const &);
 result_of_yes_type result_of_is_private_type(result_of_private_type);
 
+#ifdef BOOST_MSVC
+#  pragma warning(push)
+#  pragma warning(disable: 4512) // assignment operator could not be generated.
+#endif
 template<typename C>
 struct result_of_callable_class : C {
     result_of_callable_class();
     typedef result_of_private_type const &(*pfn_t)(...);
     operator pfn_t() const volatile;
 };
+#ifdef BOOST_MSVC
+#  pragma warning(pop)
+#endif
 
 template<typename C>
 struct result_of_wrap_callable_class {
