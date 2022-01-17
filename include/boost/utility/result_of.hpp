@@ -120,7 +120,7 @@ template<typename F> struct cpp0x_result_of;
 // There doesn't seem to be any other way to turn this off such that the presence of
 // the user-defined operator,() below doesn't cause spurious warning all over the place,
 // so unconditionally turn it off.
-#if BOOST_MSVC
+#ifdef BOOST_MSVC
 #  pragma warning(disable: 4913) // user defined binary operator ',' exists but no overload could convert all operands, default built-in binary operator ',' used
 #endif
 
