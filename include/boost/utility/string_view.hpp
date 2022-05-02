@@ -245,6 +245,18 @@ namespace boost {
                traits::compare(ptr_ + len_ - x.len_, x.ptr_, x.len_) == 0;
             }
 
+        BOOST_CXX14_CONSTEXPR bool contains(basic_string_view s) const BOOST_NOEXCEPT {
+            return find(s) != npos;
+            }
+
+        BOOST_CXX14_CONSTEXPR bool contains(charT c) const BOOST_NOEXCEPT {
+            return find(c) != npos;
+            }
+
+        BOOST_CXX14_CONSTEXPR bool contains(const charT* s) const BOOST_NOEXCEPT {
+            return find(s) != npos;
+            }
+
         //  find
         BOOST_CXX14_CONSTEXPR size_type find(basic_string_view s, size_type pos = 0) const BOOST_NOEXCEPT {
             if (pos > size())
