@@ -189,6 +189,10 @@ namespace boost {
             return rlen;
             }
 
+        BOOST_CXX14_CONSTEXPR basic_string_view substr() const {
+            return basic_string_view(data(), size());
+            }
+
         BOOST_CXX14_CONSTEXPR basic_string_view substr(size_type pos, size_type n=npos) const {
             if ( pos > size())
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "string_view::substr" ) );
