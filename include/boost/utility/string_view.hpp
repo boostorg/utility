@@ -23,6 +23,7 @@
 #include <boost/io/ostream_put.hpp>
 #include <boost/utility/string_view_fwd.hpp>
 #include <boost/throw_exception.hpp>
+#include <boost/assert.hpp>
 
 #include <cstddef>
 #include <stdexcept>
@@ -140,6 +141,8 @@ namespace boost {
         void clear() BOOST_NOEXCEPT { len_ = 0; }          // Boost extension
 
         BOOST_CXX14_CONSTEXPR void remove_prefix(size_type n) {
+            BOOST_ASSERT(n <= size());
+            // This check is deprecated and is left for backward compatibility. It will be removed in the future.
             if ( n > len_ )
                 n = len_;
             ptr_ += n;
@@ -147,6 +150,8 @@ namespace boost {
             }
 
         BOOST_CXX14_CONSTEXPR void remove_suffix(size_type n) {
+            BOOST_ASSERT(n <= size());
+            // This check is deprecated and is left for backward compatibility. It will be removed in the future.
             if ( n > len_ )
                 n = len_;
             len_ -= n;
