@@ -134,7 +134,7 @@ namespace boost {
         // element access
         BOOST_CONSTEXPR const charT& operator[](size_type pos) const { return ptr_[pos]; }
 
-        const charT& at(size_t pos) const {
+        const charT& at(size_type pos) const {
             if ( pos >= len_ )
                 BOOST_THROW_EXCEPTION( std::out_of_range ( "boost::string_ref::at" ) );
             return ptr_[pos];
