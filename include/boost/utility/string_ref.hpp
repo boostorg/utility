@@ -128,7 +128,7 @@ namespace boost {
         // capacity
         BOOST_CONSTEXPR size_type size()     const { return len_; }
         BOOST_CONSTEXPR size_type length()   const { return len_; }
-        BOOST_CONSTEXPR size_type max_size() const { return len_; }
+        BOOST_CONSTEXPR size_type max_size() const { return ~static_cast<size_type>(0) / (sizeof(value_type) * 2u); }
         BOOST_CONSTEXPR bool empty()         const { return len_ == 0; }
 
         // element access
