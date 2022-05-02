@@ -201,7 +201,7 @@ namespace boost {
             }
 
         BOOST_CXX14_CONSTEXPR int compare(size_type pos1, size_type n1, basic_string_view x)
-          const BOOST_NOEXCEPT {
+          const {
             return substr(pos1, n1).compare(x);
             }
 
