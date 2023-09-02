@@ -21,6 +21,7 @@
 #pragma hdrstop
 #endif
 
+#include <boost/core/invoke_swap.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/config/workaround.hpp>
 
@@ -360,7 +361,7 @@ int main()
   boost::value_initialized<SwapFunctionCallTester> swapFunctionCallTester2;
   get(swapFunctionCallTester1).data = 1;
   get(swapFunctionCallTester2).data = 2;
-  boost::swap(swapFunctionCallTester1, swapFunctionCallTester2);
+  boost::core::invoke_swap(swapFunctionCallTester1, swapFunctionCallTester2);
   BOOST_TEST( get(swapFunctionCallTester1).data == 2 );
   BOOST_TEST( get(swapFunctionCallTester2).data == 1 );
   BOOST_TEST( get(swapFunctionCallTester1).is_custom_swap_called );

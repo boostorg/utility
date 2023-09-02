@@ -23,7 +23,7 @@
 // contains. More details on these issues are at libs/utility/value_init.htm
 
 #include <boost/config.hpp> // For BOOST_NO_COMPLETE_VALUE_INITIALIZATION.
-#include <boost/core/swap.hpp>
+#include <boost/core/invoke_swap.hpp>
 #include <cstring>
 #include <cstddef>
 
@@ -117,7 +117,7 @@ class initialized
     BOOST_GPU_ENABLED
     void swap(initialized & arg)
     {
-      ::boost::swap( this->data(), arg.data() );
+      ::boost::core::invoke_swap( this->data(), arg.data() );
     }
 
     BOOST_GPU_ENABLED
