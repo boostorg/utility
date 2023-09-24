@@ -106,10 +106,10 @@
         "cxxstd": "03"
     },
     {
-        "key": "utility/string_ref",
-        "name": "String Ref",
+        "key": "utility/string_view",
+        "name": "String View",
         "description": "String view templates.",
-        "documentation": "doc/html/string_ref.html",
+        "documentation": "doc/html/utility/utilities/string_view.html",
         "category": [
             "Containers"
         ],
