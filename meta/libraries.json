@@ -92,7 +92,7 @@
         "key": "utility/result_of",
         "name": "Result Of",
         "description": "Determines the type of a function call expression.",
-        "documentation": "utility.htm#result_of",
+        "documentation": "doc/html/utility/utilities/result_of.html",
         "category": [
             "Function-objects"
         ],
