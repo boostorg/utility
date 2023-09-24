@@ -111,7 +111,8 @@
         "description": "String view templates.",
         "documentation": "doc/html/utility/utilities/string_view.html",
         "category": [
-            "Containers"
+            "Containers",
+            "String"
         ],
         "authors": "Marshall Clow",
         "maintainers": [
