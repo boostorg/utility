@@ -5,12 +5,9 @@
         "authors": [
             "Dave Abrahams and others"
         ],
-        "description": "Class noncopyable plus checked_delete(), checked_array_delete(), next(), prior() function templates, plus base-from-member idiom.",
+        "description": "Various utilities, such as base-from-member idiom and binary literals in C++03.",
         "documentation": "utility.htm",
         "category": [
-            "Algorithms",
-            "Function-objects",
-            "Memory",
             "Miscellaneous",
             "Patterns"
         ],
@@ -35,7 +32,7 @@
         "authors": [
             "John Maddock, Howard Hinnant, et al"
         ],
-        "description": "Empty member optimization.",
+        "description": "A pair class with empty member optimization.",
         "documentation": "compressed_pair.htm",
         "category": [
             "Data",
@@ -79,7 +76,7 @@
             "Dave Abrahams",
             "Jeremy Siek"
         ],
-        "description": "Templates ease arithmetic classes and iterators.",
+        "description": "Templates to simplify operator definition in arithmetic classes and iterators.",
         "documentation": "operators.htm",
         "category": [
             "Generic",
