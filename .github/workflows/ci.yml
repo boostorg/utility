@@ -1,4 +1,4 @@
-# Copyright 2021-2022 Andrey Semashev
+# Copyright 2021-2024 Andrey Semashev
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://boost.org/LICENSE_1_0.txt)
@@ -95,6 +95,12 @@ jobs:
             os: ubuntu-22.04
             install:
               - g++-12
+          - toolset: gcc-13
+            cxxstd: "11,14,17,20,23"
+            os: ubuntu-latest
+            container: ubuntu:23.04
+            install:
+              - g++-13
           - name: UBSAN
             toolset: gcc-11
             cxxstd: "11,14,17,20,23"
@@ -239,15 +245,25 @@ jobs:
             source_keys:
               - "https://apt.llvm.org/llvm-snapshot.gpg.key"
           - toolset: clang
-            compiler: clang++-16
-            cxxstd: "11,14,17,20,2b"
+            compiler: clang++-17
+            cxxstd: "11,14,17,20,23"
             os: ubuntu-22.04
             install:
-              - clang-16
-              - libc++-16-dev
-              - libc++abi-16-dev
+              - clang-17
             sources:
-              - "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"
+              - "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
+            source_keys:
+              - "https://apt.llvm.org/llvm-snapshot.gpg.key"
+          - toolset: clang
+            compiler: clang++-17
+            cxxstd: "11,14,17,20,23"
+            os: ubuntu-22.04
+            install:
+              - clang-17
+              - libc++-17-dev
+              - libc++abi-17-dev
+            sources:
+              - "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
             source_keys:
               - "https://apt.llvm.org/llvm-snapshot.gpg.key"
             cxxflags: -stdlib=libc++
