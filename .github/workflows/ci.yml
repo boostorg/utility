@@ -496,3 +496,78 @@ jobs:
             fi
             B2_ARGS+=("libs/$LIBRARY/test")
             ./b2 "${B2_ARGS[@]}"
+
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - toolset: msvc-14.0
+            cxxstd: "14"
+            addrmd: 32,64
+            os: windows-2019
+          - toolset: msvc-14.2
+            cxxstd: "14,17,20,latest"
+            addrmd: 32,64
+            os: windows-2019
+          - toolset: msvc-14.3
+            cxxstd: "14,17,20,latest"
+            addrmd: 32,64
+            os: windows-2022
+          - toolset: clang-win
+            cxxstd: "14,17,latest"
+            addrmd: 32,64
+            os: windows-2022
+          - toolset: gcc
+            cxxstd: "11,14,17,2a"
+            addrmd: 64
+            os: windows-2019
+
+    timeout-minutes: 15
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: Setup Boost
+        shell: cmd
+        run: |
+            echo GITHUB_REPOSITORY: %GITHUB_REPOSITORY%
+            for /f %%i in ("%GITHUB_REPOSITORY%") do set LIBRARY=%%~nxi
+            echo LIBRARY: %LIBRARY%
+            echo LIBRARY=%LIBRARY%>>%GITHUB_ENV%
+            echo GITHUB_BASE_REF: %GITHUB_BASE_REF%
+            echo GITHUB_REF: %GITHUB_REF%
+            if "%GITHUB_BASE_REF%" == "" set GITHUB_BASE_REF=%GITHUB_REF%
+            set BOOST_BRANCH=develop
+            for /f %%i in ("%GITHUB_BASE_REF%") do if "%%~nxi" == "master" set BOOST_BRANCH=master
+            echo BOOST_BRANCH: %BOOST_BRANCH%
+            mkdir snapshot
+            cd snapshot
+            echo Downloading library snapshot: https://github.com/%GITHUB_REPOSITORY%/archive/%GITHUB_SHA%.zip
+            curl -L --retry %NET_RETRY_COUNT% -o "%LIBRARY%-%GITHUB_SHA%.zip" "https://github.com/%GITHUB_REPOSITORY%/archive/%GITHUB_SHA%.zip"
+            tar -xf "%LIBRARY%-%GITHUB_SHA%.zip"
+            if not exist "%LIBRARY%-%GITHUB_SHA%\" (
+                echo Library snapshot does not contain the library directory %LIBRARY%-%GITHUB_SHA%:
+                dir
+                exit /b 1
+            )
+            del /f "%LIBRARY%-%GITHUB_SHA%.zip"
+            cd ..
+            git clone -b %BOOST_BRANCH% --depth 1 https://github.com/boostorg/boost.git boost-root
+            cd boost-root
+            if not exist "libs\" mkdir libs
+            if exist "libs\%LIBRARY%\" rmdir /s /q "libs\%LIBRARY%"
+            move /Y "..\snapshot\%LIBRARY%-%GITHUB_SHA%" "libs\%LIBRARY%"
+            rmdir /s /q "..\snapshot"
+            git submodule update --init tools/boostdep
+            python tools/boostdep/depinst/depinst.py --git_args "--jobs %GIT_FETCH_JOBS%" %LIBRARY%
+            cmd /c bootstrap
+            b2 -d0 headers
+
+      - name: Run tests
+        shell: cmd
+        run: |
+            cd boost-root
+            if not "${{matrix.cxxstd}}" == "" set CXXSTD=cxxstd=${{matrix.cxxstd}}
+            if not "${{matrix.addrmd}}" == "" set ADDRMD=address-model=${{matrix.addrmd}}
+            if not "${{matrix.build_variant}}" == "" (set BUILD_VARIANT=variant=${{matrix.build_variant}}) else (set BUILD_VARIANT=variant=%DEFAULT_BUILD_VARIANT%)
+            b2 -j %NUMBER_OF_PROCESSORS% libs/%LIBRARY%/test toolset=${{matrix.toolset}} %CXXSTD% %ADDRMD% %BUILD_VARIANT% embed-manifest-via=linker
