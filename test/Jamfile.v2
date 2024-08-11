@@ -8,6 +8,8 @@
 # bring in rules for testing
 import testing ;
 
+project : requirements <library>/boost/utility//boost_utility ;
+
 run base_from_member_test.cpp ;
 run base_from_member_ref_test.cpp ;
 
