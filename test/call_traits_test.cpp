@@ -19,8 +19,7 @@
 #include <boost/call_traits.hpp>
 
 // type_traits/test utilities
-#include <test.hpp>
-#include <check_type.hpp>
+#include "check_type.hpp"
 
 #ifdef BOOST_MSVC
 #pragma warning(disable:4181) // : warning C4181: qualifier applied to reference type; ignored
