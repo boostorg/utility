@@ -8,7 +8,7 @@ import quickbook ;
 
 project boost/libs/utility/doc ;
 
-path-constant INCLUDES : ../../.. ;
+path-constant INCLUDES : ../include ;
 path-constant boost-images : ../../../doc/src/images ;
 
 # Generate XML doxygen reference for base_from_member component in base_from_member_reference.xml
