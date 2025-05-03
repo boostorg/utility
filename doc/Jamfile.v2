@@ -39,6 +39,7 @@ doxygen base_from_member_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -83,6 +84,7 @@ doxygen boost_binary_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -128,6 +130,7 @@ doxygen call_traits_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -173,6 +176,7 @@ doxygen compressed_pair_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -218,6 +222,7 @@ doxygen in_place_factory_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -265,6 +270,7 @@ doxygen result_of_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -310,6 +316,7 @@ doxygen string_view_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
@@ -354,6 +361,7 @@ doxygen value_init_reference
                     BOOST_CONSTEXPR_OR_CONST=constexpr \\
                     BOOST_NOEXCEPT=noexcept \\
                     BOOST_NOEXCEPT_IF(x)=noexcept(x) \\
+                    BOOST_NOEXCEPT_EXPR(x)=noexcept(x) \\
                     BOOST_NOEXCEPT_OR_NOTHROW=noexcept \\
                     BOOST_COPY_ASSIGN_REF(x)=\"x const&\" \\
                     BOOST_DEFAULTED_FUNCTION(x,y)=\"x = default;\" \\
