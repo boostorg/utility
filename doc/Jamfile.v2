@@ -285,6 +285,7 @@ doxygen result_of_reference
 doxygen string_view_reference
   :
     $(INCLUDES)/boost/utility/string_view.hpp
+    $(INCLUDES)/boost/utility/string_ref.hpp
   :
     <location>tmp
     <doxygen:param>ENABLE_PREPROCESSING=YES
