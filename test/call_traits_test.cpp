@@ -1,4 +1,4 @@
-//  boost::compressed_pair test program
+//  boost::call_traits test program
 
 //  (C) Copyright John Maddock 2000.
 //  Use, modification and distribution are subject to the Boost Software License,
@@ -12,18 +12,36 @@
 // 03 Oct 2000:
 //    Enabled extra tests for VC6.
 
+#include <boost/call_traits.hpp>
+#include <cstddef>
 #include <iostream>
 #include <iomanip>
-#include <algorithm>
+#include <utility>
 #include <typeinfo>
-#include <boost/call_traits.hpp>
-
-// type_traits/test utilities
-#include "check_type.hpp"
+#include <algorithm>
+#include <boost/core/lightweight_test.hpp>
+#include <boost/core/lightweight_test_trait.hpp>
 
 #ifdef BOOST_MSVC
 #pragma warning(disable:4181) // : warning C4181: qualifier applied to reference type; ignored
 #endif
+
+// a user-defined enum
+enum enum_UDT { one, two, three };
+
+// abstract base class
+struct test_abc
+{
+   test_abc();
+   virtual ~test_abc() {}
+   test_abc(const test_abc&);
+   test_abc& operator=(const test_abc&);
+   virtual void foo() = 0;
+   virtual void foo2() = 0;
+};
+
+// incomplete type
+struct incomplete_type;
 
 // a way prevent warnings for unused variables
 template<class T> inline void unused_variable(const T&) {}
@@ -127,17 +145,17 @@ void call_traits_checker<T>::operator()(param_type p)
 {
    T t(p);
    contained<T> c(t);
-   cout << "checking contained<" << typeid(T).name() << ">..." << endl;
-   BOOST_CHECK(t == c.value());
-   BOOST_CHECK(t == c.get());
-   BOOST_CHECK(t == c.const_get());
+   std::cout << "checking contained<" << typeid(T).name() << ">..." << std::endl;
+   BOOST_TEST(t == c.value());
+   BOOST_TEST(t == c.get());
+   BOOST_TEST(t == c.const_get());
 #ifndef __ICL
-   //cout << "typeof contained<" << typeid(T).name() << ">::v_ is:           " << typeid(&contained<T>::v_).name() << endl;
-   cout << "typeof contained<" << typeid(T).name() << ">::value() is:      " << typeid(&contained<T>::value).name() << endl;
-   cout << "typeof contained<" << typeid(T).name() << ">::get() is:        " << typeid(&contained<T>::get).name() << endl;
-   cout << "typeof contained<" << typeid(T).name() << ">::const_get() is:  " << typeid(&contained<T>::const_get).name() << endl;
-   cout << "typeof contained<" << typeid(T).name() << ">::call() is:       " << typeid(&contained<T>::call).name() << endl;
-   cout << endl;
+   //std::cout << "typeof contained<" << typeid(T).name() << ">::v_ is:           " << typeid(&contained<T>::v_).name() << std::endl;
+   std::cout << "typeof contained<" << typeid(T).name() << ">::value() is:      " << typeid(&contained<T>::value).name() << std::endl;
+   std::cout << "typeof contained<" << typeid(T).name() << ">::get() is:        " << typeid(&contained<T>::get).name() << std::endl;
+   std::cout << "typeof contained<" << typeid(T).name() << ">::const_get() is:  " << typeid(&contained<T>::const_get).name() << std::endl;
+   std::cout << "typeof contained<" << typeid(T).name() << ">::call() is:       " << typeid(&contained<T>::call).name() << std::endl;
+   std::cout << std::endl;
 #endif
 }
 
@@ -149,21 +167,21 @@ struct call_traits_checker<T[N]>
    void operator()(param_type t)
    {
       contained<T[N]> c(t);
-      cout << "checking contained<" << typeid(T[N]).name() << ">..." << endl;
+      std::cout << "checking contained<" << typeid(T[N]).name() << ">..." << std::endl;
       unsigned int i = 0;
       for(i = 0; i < N; ++i)
-         BOOST_CHECK(t[i] == c.value()[i]);
+         BOOST_TEST(t[i] == c.value()[i]);
       for(i = 0; i < N; ++i)
-         BOOST_CHECK(t[i] == c.get()[i]);
+         BOOST_TEST(t[i] == c.get()[i]);
       for(i = 0; i < N; ++i)
-         BOOST_CHECK(t[i] == c.const_get()[i]);
+         BOOST_TEST(t[i] == c.const_get()[i]);
 
-      cout << "typeof contained<" << typeid(T[N]).name() << ">::v_ is:         " << typeid(&contained<T[N]>::v_).name() << endl;
-      cout << "typeof contained<" << typeid(T[N]).name() << ">::value is:      " << typeid(&contained<T[N]>::value).name() << endl;
-      cout << "typeof contained<" << typeid(T[N]).name() << ">::get is:        " << typeid(&contained<T[N]>::get).name() << endl;
-      cout << "typeof contained<" << typeid(T[N]).name() << ">::const_get is:  " << typeid(&contained<T[N]>::const_get).name() << endl;
-      cout << "typeof contained<" << typeid(T[N]).name() << ">::call is:       " << typeid(&contained<T[N]>::call).name() << endl;
-      cout << endl;
+      std::cout << "typeof contained<" << typeid(T[N]).name() << ">::v_ is:         " << typeid(&contained<T[N]>::v_).name() << std::endl;
+      std::cout << "typeof contained<" << typeid(T[N]).name() << ">::value is:      " << typeid(&contained<T[N]>::value).name() << std::endl;
+      std::cout << "typeof contained<" << typeid(T[N]).name() << ">::get is:        " << typeid(&contained<T[N]>::get).name() << std::endl;
+      std::cout << "typeof contained<" << typeid(T[N]).name() << ">::const_get is:  " << typeid(&contained<T[N]>::const_get).name() << std::endl;
+      std::cout << "typeof contained<" << typeid(T[N]).name() << ">::call is:       " << typeid(&contained<T[N]>::call).name() << std::endl;
+      std::cout << std::endl;
    }
 };
 #endif
@@ -173,8 +191,8 @@ struct call_traits_checker<T[N]>
 template <class W, class U>
 void check_wrap(const W& w, const U& u)
 {
-   cout << "checking " << typeid(W).name() << "..." << endl;
-   BOOST_CHECK(w.value() == u);
+   std::cout << "checking " << typeid(W).name() << "..." << std::endl;
+   BOOST_TEST(w.value() == u);
 }
 
 //
@@ -184,10 +202,10 @@ void check_wrap(const W& w, const U& u)
 template <class T, class U, class V>
 void check_make_pair(T c, U u, V v)
 {
-   cout << "checking std::pair<" << typeid(c.first).name() << ", " << typeid(c.second).name() << ">..." << endl;
-   BOOST_CHECK(c.first == u);
-   BOOST_CHECK(c.second == v);
-   cout << endl;
+   std::cout << "checking std::pair<" << typeid(c.first).name() << ", " << typeid(c.second).name() << ">..." << std::endl;
+   BOOST_TEST(c.first == u);
+   BOOST_TEST(c.second == v);
+   std::cout << std::endl;
 }
 
 
@@ -240,49 +258,49 @@ int main()
    typedef int& r_type;
    typedef const r_type cr_type;
 
-   BOOST_CHECK_TYPE(comparible_UDT, boost::call_traits<comparible_UDT>::value_type);
-   BOOST_CHECK_TYPE(comparible_UDT&, boost::call_traits<comparible_UDT>::reference);
-   BOOST_CHECK_TYPE(const comparible_UDT&, boost::call_traits<comparible_UDT>::const_reference);
-   BOOST_CHECK_TYPE(const comparible_UDT&, boost::call_traits<comparible_UDT>::param_type);
-   BOOST_CHECK_TYPE(int, boost::call_traits<int>::value_type);
-   BOOST_CHECK_TYPE(int&, boost::call_traits<int>::reference);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<int>::const_reference);
-   BOOST_CHECK_TYPE(const int, boost::call_traits<int>::param_type);
-   BOOST_CHECK_TYPE(int*, boost::call_traits<int*>::value_type);
-   BOOST_CHECK_TYPE(int*&, boost::call_traits<int*>::reference);
-   BOOST_CHECK_TYPE(int*const&, boost::call_traits<int*>::const_reference);
-   BOOST_CHECK_TYPE(int*const, boost::call_traits<int*>::param_type);
+   BOOST_TEST_TRAIT_SAME(comparible_UDT, boost::call_traits<comparible_UDT>::value_type);
+   BOOST_TEST_TRAIT_SAME(comparible_UDT&, boost::call_traits<comparible_UDT>::reference);
+   BOOST_TEST_TRAIT_SAME(const comparible_UDT&, boost::call_traits<comparible_UDT>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const comparible_UDT&, boost::call_traits<comparible_UDT>::param_type);
+   BOOST_TEST_TRAIT_SAME(int, boost::call_traits<int>::value_type);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<int>::reference);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<int>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const int, boost::call_traits<int>::param_type);
+   BOOST_TEST_TRAIT_SAME(int*, boost::call_traits<int*>::value_type);
+   BOOST_TEST_TRAIT_SAME(int*&, boost::call_traits<int*>::reference);
+   BOOST_TEST_TRAIT_SAME(int*const&, boost::call_traits<int*>::const_reference);
+   BOOST_TEST_TRAIT_SAME(int*const, boost::call_traits<int*>::param_type);
 #if defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-   BOOST_CHECK_TYPE(int&, boost::call_traits<int&>::value_type);
-   BOOST_CHECK_TYPE(int&, boost::call_traits<int&>::reference);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<int&>::const_reference);
-   BOOST_CHECK_TYPE(int&, boost::call_traits<int&>::param_type);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<int&>::value_type);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<int&>::reference);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<int&>::const_reference);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<int&>::param_type);
 #if !(defined(__GNUC__) && ((__GNUC__ < 3) || (__GNUC__ == 3) && (__GNUC_MINOR__ < 1)))
-   BOOST_CHECK_TYPE(int&, boost::call_traits<cr_type>::value_type);
-   BOOST_CHECK_TYPE(int&, boost::call_traits<cr_type>::reference);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<cr_type>::const_reference);
-   BOOST_CHECK_TYPE(int&, boost::call_traits<cr_type>::param_type);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<cr_type>::value_type);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<cr_type>::reference);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<cr_type>::const_reference);
+   BOOST_TEST_TRAIT_SAME(int&, boost::call_traits<cr_type>::param_type);
 #else
    std::cout << "Your compiler cannot instantiate call_traits<int&const>, skipping four tests (4 errors)" << std::endl;
 #endif
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<const int&>::value_type);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<const int&>::reference);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<const int&>::const_reference);
-   BOOST_CHECK_TYPE(const int&, boost::call_traits<const int&>::param_type);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<const int&>::value_type);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<const int&>::reference);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<const int&>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const int&, boost::call_traits<const int&>::param_type);
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-   BOOST_CHECK_TYPE(const int*, boost::call_traits<int[3]>::value_type);
-   BOOST_CHECK_TYPE(int(&)[3], boost::call_traits<int[3]>::reference);
-   BOOST_CHECK_TYPE(const int(&)[3], boost::call_traits<int[3]>::const_reference);
-   BOOST_CHECK_TYPE(const int*const, boost::call_traits<int[3]>::param_type);
-   BOOST_CHECK_TYPE(const int*, boost::call_traits<const int[3]>::value_type);
-   BOOST_CHECK_TYPE(const int(&)[3], boost::call_traits<const int[3]>::reference);
-   BOOST_CHECK_TYPE(const int(&)[3], boost::call_traits<const int[3]>::const_reference);
-   BOOST_CHECK_TYPE(const int*const, boost::call_traits<const int[3]>::param_type);
+   BOOST_TEST_TRAIT_SAME(const int*, boost::call_traits<int[3]>::value_type);
+   BOOST_TEST_TRAIT_SAME(int(&)[3], boost::call_traits<int[3]>::reference);
+   BOOST_TEST_TRAIT_SAME(const int(&)[3], boost::call_traits<int[3]>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const int*const, boost::call_traits<int[3]>::param_type);
+   BOOST_TEST_TRAIT_SAME(const int*, boost::call_traits<const int[3]>::value_type);
+   BOOST_TEST_TRAIT_SAME(const int(&)[3], boost::call_traits<const int[3]>::reference);
+   BOOST_TEST_TRAIT_SAME(const int(&)[3], boost::call_traits<const int[3]>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const int*const, boost::call_traits<const int[3]>::param_type);
    // test with abstract base class:
-   BOOST_CHECK_TYPE(test_abc1, boost::call_traits<test_abc1>::value_type);
-   BOOST_CHECK_TYPE(test_abc1&, boost::call_traits<test_abc1>::reference);
-   BOOST_CHECK_TYPE(const test_abc1&, boost::call_traits<test_abc1>::const_reference);
-   BOOST_CHECK_TYPE(const test_abc1&, boost::call_traits<test_abc1>::param_type);
+   BOOST_TEST_TRAIT_SAME(test_abc, boost::call_traits<test_abc>::value_type);
+   BOOST_TEST_TRAIT_SAME(test_abc&, boost::call_traits<test_abc>::reference);
+   BOOST_TEST_TRAIT_SAME(const test_abc&, boost::call_traits<test_abc>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const test_abc&, boost::call_traits<test_abc>::param_type);
 #else
    std::cout << "You're compiler does not support partial template specialiation, skipping 8 tests (8 errors)" << std::endl;
 #endif
@@ -290,16 +308,17 @@ int main()
    std::cout << "You're compiler does not support partial template specialiation, skipping 20 tests (20 errors)" << std::endl;
 #endif
    // test with an incomplete type:
-   BOOST_CHECK_TYPE(incomplete_type, boost::call_traits<incomplete_type>::value_type);
-   BOOST_CHECK_TYPE(incomplete_type&, boost::call_traits<incomplete_type>::reference);
-   BOOST_CHECK_TYPE(const incomplete_type&, boost::call_traits<incomplete_type>::const_reference);
-   BOOST_CHECK_TYPE(const incomplete_type&, boost::call_traits<incomplete_type>::param_type);
+   BOOST_TEST_TRAIT_SAME(incomplete_type, boost::call_traits<incomplete_type>::value_type);
+   BOOST_TEST_TRAIT_SAME(incomplete_type&, boost::call_traits<incomplete_type>::reference);
+   BOOST_TEST_TRAIT_SAME(const incomplete_type&, boost::call_traits<incomplete_type>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const incomplete_type&, boost::call_traits<incomplete_type>::param_type);
    // test enum:
-   BOOST_CHECK_TYPE(enum_UDT, boost::call_traits<enum_UDT>::value_type);
-   BOOST_CHECK_TYPE(enum_UDT&, boost::call_traits<enum_UDT>::reference);
-   BOOST_CHECK_TYPE(const enum_UDT&, boost::call_traits<enum_UDT>::const_reference);
-   BOOST_CHECK_TYPE(const enum_UDT, boost::call_traits<enum_UDT>::param_type);
-   return 0;
+   BOOST_TEST_TRAIT_SAME(enum_UDT, boost::call_traits<enum_UDT>::value_type);
+   BOOST_TEST_TRAIT_SAME(enum_UDT&, boost::call_traits<enum_UDT>::reference);
+   BOOST_TEST_TRAIT_SAME(const enum_UDT&, boost::call_traits<enum_UDT>::const_reference);
+   BOOST_TEST_TRAIT_SAME(const enum_UDT, boost::call_traits<enum_UDT>::param_type);
+
+   return boost::report_errors();
 }
 
 //
